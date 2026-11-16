@@ -1,0 +1,4014 @@
+[
+  {
+    "id": 31,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tính tổng từ 1 đến N",
+    "level": "Cơ bản",
+    "statement": "Nhập số nguyên không âm N. Tính S = 1 + 2 + ... + N.",
+    "input": "Một số nguyên N.",
+    "output": "In tổng S.",
+    "constraints": "0 <= N <= 10^9.",
+    "kind": "sum_n",
+    "gen": "sumN",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "2",
+        "output": "3"
+      },
+      {
+        "no": 4,
+        "input": "3",
+        "output": "6"
+      },
+      {
+        "no": 5,
+        "input": "4",
+        "output": "10"
+      },
+      {
+        "no": 6,
+        "input": "5",
+        "output": "15"
+      },
+      {
+        "no": 7,
+        "input": "6",
+        "output": "21"
+      },
+      {
+        "no": 8,
+        "input": "7",
+        "output": "28"
+      },
+      {
+        "no": 9,
+        "input": "8",
+        "output": "36"
+      },
+      {
+        "no": 10,
+        "input": "9",
+        "output": "45"
+      },
+      {
+        "no": 11,
+        "input": "10",
+        "output": "55"
+      },
+      {
+        "no": 12,
+        "input": "12",
+        "output": "78"
+      },
+      {
+        "no": 13,
+        "input": "15",
+        "output": "120"
+      },
+      {
+        "no": 14,
+        "input": "20",
+        "output": "210"
+      },
+      {
+        "no": 15,
+        "input": "25",
+        "output": "325"
+      },
+      {
+        "no": 16,
+        "input": "50",
+        "output": "1275"
+      },
+      {
+        "no": 17,
+        "input": "75",
+        "output": "2850"
+      },
+      {
+        "no": 18,
+        "input": "100",
+        "output": "5050"
+      },
+      {
+        "no": 19,
+        "input": "500",
+        "output": "125250"
+      },
+      {
+        "no": 20,
+        "input": "1000",
+        "output": "500500"
+      }
+    ],
+    "sample_input": "0",
+    "sample_output": "0",
+    "difficulty_rank": 1,
+    "legacyId": 36
+  },
+  {
+    "id": 32,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tổng các số chẵn từ 1 đến N",
+    "level": "Cơ bản",
+    "statement": "Nhập N. Tính tổng các số chẵn dương không vượt quá N.",
+    "input": "Một số nguyên N.",
+    "output": "In tổng cần tìm.",
+    "constraints": "0 <= N <= 10^9.",
+    "kind": "sum_even",
+    "gen": "sumN",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1",
+        "output": "0"
+      },
+      {
+        "no": 3,
+        "input": "2",
+        "output": "2"
+      },
+      {
+        "no": 4,
+        "input": "3",
+        "output": "2"
+      },
+      {
+        "no": 5,
+        "input": "4",
+        "output": "6"
+      },
+      {
+        "no": 6,
+        "input": "5",
+        "output": "6"
+      },
+      {
+        "no": 7,
+        "input": "6",
+        "output": "12"
+      },
+      {
+        "no": 8,
+        "input": "7",
+        "output": "12"
+      },
+      {
+        "no": 9,
+        "input": "8",
+        "output": "20"
+      },
+      {
+        "no": 10,
+        "input": "9",
+        "output": "20"
+      },
+      {
+        "no": 11,
+        "input": "10",
+        "output": "30"
+      },
+      {
+        "no": 12,
+        "input": "12",
+        "output": "42"
+      },
+      {
+        "no": 13,
+        "input": "15",
+        "output": "56"
+      },
+      {
+        "no": 14,
+        "input": "20",
+        "output": "110"
+      },
+      {
+        "no": 15,
+        "input": "25",
+        "output": "156"
+      },
+      {
+        "no": 16,
+        "input": "50",
+        "output": "650"
+      },
+      {
+        "no": 17,
+        "input": "75",
+        "output": "1406"
+      },
+      {
+        "no": 18,
+        "input": "100",
+        "output": "2550"
+      },
+      {
+        "no": 19,
+        "input": "500",
+        "output": "62750"
+      },
+      {
+        "no": 20,
+        "input": "1000",
+        "output": "250500"
+      }
+    ],
+    "sample_input": "0",
+    "sample_output": "0",
+    "difficulty_rank": 1,
+    "legacyId": 37
+  },
+  {
+    "id": 33,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tổng các số lẻ từ 1 đến N",
+    "level": "Cơ bản",
+    "statement": "Nhập N. Tính tổng các số lẻ dương không vượt quá N.",
+    "input": "Một số nguyên N.",
+    "output": "In tổng cần tìm.",
+    "constraints": "0 <= N <= 10^9.",
+    "kind": "sum_odd",
+    "gen": "sumN",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "2",
+        "output": "1"
+      },
+      {
+        "no": 4,
+        "input": "3",
+        "output": "4"
+      },
+      {
+        "no": 5,
+        "input": "4",
+        "output": "4"
+      },
+      {
+        "no": 6,
+        "input": "5",
+        "output": "9"
+      },
+      {
+        "no": 7,
+        "input": "6",
+        "output": "9"
+      },
+      {
+        "no": 8,
+        "input": "7",
+        "output": "16"
+      },
+      {
+        "no": 9,
+        "input": "8",
+        "output": "16"
+      },
+      {
+        "no": 10,
+        "input": "9",
+        "output": "25"
+      },
+      {
+        "no": 11,
+        "input": "10",
+        "output": "25"
+      },
+      {
+        "no": 12,
+        "input": "12",
+        "output": "36"
+      },
+      {
+        "no": 13,
+        "input": "15",
+        "output": "64"
+      },
+      {
+        "no": 14,
+        "input": "20",
+        "output": "100"
+      },
+      {
+        "no": 15,
+        "input": "25",
+        "output": "169"
+      },
+      {
+        "no": 16,
+        "input": "50",
+        "output": "625"
+      },
+      {
+        "no": 17,
+        "input": "75",
+        "output": "1444"
+      },
+      {
+        "no": 18,
+        "input": "100",
+        "output": "2500"
+      },
+      {
+        "no": 19,
+        "input": "500",
+        "output": "62500"
+      },
+      {
+        "no": 20,
+        "input": "1000",
+        "output": "250000"
+      }
+    ],
+    "sample_input": "0",
+    "sample_output": "0",
+    "difficulty_rank": 1,
+    "legacyId": 38
+  },
+  {
+    "id": 34,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tính giai thừa N",
+    "level": "Cơ bản",
+    "statement": "Nhập N. Tính N! = 1*2*...*N, quy ước 0! = 1.",
+    "input": "Một số nguyên N.",
+    "output": "In giá trị N!.",
+    "constraints": "0 <= N <= 20.",
+    "kind": "factorial",
+    "gen": "factorial",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "2",
+        "output": "2"
+      },
+      {
+        "no": 4,
+        "input": "3",
+        "output": "6"
+      },
+      {
+        "no": 5,
+        "input": "4",
+        "output": "24"
+      },
+      {
+        "no": 6,
+        "input": "5",
+        "output": "120"
+      },
+      {
+        "no": 7,
+        "input": "6",
+        "output": "720"
+      },
+      {
+        "no": 8,
+        "input": "7",
+        "output": "5040"
+      },
+      {
+        "no": 9,
+        "input": "8",
+        "output": "40320"
+      },
+      {
+        "no": 10,
+        "input": "9",
+        "output": "362880"
+      },
+      {
+        "no": 11,
+        "input": "10",
+        "output": "3628800"
+      },
+      {
+        "no": 12,
+        "input": "11",
+        "output": "39916800"
+      },
+      {
+        "no": 13,
+        "input": "12",
+        "output": "479001600"
+      },
+      {
+        "no": 14,
+        "input": "13",
+        "output": "6227020800"
+      },
+      {
+        "no": 15,
+        "input": "14",
+        "output": "87178291200"
+      },
+      {
+        "no": 16,
+        "input": "15",
+        "output": "1307674368000"
+      },
+      {
+        "no": 17,
+        "input": "16",
+        "output": "20922789888000"
+      },
+      {
+        "no": 18,
+        "input": "18",
+        "output": "6402373705728000"
+      },
+      {
+        "no": 19,
+        "input": "19",
+        "output": "121645100408832000"
+      },
+      {
+        "no": 20,
+        "input": "20",
+        "output": "2432902008176640000"
+      }
+    ],
+    "sample_input": "0",
+    "sample_output": "1",
+    "difficulty_rank": 1,
+    "legacyId": 39
+  },
+  {
+    "id": 35,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tính lũy thừa a mũ b",
+    "level": "Cơ bản",
+    "statement": "Nhập số nguyên a và số nguyên không âm b. Tính a^b, không dùng hàm pow.",
+    "input": "Một dòng gồm a và b.",
+    "output": "In a^b.",
+    "constraints": "-30 <= a <= 30; 0 <= b <= 10.",
+    "kind": "power",
+    "gen": "pow",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0 0",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "0 1",
+        "output": "0"
+      },
+      {
+        "no": 3,
+        "input": "1 0",
+        "output": "1"
+      },
+      {
+        "no": 4,
+        "input": "1 1",
+        "output": "1"
+      },
+      {
+        "no": 5,
+        "input": "2 3",
+        "output": "8"
+      },
+      {
+        "no": 6,
+        "input": "2 10",
+        "output": "1024"
+      },
+      {
+        "no": 7,
+        "input": "3 4",
+        "output": "81"
+      },
+      {
+        "no": 8,
+        "input": "5 0",
+        "output": "1"
+      },
+      {
+        "no": 9,
+        "input": "-2 3",
+        "output": "-8"
+      },
+      {
+        "no": 10,
+        "input": "-2 4",
+        "output": "16"
+      },
+      {
+        "no": 11,
+        "input": "10 2",
+        "output": "100"
+      },
+      {
+        "no": 12,
+        "input": "10 3",
+        "output": "1000"
+      },
+      {
+        "no": 13,
+        "input": "3 8",
+        "output": "6561"
+      },
+      {
+        "no": 14,
+        "input": "4 6",
+        "output": "4096"
+      },
+      {
+        "no": 15,
+        "input": "7 5",
+        "output": "16807"
+      },
+      {
+        "no": 16,
+        "input": "9 4",
+        "output": "6561"
+      },
+      {
+        "no": 17,
+        "input": "12 3",
+        "output": "1728"
+      },
+      {
+        "no": 18,
+        "input": "15 2",
+        "output": "225"
+      },
+      {
+        "no": 19,
+        "input": "20 2",
+        "output": "400"
+      },
+      {
+        "no": 20,
+        "input": "-5 5",
+        "output": "-3125"
+      }
+    ],
+    "sample_input": "0 0",
+    "sample_output": "1",
+    "difficulty_rank": 1,
+    "legacyId": 40
+  },
+  {
+    "id": 36,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Đếm số chữ số",
+    "level": "Cơ bản",
+    "statement": "Nhập số nguyên không âm n. Đếm số chữ số thập phân của n; số 0 có một chữ số.",
+    "input": "Một số nguyên n.",
+    "output": "In số lượng chữ số.",
+    "constraints": "0 <= n <= 10^18.",
+    "kind": "count_digits",
+    "gen": "large_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "1"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "1"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "1"
+      },
+      {
+        "no": 6,
+        "input": "9",
+        "output": "1"
+      },
+      {
+        "no": 7,
+        "input": "10",
+        "output": "2"
+      },
+      {
+        "no": 8,
+        "input": "11",
+        "output": "2"
+      },
+      {
+        "no": 9,
+        "input": "19",
+        "output": "2"
+      },
+      {
+        "no": 10,
+        "input": "20",
+        "output": "2"
+      },
+      {
+        "no": 11,
+        "input": "99",
+        "output": "2"
+      },
+      {
+        "no": 12,
+        "input": "100",
+        "output": "3"
+      },
+      {
+        "no": 13,
+        "input": "101",
+        "output": "3"
+      },
+      {
+        "no": 14,
+        "input": "123",
+        "output": "3"
+      },
+      {
+        "no": 15,
+        "input": "999",
+        "output": "3"
+      },
+      {
+        "no": 16,
+        "input": "1000",
+        "output": "4"
+      },
+      {
+        "no": 17,
+        "input": "12345",
+        "output": "5"
+      },
+      {
+        "no": 18,
+        "input": "99999",
+        "output": "5"
+      },
+      {
+        "no": 19,
+        "input": "123456",
+        "output": "6"
+      },
+      {
+        "no": 20,
+        "input": "999999",
+        "output": "6"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "1",
+    "difficulty_rank": 1,
+    "legacyId": 41
+  },
+  {
+    "id": 37,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tính tổng chữ số",
+    "level": "Cơ bản",
+    "statement": "Nhập số nguyên không âm n. Tính tổng các chữ số của n.",
+    "input": "Một số nguyên n.",
+    "output": "In tổng chữ số.",
+    "constraints": "0 <= n <= 10^18.",
+    "kind": "sum_digits",
+    "gen": "large_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "2"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "3"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "4"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "5"
+      },
+      {
+        "no": 6,
+        "input": "9",
+        "output": "9"
+      },
+      {
+        "no": 7,
+        "input": "10",
+        "output": "1"
+      },
+      {
+        "no": 8,
+        "input": "11",
+        "output": "2"
+      },
+      {
+        "no": 9,
+        "input": "19",
+        "output": "10"
+      },
+      {
+        "no": 10,
+        "input": "20",
+        "output": "2"
+      },
+      {
+        "no": 11,
+        "input": "99",
+        "output": "18"
+      },
+      {
+        "no": 12,
+        "input": "100",
+        "output": "1"
+      },
+      {
+        "no": 13,
+        "input": "101",
+        "output": "2"
+      },
+      {
+        "no": 14,
+        "input": "123",
+        "output": "6"
+      },
+      {
+        "no": 15,
+        "input": "999",
+        "output": "27"
+      },
+      {
+        "no": 16,
+        "input": "1000",
+        "output": "1"
+      },
+      {
+        "no": 17,
+        "input": "12345",
+        "output": "15"
+      },
+      {
+        "no": 18,
+        "input": "99999",
+        "output": "45"
+      },
+      {
+        "no": 19,
+        "input": "123456",
+        "output": "21"
+      },
+      {
+        "no": 20,
+        "input": "999999",
+        "output": "54"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "1",
+    "difficulty_rank": 1,
+    "legacyId": 42
+  },
+  {
+    "id": 38,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Đảo ngược chữ số",
+    "level": "Cơ bản",
+    "statement": "Nhập số nguyên không âm n. In số tạo được khi viết các chữ số của n theo thứ tự ngược lại; các số 0 ở đầu kết quả bị bỏ đi.",
+    "input": "Một số nguyên n.",
+    "output": "In số đảo ngược.",
+    "constraints": "0 <= n <= 10^18.",
+    "kind": "reverse",
+    "gen": "large_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "2"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "3"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "4"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "5"
+      },
+      {
+        "no": 6,
+        "input": "9",
+        "output": "9"
+      },
+      {
+        "no": 7,
+        "input": "10",
+        "output": "1"
+      },
+      {
+        "no": 8,
+        "input": "11",
+        "output": "11"
+      },
+      {
+        "no": 9,
+        "input": "19",
+        "output": "91"
+      },
+      {
+        "no": 10,
+        "input": "20",
+        "output": "2"
+      },
+      {
+        "no": 11,
+        "input": "99",
+        "output": "99"
+      },
+      {
+        "no": 12,
+        "input": "100",
+        "output": "1"
+      },
+      {
+        "no": 13,
+        "input": "101",
+        "output": "101"
+      },
+      {
+        "no": 14,
+        "input": "123",
+        "output": "321"
+      },
+      {
+        "no": 15,
+        "input": "999",
+        "output": "999"
+      },
+      {
+        "no": 16,
+        "input": "1000",
+        "output": "1"
+      },
+      {
+        "no": 17,
+        "input": "12345",
+        "output": "54321"
+      },
+      {
+        "no": 18,
+        "input": "99999",
+        "output": "99999"
+      },
+      {
+        "no": 19,
+        "input": "123456",
+        "output": "654321"
+      },
+      {
+        "no": 20,
+        "input": "999999",
+        "output": "999999"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "1",
+    "difficulty_rank": 1,
+    "legacyId": 43
+  },
+  {
+    "id": 39,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Kiểm tra số đối xứng",
+    "level": "Cơ bản",
+    "statement": "Một số được gọi là đối xứng nếu đọc từ trái sang phải giống từ phải sang trái. Kiểm tra số nguyên không âm n.",
+    "input": "Một số nguyên n.",
+    "output": "In YES nếu n đối xứng, ngược lại in NO.",
+    "constraints": "0 <= n <= 10^18.",
+    "kind": "palindrome",
+    "gen": "large_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "YES"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "YES"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "YES"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "YES"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "YES"
+      },
+      {
+        "no": 6,
+        "input": "9",
+        "output": "YES"
+      },
+      {
+        "no": 7,
+        "input": "10",
+        "output": "NO"
+      },
+      {
+        "no": 8,
+        "input": "11",
+        "output": "YES"
+      },
+      {
+        "no": 9,
+        "input": "19",
+        "output": "NO"
+      },
+      {
+        "no": 10,
+        "input": "20",
+        "output": "NO"
+      },
+      {
+        "no": 11,
+        "input": "99",
+        "output": "YES"
+      },
+      {
+        "no": 12,
+        "input": "100",
+        "output": "NO"
+      },
+      {
+        "no": 13,
+        "input": "101",
+        "output": "YES"
+      },
+      {
+        "no": 14,
+        "input": "123",
+        "output": "NO"
+      },
+      {
+        "no": 15,
+        "input": "999",
+        "output": "YES"
+      },
+      {
+        "no": 16,
+        "input": "1000",
+        "output": "NO"
+      },
+      {
+        "no": 17,
+        "input": "12345",
+        "output": "NO"
+      },
+      {
+        "no": 18,
+        "input": "99999",
+        "output": "YES"
+      },
+      {
+        "no": 19,
+        "input": "123456",
+        "output": "NO"
+      },
+      {
+        "no": 20,
+        "input": "999999",
+        "output": "YES"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "YES",
+    "difficulty_rank": 1,
+    "legacyId": 44
+  },
+  {
+    "id": 40,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tìm ước chung lớn nhất",
+    "level": "Cơ bản",
+    "statement": "Nhập hai số nguyên không âm a, b. Tìm ước chung lớn nhất của chúng. Quy ước gcd(0,0)=0.",
+    "input": "Một dòng gồm a và b.",
+    "output": "In gcd(a,b).",
+    "constraints": "0 <= a, b <= 10^12.",
+    "kind": "gcd",
+    "gen": "pair_nonneg",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0 1",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "1 1",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "2 1",
+        "output": "1"
+      },
+      {
+        "no": 4,
+        "input": "10 2",
+        "output": "2"
+      },
+      {
+        "no": 5,
+        "input": "10 3",
+        "output": "1"
+      },
+      {
+        "no": 6,
+        "input": "9 3",
+        "output": "3"
+      },
+      {
+        "no": 7,
+        "input": "15 4",
+        "output": "1"
+      },
+      {
+        "no": 8,
+        "input": "20 5",
+        "output": "5"
+      },
+      {
+        "no": 9,
+        "input": "21 7",
+        "output": "7"
+      },
+      {
+        "no": 10,
+        "input": "50 6",
+        "output": "2"
+      },
+      {
+        "no": 11,
+        "input": "99 10",
+        "output": "1"
+      },
+      {
+        "no": 12,
+        "input": "100 25",
+        "output": "25"
+      },
+      {
+        "no": 13,
+        "input": "101 10",
+        "output": "1"
+      },
+      {
+        "no": 14,
+        "input": "123 11",
+        "output": "1"
+      },
+      {
+        "no": 15,
+        "input": "250 13",
+        "output": "1"
+      },
+      {
+        "no": 16,
+        "input": "500 17",
+        "output": "1"
+      },
+      {
+        "no": 17,
+        "input": "999 20",
+        "output": "1"
+      },
+      {
+        "no": 18,
+        "input": "1000 30",
+        "output": "10"
+      },
+      {
+        "no": 19,
+        "input": "1234 100",
+        "output": "2"
+      },
+      {
+        "no": 20,
+        "input": "9999 99",
+        "output": "99"
+      }
+    ],
+    "sample_input": "0 1",
+    "sample_output": "1",
+    "difficulty_rank": 1,
+    "legacyId": 45
+  },
+  {
+    "id": 41,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tìm bội chung nhỏ nhất",
+    "level": "Cơ bản",
+    "statement": "Nhập hai số nguyên không âm a, b. Tìm bội chung nhỏ nhất; nếu một trong hai số bằng 0 thì kết quả bằng 0.",
+    "input": "Một dòng gồm a và b.",
+    "output": "In lcm(a,b).",
+    "constraints": "0 <= a, b <= 10^9.",
+    "kind": "lcm",
+    "gen": "lcm_pair",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0 1",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1 1",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "2 3",
+        "output": "6"
+      },
+      {
+        "no": 4,
+        "input": "4 6",
+        "output": "12"
+      },
+      {
+        "no": 5,
+        "input": "5 10",
+        "output": "10"
+      },
+      {
+        "no": 6,
+        "input": "7 9",
+        "output": "63"
+      },
+      {
+        "no": 7,
+        "input": "12 18",
+        "output": "36"
+      },
+      {
+        "no": 8,
+        "input": "15 20",
+        "output": "60"
+      },
+      {
+        "no": 9,
+        "input": "21 28",
+        "output": "84"
+      },
+      {
+        "no": 10,
+        "input": "25 30",
+        "output": "150"
+      },
+      {
+        "no": 11,
+        "input": "50 75",
+        "output": "150"
+      },
+      {
+        "no": 12,
+        "input": "99 11",
+        "output": "99"
+      },
+      {
+        "no": 13,
+        "input": "100 25",
+        "output": "100"
+      },
+      {
+        "no": 14,
+        "input": "123 456",
+        "output": "18696"
+      },
+      {
+        "no": 15,
+        "input": "456 123",
+        "output": "18696"
+      },
+      {
+        "no": 16,
+        "input": "999 3",
+        "output": "999"
+      },
+      {
+        "no": 17,
+        "input": "3 999",
+        "output": "999"
+      },
+      {
+        "no": 18,
+        "input": "2026 26",
+        "output": "26338"
+      },
+      {
+        "no": 19,
+        "input": "9999 101",
+        "output": "9999"
+      },
+      {
+        "no": 20,
+        "input": "100000 999",
+        "output": "99900000"
+      }
+    ],
+    "sample_input": "0 1",
+    "sample_output": "0",
+    "difficulty_rank": 1,
+    "legacyId": 46
+  },
+  {
+    "id": 42,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Đếm bội của K",
+    "level": "Cơ bản",
+    "statement": "Cho N không âm và K dương. Đếm các số trong đoạn [1,N] chia hết cho K.",
+    "input": "Một dòng gồm N và K.",
+    "output": "In số lượng bội của K trong đoạn [1,N].",
+    "constraints": "0 <= N <= 10^9; 1 <= K <= 10^6.",
+    "kind": "count_multiples",
+    "gen": "pair_div",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0 1",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1 1",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "2 2",
+        "output": "1"
+      },
+      {
+        "no": 4,
+        "input": "10 2",
+        "output": "5"
+      },
+      {
+        "no": 5,
+        "input": "10 3",
+        "output": "3"
+      },
+      {
+        "no": 6,
+        "input": "9 3",
+        "output": "3"
+      },
+      {
+        "no": 7,
+        "input": "15 4",
+        "output": "3"
+      },
+      {
+        "no": 8,
+        "input": "20 5",
+        "output": "4"
+      },
+      {
+        "no": 9,
+        "input": "21 7",
+        "output": "3"
+      },
+      {
+        "no": 10,
+        "input": "50 6",
+        "output": "8"
+      },
+      {
+        "no": 11,
+        "input": "99 10",
+        "output": "9"
+      },
+      {
+        "no": 12,
+        "input": "100 25",
+        "output": "4"
+      },
+      {
+        "no": 13,
+        "input": "101 10",
+        "output": "10"
+      },
+      {
+        "no": 14,
+        "input": "123 11",
+        "output": "11"
+      },
+      {
+        "no": 15,
+        "input": "250 13",
+        "output": "19"
+      },
+      {
+        "no": 16,
+        "input": "500 17",
+        "output": "29"
+      },
+      {
+        "no": 17,
+        "input": "999 20",
+        "output": "49"
+      },
+      {
+        "no": 18,
+        "input": "1000 30",
+        "output": "33"
+      },
+      {
+        "no": 19,
+        "input": "1234 100",
+        "output": "12"
+      },
+      {
+        "no": 20,
+        "input": "9999 99",
+        "output": "101"
+      }
+    ],
+    "sample_input": "0 1",
+    "sample_output": "0",
+    "difficulty_rank": 1,
+    "legacyId": 47
+  },
+  {
+    "id": 43,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tổng các bội của K",
+    "level": "Cơ bản",
+    "statement": "Cho N không âm và K dương. Tính tổng các số trong đoạn [1,N] chia hết cho K.",
+    "input": "Một dòng gồm N và K.",
+    "output": "In tổng các bội của K.",
+    "constraints": "0 <= N <= 10^6; 1 <= K <= 10^6.",
+    "kind": "sum_multiples",
+    "gen": "pair_div",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0 1",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1 1",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "2 2",
+        "output": "2"
+      },
+      {
+        "no": 4,
+        "input": "10 2",
+        "output": "30"
+      },
+      {
+        "no": 5,
+        "input": "10 3",
+        "output": "18"
+      },
+      {
+        "no": 6,
+        "input": "9 3",
+        "output": "18"
+      },
+      {
+        "no": 7,
+        "input": "15 4",
+        "output": "24"
+      },
+      {
+        "no": 8,
+        "input": "20 5",
+        "output": "50"
+      },
+      {
+        "no": 9,
+        "input": "21 7",
+        "output": "42"
+      },
+      {
+        "no": 10,
+        "input": "50 6",
+        "output": "216"
+      },
+      {
+        "no": 11,
+        "input": "99 10",
+        "output": "450"
+      },
+      {
+        "no": 12,
+        "input": "100 25",
+        "output": "250"
+      },
+      {
+        "no": 13,
+        "input": "101 10",
+        "output": "550"
+      },
+      {
+        "no": 14,
+        "input": "123 11",
+        "output": "726"
+      },
+      {
+        "no": 15,
+        "input": "250 13",
+        "output": "2470"
+      },
+      {
+        "no": 16,
+        "input": "500 17",
+        "output": "7395"
+      },
+      {
+        "no": 17,
+        "input": "999 20",
+        "output": "24500"
+      },
+      {
+        "no": 18,
+        "input": "1000 30",
+        "output": "16830"
+      },
+      {
+        "no": 19,
+        "input": "1234 100",
+        "output": "7800"
+      },
+      {
+        "no": 20,
+        "input": "9999 99",
+        "output": "509949"
+      }
+    ],
+    "sample_input": "0 1",
+    "sample_output": "0",
+    "difficulty_rank": 1,
+    "legacyId": 48
+  },
+  {
+    "id": 44,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tổng bình phương",
+    "level": "Cơ bản",
+    "statement": "Nhập N. Tính 1^2 + 2^2 + ... + N^2 bằng vòng lặp.",
+    "input": "Một số nguyên N.",
+    "output": "In tổng bình phương.",
+    "constraints": "0 <= N <= 10^6.",
+    "kind": "sum_squares",
+    "gen": "sumN",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "2",
+        "output": "5"
+      },
+      {
+        "no": 4,
+        "input": "3",
+        "output": "14"
+      },
+      {
+        "no": 5,
+        "input": "4",
+        "output": "30"
+      },
+      {
+        "no": 6,
+        "input": "5",
+        "output": "55"
+      },
+      {
+        "no": 7,
+        "input": "6",
+        "output": "91"
+      },
+      {
+        "no": 8,
+        "input": "7",
+        "output": "140"
+      },
+      {
+        "no": 9,
+        "input": "8",
+        "output": "204"
+      },
+      {
+        "no": 10,
+        "input": "9",
+        "output": "285"
+      },
+      {
+        "no": 11,
+        "input": "10",
+        "output": "385"
+      },
+      {
+        "no": 12,
+        "input": "12",
+        "output": "650"
+      },
+      {
+        "no": 13,
+        "input": "15",
+        "output": "1240"
+      },
+      {
+        "no": 14,
+        "input": "20",
+        "output": "2870"
+      },
+      {
+        "no": 15,
+        "input": "25",
+        "output": "5525"
+      },
+      {
+        "no": 16,
+        "input": "50",
+        "output": "42925"
+      },
+      {
+        "no": 17,
+        "input": "75",
+        "output": "143450"
+      },
+      {
+        "no": 18,
+        "input": "100",
+        "output": "338350"
+      },
+      {
+        "no": 19,
+        "input": "500",
+        "output": "41791750"
+      },
+      {
+        "no": 20,
+        "input": "1000",
+        "output": "333833500"
+      }
+    ],
+    "sample_input": "0",
+    "sample_output": "0",
+    "difficulty_rank": 1,
+    "legacyId": 49
+  },
+  {
+    "id": 45,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tổng lập phương",
+    "level": "Cơ bản",
+    "statement": "Nhập N. Tính 1^3 + 2^3 + ... + N^3 bằng vòng lặp.",
+    "input": "Một số nguyên N.",
+    "output": "In tổng lập phương.",
+    "constraints": "0 <= N <= 50000.",
+    "kind": "sum_cubes",
+    "gen": "sumN",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "2",
+        "output": "9"
+      },
+      {
+        "no": 4,
+        "input": "3",
+        "output": "36"
+      },
+      {
+        "no": 5,
+        "input": "4",
+        "output": "100"
+      },
+      {
+        "no": 6,
+        "input": "5",
+        "output": "225"
+      },
+      {
+        "no": 7,
+        "input": "6",
+        "output": "441"
+      },
+      {
+        "no": 8,
+        "input": "7",
+        "output": "784"
+      },
+      {
+        "no": 9,
+        "input": "8",
+        "output": "1296"
+      },
+      {
+        "no": 10,
+        "input": "9",
+        "output": "2025"
+      },
+      {
+        "no": 11,
+        "input": "10",
+        "output": "3025"
+      },
+      {
+        "no": 12,
+        "input": "12",
+        "output": "6084"
+      },
+      {
+        "no": 13,
+        "input": "15",
+        "output": "14400"
+      },
+      {
+        "no": 14,
+        "input": "20",
+        "output": "44100"
+      },
+      {
+        "no": 15,
+        "input": "25",
+        "output": "105625"
+      },
+      {
+        "no": 16,
+        "input": "50",
+        "output": "1625625"
+      },
+      {
+        "no": 17,
+        "input": "75",
+        "output": "8122500"
+      },
+      {
+        "no": 18,
+        "input": "100",
+        "output": "25502500"
+      },
+      {
+        "no": 19,
+        "input": "500",
+        "output": "15687562500"
+      },
+      {
+        "no": 20,
+        "input": "1000",
+        "output": "250500250000"
+      }
+    ],
+    "sample_input": "0",
+    "sample_output": "0",
+    "difficulty_rank": 1,
+    "legacyId": 50
+  },
+  {
+    "id": 46,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tính tổng điều hòa",
+    "level": "Trung bình",
+    "statement": "Nhập N dương. Tính H = 1 + 1/2 + 1/3 + ... + 1/N. Chú ý phải dùng kiểu số thực.",
+    "input": "Một số nguyên N.",
+    "output": "In H với đúng 6 chữ số sau dấu phẩy.",
+    "constraints": "1 <= N <= 1000.",
+    "kind": "harmonic",
+    "gen": "harmonic",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "1.000000"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "1.500000"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "1.833333"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "2.083333"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "2.283333"
+      },
+      {
+        "no": 6,
+        "input": "6",
+        "output": "2.450000"
+      },
+      {
+        "no": 7,
+        "input": "7",
+        "output": "2.592857"
+      },
+      {
+        "no": 8,
+        "input": "8",
+        "output": "2.717857"
+      },
+      {
+        "no": 9,
+        "input": "9",
+        "output": "2.828968"
+      },
+      {
+        "no": 10,
+        "input": "10",
+        "output": "2.928968"
+      },
+      {
+        "no": 11,
+        "input": "12",
+        "output": "3.103211"
+      },
+      {
+        "no": 12,
+        "input": "15",
+        "output": "3.318229"
+      },
+      {
+        "no": 13,
+        "input": "20",
+        "output": "3.597740"
+      },
+      {
+        "no": 14,
+        "input": "25",
+        "output": "3.815958"
+      },
+      {
+        "no": 15,
+        "input": "30",
+        "output": "3.994987"
+      },
+      {
+        "no": 16,
+        "input": "50",
+        "output": "4.499205"
+      },
+      {
+        "no": 17,
+        "input": "75",
+        "output": "4.901356"
+      },
+      {
+        "no": 18,
+        "input": "100",
+        "output": "5.187378"
+      },
+      {
+        "no": 19,
+        "input": "500",
+        "output": "6.792823"
+      },
+      {
+        "no": 20,
+        "input": "1000",
+        "output": "7.485471"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "1.000000",
+    "difficulty_rank": 2,
+    "legacyId": 51
+  },
+  {
+    "id": 47,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Số Fibonacci thứ N",
+    "level": "Trung bình",
+    "statement": "Dãy Fibonacci được xác định bởi F0=0, F1=1 và Fn=F(n-1)+F(n-2). Tính FN.",
+    "input": "Một số nguyên N.",
+    "output": "In FN.",
+    "constraints": "0 <= N <= 92.",
+    "kind": "fib",
+    "gen": "fib",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "2",
+        "output": "1"
+      },
+      {
+        "no": 4,
+        "input": "3",
+        "output": "2"
+      },
+      {
+        "no": 5,
+        "input": "4",
+        "output": "3"
+      },
+      {
+        "no": 6,
+        "input": "5",
+        "output": "5"
+      },
+      {
+        "no": 7,
+        "input": "6",
+        "output": "8"
+      },
+      {
+        "no": 8,
+        "input": "7",
+        "output": "13"
+      },
+      {
+        "no": 9,
+        "input": "8",
+        "output": "21"
+      },
+      {
+        "no": 10,
+        "input": "10",
+        "output": "55"
+      },
+      {
+        "no": 11,
+        "input": "12",
+        "output": "144"
+      },
+      {
+        "no": 12,
+        "input": "20",
+        "output": "6765"
+      },
+      {
+        "no": 13,
+        "input": "30",
+        "output": "832040"
+      },
+      {
+        "no": 14,
+        "input": "40",
+        "output": "102334155"
+      },
+      {
+        "no": 15,
+        "input": "50",
+        "output": "12586269025"
+      },
+      {
+        "no": 16,
+        "input": "60",
+        "output": "1548008755920"
+      },
+      {
+        "no": 17,
+        "input": "70",
+        "output": "190392490709135"
+      },
+      {
+        "no": 18,
+        "input": "80",
+        "output": "23416728348467685"
+      },
+      {
+        "no": 19,
+        "input": "90",
+        "output": "2880067194370816120"
+      },
+      {
+        "no": 20,
+        "input": "92",
+        "output": "7540113804746346429"
+      }
+    ],
+    "sample_input": "0",
+    "sample_output": "0",
+    "difficulty_rank": 2,
+    "legacyId": 52
+  },
+  {
+    "id": 48,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Kiểm tra số nguyên tố",
+    "level": "Trung bình",
+    "statement": "Nhập số nguyên n. Kiểm tra n có phải số nguyên tố hay không. Số nguyên tố là số lớn hơn 1 chỉ có hai ước dương.",
+    "input": "Một số nguyên n.",
+    "output": "In YES nếu n nguyên tố, ngược lại in NO.",
+    "constraints": "0 <= n <= 10^9.",
+    "kind": "prime",
+    "gen": "primeN",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0",
+        "output": "NO"
+      },
+      {
+        "no": 2,
+        "input": "1",
+        "output": "NO"
+      },
+      {
+        "no": 3,
+        "input": "2",
+        "output": "YES"
+      },
+      {
+        "no": 4,
+        "input": "3",
+        "output": "YES"
+      },
+      {
+        "no": 5,
+        "input": "4",
+        "output": "NO"
+      },
+      {
+        "no": 6,
+        "input": "5",
+        "output": "YES"
+      },
+      {
+        "no": 7,
+        "input": "7",
+        "output": "YES"
+      },
+      {
+        "no": 8,
+        "input": "9",
+        "output": "NO"
+      },
+      {
+        "no": 9,
+        "input": "11",
+        "output": "YES"
+      },
+      {
+        "no": 10,
+        "input": "15",
+        "output": "NO"
+      },
+      {
+        "no": 11,
+        "input": "17",
+        "output": "YES"
+      },
+      {
+        "no": 12,
+        "input": "20",
+        "output": "NO"
+      },
+      {
+        "no": 13,
+        "input": "23",
+        "output": "YES"
+      },
+      {
+        "no": 14,
+        "input": "29",
+        "output": "YES"
+      },
+      {
+        "no": 15,
+        "input": "97",
+        "output": "YES"
+      },
+      {
+        "no": 16,
+        "input": "100",
+        "output": "NO"
+      },
+      {
+        "no": 17,
+        "input": "101",
+        "output": "YES"
+      },
+      {
+        "no": 18,
+        "input": "997",
+        "output": "YES"
+      },
+      {
+        "no": 19,
+        "input": "1000",
+        "output": "NO"
+      },
+      {
+        "no": 20,
+        "input": "5000",
+        "output": "NO"
+      }
+    ],
+    "sample_input": "0",
+    "sample_output": "NO",
+    "difficulty_rank": 2,
+    "legacyId": 53
+  },
+  {
+    "id": 49,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Đếm số nguyên tố không vượt quá N",
+    "level": "Trung bình",
+    "statement": "Nhập N. Đếm có bao nhiêu số nguyên tố trong đoạn [1,N].",
+    "input": "Một số nguyên N.",
+    "output": "In số lượng số nguyên tố.",
+    "constraints": "1 <= N <= 5000.",
+    "kind": "count_primes",
+    "gen": "primeN_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "2"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "2"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "3"
+      },
+      {
+        "no": 6,
+        "input": "7",
+        "output": "4"
+      },
+      {
+        "no": 7,
+        "input": "9",
+        "output": "4"
+      },
+      {
+        "no": 8,
+        "input": "11",
+        "output": "5"
+      },
+      {
+        "no": 9,
+        "input": "15",
+        "output": "6"
+      },
+      {
+        "no": 10,
+        "input": "17",
+        "output": "7"
+      },
+      {
+        "no": 11,
+        "input": "20",
+        "output": "8"
+      },
+      {
+        "no": 12,
+        "input": "23",
+        "output": "9"
+      },
+      {
+        "no": 13,
+        "input": "29",
+        "output": "10"
+      },
+      {
+        "no": 14,
+        "input": "97",
+        "output": "25"
+      },
+      {
+        "no": 15,
+        "input": "100",
+        "output": "25"
+      },
+      {
+        "no": 16,
+        "input": "101",
+        "output": "26"
+      },
+      {
+        "no": 17,
+        "input": "997",
+        "output": "168"
+      },
+      {
+        "no": 18,
+        "input": "1000",
+        "output": "168"
+      },
+      {
+        "no": 19,
+        "input": "2500",
+        "output": "367"
+      },
+      {
+        "no": 20,
+        "input": "5000",
+        "output": "669"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "0",
+    "difficulty_rank": 2,
+    "legacyId": 54
+  },
+  {
+    "id": 50,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Đếm số ước dương",
+    "level": "Trung bình",
+    "statement": "Nhập số nguyên dương n. Đếm số lượng ước dương của n.",
+    "input": "Một số nguyên n.",
+    "output": "In số lượng ước dương.",
+    "constraints": "1 <= n <= 10^9.",
+    "kind": "divisor_count",
+    "gen": "divisor_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "2"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "2"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "3"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "2"
+      },
+      {
+        "no": 6,
+        "input": "6",
+        "output": "4"
+      },
+      {
+        "no": 7,
+        "input": "7",
+        "output": "2"
+      },
+      {
+        "no": 8,
+        "input": "8",
+        "output": "4"
+      },
+      {
+        "no": 9,
+        "input": "9",
+        "output": "3"
+      },
+      {
+        "no": 10,
+        "input": "10",
+        "output": "4"
+      },
+      {
+        "no": 11,
+        "input": "12",
+        "output": "6"
+      },
+      {
+        "no": 12,
+        "input": "16",
+        "output": "5"
+      },
+      {
+        "no": 13,
+        "input": "20",
+        "output": "6"
+      },
+      {
+        "no": 14,
+        "input": "24",
+        "output": "8"
+      },
+      {
+        "no": 15,
+        "input": "28",
+        "output": "6"
+      },
+      {
+        "no": 16,
+        "input": "36",
+        "output": "9"
+      },
+      {
+        "no": 17,
+        "input": "49",
+        "output": "3"
+      },
+      {
+        "no": 18,
+        "input": "60",
+        "output": "12"
+      },
+      {
+        "no": 19,
+        "input": "97",
+        "output": "2"
+      },
+      {
+        "no": 20,
+        "input": "100",
+        "output": "9"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "1",
+    "difficulty_rank": 2,
+    "legacyId": 55
+  },
+  {
+    "id": 51,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tổng các ước thực sự",
+    "level": "Trung bình",
+    "statement": "Tổng các ước thực sự của n là tổng các ước dương nhỏ hơn n. Tính tổng đó.",
+    "input": "Một số nguyên dương n.",
+    "output": "In tổng các ước thực sự của n.",
+    "constraints": "1 <= n <= 10^6.",
+    "kind": "proper_sum",
+    "gen": "divisor_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "1"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "3"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "1"
+      },
+      {
+        "no": 6,
+        "input": "6",
+        "output": "6"
+      },
+      {
+        "no": 7,
+        "input": "7",
+        "output": "1"
+      },
+      {
+        "no": 8,
+        "input": "8",
+        "output": "7"
+      },
+      {
+        "no": 9,
+        "input": "9",
+        "output": "4"
+      },
+      {
+        "no": 10,
+        "input": "10",
+        "output": "8"
+      },
+      {
+        "no": 11,
+        "input": "12",
+        "output": "16"
+      },
+      {
+        "no": 12,
+        "input": "16",
+        "output": "15"
+      },
+      {
+        "no": 13,
+        "input": "20",
+        "output": "22"
+      },
+      {
+        "no": 14,
+        "input": "24",
+        "output": "36"
+      },
+      {
+        "no": 15,
+        "input": "28",
+        "output": "28"
+      },
+      {
+        "no": 16,
+        "input": "36",
+        "output": "55"
+      },
+      {
+        "no": 17,
+        "input": "49",
+        "output": "8"
+      },
+      {
+        "no": 18,
+        "input": "60",
+        "output": "108"
+      },
+      {
+        "no": 19,
+        "input": "97",
+        "output": "1"
+      },
+      {
+        "no": 20,
+        "input": "100",
+        "output": "117"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "0",
+    "difficulty_rank": 2,
+    "legacyId": 56
+  },
+  {
+    "id": 52,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Kiểm tra số hoàn hảo",
+    "level": "Trung bình",
+    "statement": "Một số hoàn hảo là số nguyên dương bằng tổng các ước dương nhỏ hơn nó. Kiểm tra n.",
+    "input": "Một số nguyên dương n.",
+    "output": "In YES nếu n hoàn hảo, ngược lại in NO.",
+    "constraints": "1 <= n <= 10^6.",
+    "kind": "perfect",
+    "gen": "divisor_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "NO"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "NO"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "NO"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "NO"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "NO"
+      },
+      {
+        "no": 6,
+        "input": "6",
+        "output": "YES"
+      },
+      {
+        "no": 7,
+        "input": "7",
+        "output": "NO"
+      },
+      {
+        "no": 8,
+        "input": "8",
+        "output": "NO"
+      },
+      {
+        "no": 9,
+        "input": "9",
+        "output": "NO"
+      },
+      {
+        "no": 10,
+        "input": "10",
+        "output": "NO"
+      },
+      {
+        "no": 11,
+        "input": "12",
+        "output": "NO"
+      },
+      {
+        "no": 12,
+        "input": "16",
+        "output": "NO"
+      },
+      {
+        "no": 13,
+        "input": "20",
+        "output": "NO"
+      },
+      {
+        "no": 14,
+        "input": "24",
+        "output": "NO"
+      },
+      {
+        "no": 15,
+        "input": "28",
+        "output": "YES"
+      },
+      {
+        "no": 16,
+        "input": "36",
+        "output": "NO"
+      },
+      {
+        "no": 17,
+        "input": "49",
+        "output": "NO"
+      },
+      {
+        "no": 18,
+        "input": "60",
+        "output": "NO"
+      },
+      {
+        "no": 19,
+        "input": "97",
+        "output": "NO"
+      },
+      {
+        "no": 20,
+        "input": "100",
+        "output": "NO"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "NO",
+    "difficulty_rank": 2,
+    "legacyId": 57
+  },
+  {
+    "id": 53,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Đếm số 0 bên phải của N!",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên n. Hãy đếm xem trong kết quả của n! có bao nhiêu chữ số 0 liên tiếp tính từ hàng đơn vị (bao nhiêu số 0 liên tiếp bên phải). Không tính trực tiếp n! vì giá trị rất lớn.",
+    "input": "Một số nguyên n.",
+    "output": "In số lượng chữ số 0 liên tiếp ở cuối n!.",
+    "constraints": "1 <= n <= 1000.",
+    "kind": "trailing_zeros",
+    "gen": "trailing",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "4",
+        "output": "0"
+      },
+      {
+        "no": 3,
+        "input": "8",
+        "output": "1"
+      },
+      {
+        "no": 4,
+        "input": "20",
+        "output": "4"
+      },
+      {
+        "no": 5,
+        "input": "25",
+        "output": "6"
+      },
+      {
+        "no": 6,
+        "input": "26",
+        "output": "6"
+      },
+      {
+        "no": 7,
+        "input": "30",
+        "output": "7"
+      },
+      {
+        "no": 8,
+        "input": "40",
+        "output": "9"
+      },
+      {
+        "no": 9,
+        "input": "50",
+        "output": "12"
+      },
+      {
+        "no": 10,
+        "input": "75",
+        "output": "18"
+      },
+      {
+        "no": 11,
+        "input": "100",
+        "output": "24"
+      },
+      {
+        "no": 12,
+        "input": "125",
+        "output": "31"
+      },
+      {
+        "no": 13,
+        "input": "126",
+        "output": "31"
+      },
+      {
+        "no": 14,
+        "input": "150",
+        "output": "37"
+      },
+      {
+        "no": 15,
+        "input": "200",
+        "output": "49"
+      },
+      {
+        "no": 16,
+        "input": "250",
+        "output": "62"
+      },
+      {
+        "no": 17,
+        "input": "500",
+        "output": "124"
+      },
+      {
+        "no": 18,
+        "input": "750",
+        "output": "187"
+      },
+      {
+        "no": 19,
+        "input": "999",
+        "output": "246"
+      },
+      {
+        "no": 20,
+        "input": "1000",
+        "output": "249"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "0",
+    "difficulty_rank": 2,
+    "legacyId": 58
+  },
+  {
+    "id": 54,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Đếm số lần xuất hiện của chữ số D",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên không âm n và một chữ số d từ 0 đến 9. Đếm số lần chữ số d xuất hiện trong n.",
+    "input": "Một dòng gồm n và d.",
+    "output": "In số lần xuất hiện.",
+    "constraints": "0 <= n <= 10^18; 0 <= d <= 9.",
+    "kind": "count_digit",
+    "gen": "digit_pair",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0 0",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "0 1",
+        "output": "0"
+      },
+      {
+        "no": 3,
+        "input": "1 1",
+        "output": "1"
+      },
+      {
+        "no": 4,
+        "input": "11 1",
+        "output": "2"
+      },
+      {
+        "no": 5,
+        "input": "101 0",
+        "output": "1"
+      },
+      {
+        "no": 6,
+        "input": "101 1",
+        "output": "2"
+      },
+      {
+        "no": 7,
+        "input": "12345 2",
+        "output": "1"
+      },
+      {
+        "no": 8,
+        "input": "99999 9",
+        "output": "5"
+      },
+      {
+        "no": 9,
+        "input": "10000 0",
+        "output": "4"
+      },
+      {
+        "no": 10,
+        "input": "10000 1",
+        "output": "1"
+      },
+      {
+        "no": 11,
+        "input": "22222 2",
+        "output": "5"
+      },
+      {
+        "no": 12,
+        "input": "123456 4",
+        "output": "1"
+      },
+      {
+        "no": 13,
+        "input": "909090 9",
+        "output": "3"
+      },
+      {
+        "no": 14,
+        "input": "987654 5",
+        "output": "1"
+      },
+      {
+        "no": 15,
+        "input": "1001 1",
+        "output": "2"
+      },
+      {
+        "no": 16,
+        "input": "123 3",
+        "output": "1"
+      },
+      {
+        "no": 17,
+        "input": "555 5",
+        "output": "3"
+      },
+      {
+        "no": 18,
+        "input": "7777 7",
+        "output": "4"
+      },
+      {
+        "no": 19,
+        "input": "80808 8",
+        "output": "3"
+      },
+      {
+        "no": 20,
+        "input": "123456789 0",
+        "output": "0"
+      }
+    ],
+    "sample_input": "0 0",
+    "sample_output": "1",
+    "difficulty_rank": 2,
+    "legacyId": 59
+  },
+  {
+    "id": 55,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tìm chữ số lớn nhất",
+    "level": "Cơ bản",
+    "statement": "Nhập số nguyên không âm n. Tìm chữ số lớn nhất xuất hiện trong n.",
+    "input": "Một số nguyên n.",
+    "output": "In chữ số lớn nhất.",
+    "constraints": "0 <= n <= 10^18.",
+    "kind": "max_digit",
+    "gen": "large_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "2"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "3"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "4"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "5"
+      },
+      {
+        "no": 6,
+        "input": "9",
+        "output": "9"
+      },
+      {
+        "no": 7,
+        "input": "10",
+        "output": "1"
+      },
+      {
+        "no": 8,
+        "input": "11",
+        "output": "1"
+      },
+      {
+        "no": 9,
+        "input": "19",
+        "output": "9"
+      },
+      {
+        "no": 10,
+        "input": "20",
+        "output": "2"
+      },
+      {
+        "no": 11,
+        "input": "99",
+        "output": "9"
+      },
+      {
+        "no": 12,
+        "input": "100",
+        "output": "1"
+      },
+      {
+        "no": 13,
+        "input": "101",
+        "output": "1"
+      },
+      {
+        "no": 14,
+        "input": "123",
+        "output": "3"
+      },
+      {
+        "no": 15,
+        "input": "999",
+        "output": "9"
+      },
+      {
+        "no": 16,
+        "input": "1000",
+        "output": "1"
+      },
+      {
+        "no": 17,
+        "input": "12345",
+        "output": "5"
+      },
+      {
+        "no": 18,
+        "input": "99999",
+        "output": "9"
+      },
+      {
+        "no": 19,
+        "input": "123456",
+        "output": "6"
+      },
+      {
+        "no": 20,
+        "input": "999999",
+        "output": "9"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "1",
+    "difficulty_rank": 1,
+    "legacyId": 60
+  },
+  {
+    "id": 56,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tìm chữ số nhỏ nhất",
+    "level": "Cơ bản",
+    "statement": "Nhập số nguyên không âm n. Tìm chữ số nhỏ nhất xuất hiện trong n.",
+    "input": "Một số nguyên n.",
+    "output": "In chữ số nhỏ nhất.",
+    "constraints": "0 <= n <= 10^18.",
+    "kind": "min_digit",
+    "gen": "large_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "2"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "3"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "4"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "5"
+      },
+      {
+        "no": 6,
+        "input": "9",
+        "output": "9"
+      },
+      {
+        "no": 7,
+        "input": "10",
+        "output": "0"
+      },
+      {
+        "no": 8,
+        "input": "11",
+        "output": "1"
+      },
+      {
+        "no": 9,
+        "input": "19",
+        "output": "1"
+      },
+      {
+        "no": 10,
+        "input": "20",
+        "output": "0"
+      },
+      {
+        "no": 11,
+        "input": "99",
+        "output": "9"
+      },
+      {
+        "no": 12,
+        "input": "100",
+        "output": "0"
+      },
+      {
+        "no": 13,
+        "input": "101",
+        "output": "0"
+      },
+      {
+        "no": 14,
+        "input": "123",
+        "output": "1"
+      },
+      {
+        "no": 15,
+        "input": "999",
+        "output": "9"
+      },
+      {
+        "no": 16,
+        "input": "1000",
+        "output": "0"
+      },
+      {
+        "no": 17,
+        "input": "12345",
+        "output": "1"
+      },
+      {
+        "no": 18,
+        "input": "99999",
+        "output": "9"
+      },
+      {
+        "no": 19,
+        "input": "123456",
+        "output": "1"
+      },
+      {
+        "no": 20,
+        "input": "999999",
+        "output": "9"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "1",
+    "difficulty_rank": 1,
+    "legacyId": 61
+  },
+  {
+    "id": 57,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tích các chữ số",
+    "level": "Trung bình",
+    "statement": "Nhập số nguyên không âm n. Tính tích tất cả chữ số của n. Nếu n=0 thì tích bằng 0.",
+    "input": "Một số nguyên n.",
+    "output": "In tích các chữ số.",
+    "constraints": "0 <= n <= 10^12.",
+    "kind": "product_digits",
+    "gen": "large_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "2"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "3"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "4"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "5"
+      },
+      {
+        "no": 6,
+        "input": "9",
+        "output": "9"
+      },
+      {
+        "no": 7,
+        "input": "10",
+        "output": "0"
+      },
+      {
+        "no": 8,
+        "input": "11",
+        "output": "1"
+      },
+      {
+        "no": 9,
+        "input": "19",
+        "output": "9"
+      },
+      {
+        "no": 10,
+        "input": "20",
+        "output": "0"
+      },
+      {
+        "no": 11,
+        "input": "99",
+        "output": "81"
+      },
+      {
+        "no": 12,
+        "input": "100",
+        "output": "0"
+      },
+      {
+        "no": 13,
+        "input": "101",
+        "output": "0"
+      },
+      {
+        "no": 14,
+        "input": "123",
+        "output": "6"
+      },
+      {
+        "no": 15,
+        "input": "999",
+        "output": "729"
+      },
+      {
+        "no": 16,
+        "input": "1000",
+        "output": "0"
+      },
+      {
+        "no": 17,
+        "input": "12345",
+        "output": "120"
+      },
+      {
+        "no": 18,
+        "input": "99999",
+        "output": "59049"
+      },
+      {
+        "no": 19,
+        "input": "123456",
+        "output": "720"
+      },
+      {
+        "no": 20,
+        "input": "999999",
+        "output": "531441"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "1",
+    "difficulty_rank": 2,
+    "legacyId": 62
+  },
+  {
+    "id": 58,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Rút gọn tổng chữ số",
+    "level": "Trung bình",
+    "statement": "Liên tục cộng các chữ số của n cho đến khi còn một chữ số. Hãy in chữ số cuối cùng nhận được.",
+    "input": "Một số nguyên không âm n.",
+    "output": "In chữ số rút gọn (digital root).",
+    "constraints": "0 <= n <= 10^18.",
+    "kind": "digital_root",
+    "gen": "large_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "2"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "3"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "4"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "5"
+      },
+      {
+        "no": 6,
+        "input": "9",
+        "output": "9"
+      },
+      {
+        "no": 7,
+        "input": "10",
+        "output": "1"
+      },
+      {
+        "no": 8,
+        "input": "11",
+        "output": "2"
+      },
+      {
+        "no": 9,
+        "input": "19",
+        "output": "1"
+      },
+      {
+        "no": 10,
+        "input": "20",
+        "output": "2"
+      },
+      {
+        "no": 11,
+        "input": "99",
+        "output": "9"
+      },
+      {
+        "no": 12,
+        "input": "100",
+        "output": "1"
+      },
+      {
+        "no": 13,
+        "input": "101",
+        "output": "2"
+      },
+      {
+        "no": 14,
+        "input": "123",
+        "output": "6"
+      },
+      {
+        "no": 15,
+        "input": "999",
+        "output": "9"
+      },
+      {
+        "no": 16,
+        "input": "1000",
+        "output": "1"
+      },
+      {
+        "no": 17,
+        "input": "12345",
+        "output": "6"
+      },
+      {
+        "no": 18,
+        "input": "99999",
+        "output": "9"
+      },
+      {
+        "no": 19,
+        "input": "123456",
+        "output": "3"
+      },
+      {
+        "no": 20,
+        "input": "999999",
+        "output": "9"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "1",
+    "difficulty_rank": 2,
+    "legacyId": 63
+  },
+  {
+    "id": 59,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Kiểm tra số Armstrong",
+    "level": "Khá",
+    "statement": "Một số n có k chữ số được gọi là Armstrong nếu n bằng tổng mỗi chữ số lũy thừa k. Ví dụ 153 = 1^3+5^3+3^3. Kiểm tra n.",
+    "input": "Một số nguyên không âm n.",
+    "output": "In YES nếu n là Armstrong, ngược lại in NO.",
+    "constraints": "0 <= n <= 10^9.",
+    "kind": "armstrong",
+    "gen": "large_pos",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "YES"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "YES"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "YES"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "YES"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "YES"
+      },
+      {
+        "no": 6,
+        "input": "9",
+        "output": "YES"
+      },
+      {
+        "no": 7,
+        "input": "10",
+        "output": "NO"
+      },
+      {
+        "no": 8,
+        "input": "11",
+        "output": "NO"
+      },
+      {
+        "no": 9,
+        "input": "19",
+        "output": "NO"
+      },
+      {
+        "no": 10,
+        "input": "20",
+        "output": "NO"
+      },
+      {
+        "no": 11,
+        "input": "99",
+        "output": "NO"
+      },
+      {
+        "no": 12,
+        "input": "100",
+        "output": "NO"
+      },
+      {
+        "no": 13,
+        "input": "101",
+        "output": "NO"
+      },
+      {
+        "no": 14,
+        "input": "123",
+        "output": "NO"
+      },
+      {
+        "no": 15,
+        "input": "999",
+        "output": "NO"
+      },
+      {
+        "no": 16,
+        "input": "1000",
+        "output": "NO"
+      },
+      {
+        "no": 17,
+        "input": "12345",
+        "output": "NO"
+      },
+      {
+        "no": 18,
+        "input": "99999",
+        "output": "NO"
+      },
+      {
+        "no": 19,
+        "input": "123456",
+        "output": "NO"
+      },
+      {
+        "no": 20,
+        "input": "999999",
+        "output": "NO"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "YES",
+    "difficulty_rank": 3,
+    "legacyId": 64
+  },
+  {
+    "id": 60,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Đếm thừa số nguyên tố",
+    "level": "Khá",
+    "statement": "Phân tích n thành tích các thừa số nguyên tố. Đếm số thừa số tính cả số lần lặp; ví dụ 12=2*2*3 có kết quả 3.",
+    "input": "Một số nguyên n.",
+    "output": "In số thừa số nguyên tố tính cả lặp.",
+    "constraints": "2 <= n <= 10^9.",
+    "kind": "factor_count",
+    "gen": "factor_small",
+    "tests": [
+      {
+        "no": 1,
+        "input": "2",
+        "output": "1"
+      },
+      {
+        "no": 2,
+        "input": "3",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "4",
+        "output": "2"
+      },
+      {
+        "no": 4,
+        "input": "5",
+        "output": "1"
+      },
+      {
+        "no": 5,
+        "input": "6",
+        "output": "2"
+      },
+      {
+        "no": 6,
+        "input": "7",
+        "output": "1"
+      },
+      {
+        "no": 7,
+        "input": "8",
+        "output": "3"
+      },
+      {
+        "no": 8,
+        "input": "9",
+        "output": "2"
+      },
+      {
+        "no": 9,
+        "input": "10",
+        "output": "2"
+      },
+      {
+        "no": 10,
+        "input": "12",
+        "output": "3"
+      },
+      {
+        "no": 11,
+        "input": "18",
+        "output": "3"
+      },
+      {
+        "no": 12,
+        "input": "24",
+        "output": "4"
+      },
+      {
+        "no": 13,
+        "input": "30",
+        "output": "3"
+      },
+      {
+        "no": 14,
+        "input": "36",
+        "output": "4"
+      },
+      {
+        "no": 15,
+        "input": "49",
+        "output": "2"
+      },
+      {
+        "no": 16,
+        "input": "60",
+        "output": "4"
+      },
+      {
+        "no": 17,
+        "input": "77",
+        "output": "2"
+      },
+      {
+        "no": 18,
+        "input": "97",
+        "output": "1"
+      },
+      {
+        "no": 19,
+        "input": "121",
+        "output": "2"
+      },
+      {
+        "no": 20,
+        "input": "143",
+        "output": "2"
+      }
+    ],
+    "sample_input": "2",
+    "sample_output": "1",
+    "difficulty_rank": 3,
+    "legacyId": 65
+  },
+  {
+    "id": 61,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Thừa số nguyên tố lớn nhất",
+    "level": "Khá",
+    "statement": "Cho số nguyên n lớn hơn 1. Tìm thừa số nguyên tố lớn nhất của n.",
+    "input": "Một số nguyên n.",
+    "output": "In thừa số nguyên tố lớn nhất.",
+    "constraints": "2 <= n <= 10^9.",
+    "kind": "largest_prime_factor",
+    "gen": "factor_small",
+    "tests": [
+      {
+        "no": 1,
+        "input": "2",
+        "output": "2"
+      },
+      {
+        "no": 2,
+        "input": "3",
+        "output": "3"
+      },
+      {
+        "no": 3,
+        "input": "4",
+        "output": "2"
+      },
+      {
+        "no": 4,
+        "input": "5",
+        "output": "5"
+      },
+      {
+        "no": 5,
+        "input": "6",
+        "output": "3"
+      },
+      {
+        "no": 6,
+        "input": "7",
+        "output": "7"
+      },
+      {
+        "no": 7,
+        "input": "8",
+        "output": "2"
+      },
+      {
+        "no": 8,
+        "input": "9",
+        "output": "3"
+      },
+      {
+        "no": 9,
+        "input": "10",
+        "output": "5"
+      },
+      {
+        "no": 10,
+        "input": "12",
+        "output": "3"
+      },
+      {
+        "no": 11,
+        "input": "18",
+        "output": "3"
+      },
+      {
+        "no": 12,
+        "input": "24",
+        "output": "3"
+      },
+      {
+        "no": 13,
+        "input": "30",
+        "output": "5"
+      },
+      {
+        "no": 14,
+        "input": "36",
+        "output": "3"
+      },
+      {
+        "no": 15,
+        "input": "49",
+        "output": "7"
+      },
+      {
+        "no": 16,
+        "input": "60",
+        "output": "5"
+      },
+      {
+        "no": 17,
+        "input": "77",
+        "output": "11"
+      },
+      {
+        "no": 18,
+        "input": "97",
+        "output": "97"
+      },
+      {
+        "no": 19,
+        "input": "121",
+        "output": "11"
+      },
+      {
+        "no": 20,
+        "input": "143",
+        "output": "13"
+      }
+    ],
+    "sample_input": "2",
+    "sample_output": "2",
+    "difficulty_rank": 3,
+    "legacyId": 66
+  },
+  {
+    "id": 62,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Ước dương nhỏ nhất lớn hơn 1",
+    "level": "Khá",
+    "statement": "Cho n>=2. Tìm ước dương nhỏ nhất của n mà lớn hơn 1.",
+    "input": "Một số nguyên n.",
+    "output": "In ước dương nhỏ nhất lớn hơn 1.",
+    "constraints": "2 <= n <= 10^9.",
+    "kind": "smallest_divisor",
+    "gen": "factor_small",
+    "tests": [
+      {
+        "no": 1,
+        "input": "2",
+        "output": "2"
+      },
+      {
+        "no": 2,
+        "input": "3",
+        "output": "3"
+      },
+      {
+        "no": 3,
+        "input": "4",
+        "output": "2"
+      },
+      {
+        "no": 4,
+        "input": "5",
+        "output": "5"
+      },
+      {
+        "no": 5,
+        "input": "6",
+        "output": "2"
+      },
+      {
+        "no": 6,
+        "input": "7",
+        "output": "7"
+      },
+      {
+        "no": 7,
+        "input": "8",
+        "output": "2"
+      },
+      {
+        "no": 8,
+        "input": "9",
+        "output": "3"
+      },
+      {
+        "no": 9,
+        "input": "10",
+        "output": "2"
+      },
+      {
+        "no": 10,
+        "input": "12",
+        "output": "2"
+      },
+      {
+        "no": 11,
+        "input": "18",
+        "output": "2"
+      },
+      {
+        "no": 12,
+        "input": "24",
+        "output": "2"
+      },
+      {
+        "no": 13,
+        "input": "30",
+        "output": "2"
+      },
+      {
+        "no": 14,
+        "input": "36",
+        "output": "2"
+      },
+      {
+        "no": 15,
+        "input": "49",
+        "output": "7"
+      },
+      {
+        "no": 16,
+        "input": "60",
+        "output": "2"
+      },
+      {
+        "no": 17,
+        "input": "77",
+        "output": "7"
+      },
+      {
+        "no": 18,
+        "input": "97",
+        "output": "97"
+      },
+      {
+        "no": 19,
+        "input": "121",
+        "output": "11"
+      },
+      {
+        "no": 20,
+        "input": "143",
+        "output": "11"
+      }
+    ],
+    "sample_input": "2",
+    "sample_output": "2",
+    "difficulty_rank": 3,
+    "legacyId": 67
+  },
+  {
+    "id": 63,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Đếm bước biến đổi Collatz",
+    "level": "Khá",
+    "statement": "Bắt đầu từ n dương. Nếu n chẵn, thay n bằng n/2; nếu n lẻ, thay n bằng 3*n+1. Lặp đến khi n=1. Đếm số bước đã thực hiện.",
+    "input": "Một số nguyên n.",
+    "output": "In số bước biến đổi.",
+    "constraints": "1 <= n <= 10^6.",
+    "kind": "collatz",
+    "gen": "collatz",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "2",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "3",
+        "output": "7"
+      },
+      {
+        "no": 4,
+        "input": "4",
+        "output": "2"
+      },
+      {
+        "no": 5,
+        "input": "5",
+        "output": "5"
+      },
+      {
+        "no": 6,
+        "input": "6",
+        "output": "8"
+      },
+      {
+        "no": 7,
+        "input": "7",
+        "output": "16"
+      },
+      {
+        "no": 8,
+        "input": "8",
+        "output": "3"
+      },
+      {
+        "no": 9,
+        "input": "9",
+        "output": "19"
+      },
+      {
+        "no": 10,
+        "input": "10",
+        "output": "6"
+      },
+      {
+        "no": 11,
+        "input": "11",
+        "output": "14"
+      },
+      {
+        "no": 12,
+        "input": "12",
+        "output": "9"
+      },
+      {
+        "no": 13,
+        "input": "13",
+        "output": "9"
+      },
+      {
+        "no": 14,
+        "input": "15",
+        "output": "17"
+      },
+      {
+        "no": 15,
+        "input": "19",
+        "output": "20"
+      },
+      {
+        "no": 16,
+        "input": "27",
+        "output": "111"
+      },
+      {
+        "no": 17,
+        "input": "31",
+        "output": "106"
+      },
+      {
+        "no": 18,
+        "input": "50",
+        "output": "24"
+      },
+      {
+        "no": 19,
+        "input": "97",
+        "output": "118"
+      },
+      {
+        "no": 20,
+        "input": "999",
+        "output": "49"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "0",
+    "difficulty_rank": 3,
+    "legacyId": 68
+  },
+  {
+    "id": 64,
+    "section": "Phần 3 - Vòng lặp cơ bản và số học",
+    "title": "Tổng luân phiên",
+    "level": "Trung bình",
+    "statement": "Tính S = 1 - 2 + 3 - 4 + ... + (-1)^(N+1)*N.",
+    "input": "Một số nguyên N không âm.",
+    "output": "In tổng S.",
+    "constraints": "0 <= N <= 10^9.",
+    "kind": "alternating",
+    "gen": "sumN",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "2",
+        "output": "-1"
+      },
+      {
+        "no": 4,
+        "input": "3",
+        "output": "2"
+      },
+      {
+        "no": 5,
+        "input": "4",
+        "output": "-2"
+      },
+      {
+        "no": 6,
+        "input": "5",
+        "output": "3"
+      },
+      {
+        "no": 7,
+        "input": "6",
+        "output": "-3"
+      },
+      {
+        "no": 8,
+        "input": "7",
+        "output": "4"
+      },
+      {
+        "no": 9,
+        "input": "8",
+        "output": "-4"
+      },
+      {
+        "no": 10,
+        "input": "9",
+        "output": "5"
+      },
+      {
+        "no": 11,
+        "input": "10",
+        "output": "-5"
+      },
+      {
+        "no": 12,
+        "input": "12",
+        "output": "-6"
+      },
+      {
+        "no": 13,
+        "input": "15",
+        "output": "8"
+      },
+      {
+        "no": 14,
+        "input": "20",
+        "output": "-10"
+      },
+      {
+        "no": 15,
+        "input": "25",
+        "output": "13"
+      },
+      {
+        "no": 16,
+        "input": "50",
+        "output": "-25"
+      },
+      {
+        "no": 17,
+        "input": "75",
+        "output": "38"
+      },
+      {
+        "no": 18,
+        "input": "100",
+        "output": "-50"
+      },
+      {
+        "no": 19,
+        "input": "500",
+        "output": "-250"
+      },
+      {
+        "no": 20,
+        "input": "1000",
+        "output": "-500"
+      }
+    ],
+    "sample_input": "0",
+    "sample_output": "0",
+    "difficulty_rank": 2,
+    "legacyId": 69
+  }
+]
