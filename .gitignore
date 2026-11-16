@@ -1,0 +1,29 @@
+# Local credentials and environment settings
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Local editor and operating-system files
+.vscode/
+.idea/
+.vs/
+.codex/
+.agents/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local build output, dependencies, and logs
+node_modules/
+dist/
+build/
+coverage/
+*.log
+npm-debug.log*
+
+# Supabase SQL is maintained and applied in the separate Supabase project.
+# It is not needed to serve this frontend.
+supabase/migrations/

@@ -6117,7 +6117,7 @@
   {
     "id": 117,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Đếm cặp có tổng chia hết cho K",
+    "title": "\u0110\u1ebfm c\u1eb7p c\u00f3 th\u1ee9 t\u1ef1 c\u00f3 t\u1ed5ng chia h\u1ebft cho K",
     "level": "Khó",
     "statement": "Cho hai số nguyên dương N và K. Đếm các cặp có thứ tự (a, b) thỏa mãn 1 <= a, b <= N và (a + b) chia hết cho K.",
     "input": "Một dòng gồm N và K.",
