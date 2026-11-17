@@ -4,13 +4,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="icon"
-      type="image/png"
-      href="image/TrungHuy_tron.png"
-    />
+    <link rel="icon" type="image/png" href="image/TrungHuy_tron.png" />
     <!-- VI: Gioi han nguon tai tai nguyen; CSP frame-ancestors can them o cau hinh host. EN: Restrict browser resource sources; configure frame-ancestors at the hosting layer. -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://dcdvtpmihijzbieblwfa.supabase.co; connect-src 'self' https://dcdvtpmihijzbieblwfa.supabase.co wss://dcdvtpmihijzbieblwfa.supabase.co; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://dcdvtpmihijzbieblwfa.supabase.co" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://dcdvtpmihijzbieblwfa.supabase.co; connect-src 'self' https://dcdvtpmihijzbieblwfa.supabase.co wss://dcdvtpmihijzbieblwfa.supabase.co; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://dcdvtpmihijzbieblwfa.supabase.co"
+    />
     <title>150 bài luyện thi C++ | Nhập môn lập trình</title>
     <link rel="stylesheet" href="Style.css" />
   </head>
@@ -26,11 +25,30 @@
         <div class="auth-box" id="authBox"></div>
       </div>
       <!-- VI: Mục phụ nằm trong menu tài khoản để thanh đầu trang gọn hơn. EN: Secondary actions live in the account menu to keep the header compact. -->
-      <div class="stats contact-links" id="statsBar" hidden><span class="pill">Email: s&#7869; c&#7853;p nh&#7853;t</span><span class="pill">Facebook: s&#7869; c&#7853;p nh&#7853;t</span><span class="pill">Zalo: s&#7869; c&#7853;p nh&#7853;t</span></div>
+      <div class="stats contact-links" id="statsBar" hidden>
+        <span class="pill">Email: s&#7869; c&#7853;p nh&#7853;t</span
+        ><span class="pill">Facebook: s&#7869; c&#7853;p nh&#7853;t</span
+        ><span class="pill">Zalo: s&#7869; c&#7853;p nh&#7853;t</span>
+      </div>
     </header>
-    <aside id="suspensionNotice" class="suspension-notice" role="status" aria-live="polite" hidden>
-      <span><strong>Tài khoản đang bị đình chỉ.</strong> Bạn vẫn có thể viết và chạy code, nhưng kết quả sẽ không được tính điểm.</span>
-      <button id="dismissSuspensionNotice" type="button" aria-label="Ẩn thông báo">×</button>
+    <aside
+      id="suspensionNotice"
+      class="suspension-notice"
+      role="status"
+      aria-live="polite"
+      hidden
+    >
+      <span
+        ><strong>Tài khoản đang bị đình chỉ.</strong> Bạn vẫn có thể viết và
+        chạy code, nhưng kết quả sẽ không được tính điểm.</span
+      >
+      <button
+        id="dismissSuspensionNotice"
+        type="button"
+        aria-label="Ẩn thông báo"
+      >
+        ×
+      </button>
     </aside>
     <main>
       <aside class="side">
@@ -163,7 +181,14 @@
             thông tin.
           </p>
           <p class="notice">
-            Code được biên dịch bằng Clang C++20 và chạy cục bộ trong trình duyệt; mã nguồn không gửi tới dịch vụ biên dịch. Khi đăng nhập và có mạng, mỗi lần chạy (đúng, sai hoặc lỗi) sẽ lưu bản code cùng kết quả vào lịch sử Supabase. Chủ tài khoản luôn xem được, Admin xem được mọi bản lưu, thành viên khác chỉ xem code của bài đã hoàn thành. Lịch sử cần kết nối mạng để đồng bộ; compiler khoảng 95 MB có thể dùng offline sau khi tải và cache đầy đủ.          </p>
+            Code được biên dịch bằng Clang C++20 và chạy cục bộ trong trình
+            duyệt; mã nguồn không gửi tới dịch vụ biên dịch. Khi đăng nhập và có
+            mạng, mỗi lần chạy (đúng, sai hoặc lỗi) sẽ lưu bản code cùng kết quả
+            vào lịch sử Supabase. Chủ tài khoản luôn xem được, Admin xem được
+            mọi bản lưu, thành viên khác chỉ xem code của bài đã hoàn thành.
+            Lịch sử cần kết nối mạng để đồng bộ; compiler khoảng 95 MB có thể
+            dùng offline sau khi tải và cache đầy đủ.
+          </p>
         </div>
       </section>
     </main>
@@ -217,15 +242,46 @@
             Đăng nhập
           </button>
         </form>
-        <button class="btn resend-confirmation" id="resendConfirmation" type="button" hidden>Gửi lại email xác nhận</button>
-        <button class="btn resend-confirmation" id="confirmCreateAccount" type="button" hidden>Tiếp tục tạo tài khoản</button>
+        <button
+          class="btn resend-confirmation"
+          id="resendConfirmation"
+          type="button"
+          hidden
+        >
+          Gửi lại email xác nhận
+        </button>
+        <button
+          class="btn resend-confirmation"
+          id="confirmCreateAccount"
+          type="button"
+          hidden
+        >
+          Tiếp tục tạo tài khoản
+        </button>
         <div class="auth-or"><span>hoặc</span></div>
         <button class="btn google" id="authGoogle" type="button">
-          <svg class="google-logo" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.55-.2-2.27H12v4.3h6.44a5.5 5.5 0 0 1-2.27 3.36v2.78h3.67c2.15-1.98 3.65-4.9 3.65-8.17z"/>
-            <path fill="#34A853" d="M12 24c3.24 0 5.96-1.08 7.94-2.92l-3.67-2.78c-1.08.72-2.46 1.14-4.27 1.14-3.28 0-6.06-2.21-7.05-5.18H1.16v2.87A12 12 0 0 0 12 24z"/>
-            <path fill="#FBBC05" d="M4.95 14.26a7.2 7.2 0 0 1 0-4.52V6.87H1.16a12 12 0 0 0 0 11.26l3.79-2.87z"/>
-            <path fill="#EA4335" d="M12 4.77c1.77 0 3.35.61 4.6 1.81l3.45-3.45C17.95 1.19 15.23 0 12 0A12 12 0 0 0 1.16 6.87l3.79 2.87C5.94 6.98 8.72 4.77 12 4.77z"/>
+          <svg
+            class="google-logo"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path
+              fill="#4285F4"
+              d="M23.49 12.27c0-.79-.07-1.55-.2-2.27H12v4.3h6.44a5.5 5.5 0 0 1-2.27 3.36v2.78h3.67c2.15-1.98 3.65-4.9 3.65-8.17z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 24c3.24 0 5.96-1.08 7.94-2.92l-3.67-2.78c-1.08.72-2.46 1.14-4.27 1.14-3.28 0-6.06-2.21-7.05-5.18H1.16v2.87A12 12 0 0 0 12 24z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M4.95 14.26a7.2 7.2 0 0 1 0-4.52V6.87H1.16a12 12 0 0 0 0 11.26l3.79-2.87z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 4.77c1.77 0 3.35.61 4.6 1.81l3.45-3.45C17.95 1.19 15.23 0 12 0A12 12 0 0 0 1.16 6.87l3.79 2.87C5.94 6.98 8.72 4.77 12 4.77z"
+            />
           </svg>
           Tiếp tục với Google
         </button>
@@ -233,23 +289,70 @@
       </div>
     </div>
     <div class="auth-overlay rename-overlay" id="renameOverlay" hidden>
-      <section class="auth-card rename-card" role="dialog" aria-modal="true" aria-labelledby="renameTitle">
-        <button class="auth-close" type="button" data-close="renameOverlay" aria-label="Đóng">&times;</button>
+      <section
+        class="auth-card rename-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="renameTitle"
+      >
+        <button
+          class="auth-close"
+          type="button"
+          data-close="renameOverlay"
+          aria-label="Đóng"
+        >
+          &times;
+        </button>
         <h2 id="renameTitle">Đổi tên hiển thị</h2>
-        <p class="auth-sub">Tên dài 3–30 ký tự. Mỗi 30 ngày chỉ đổi được một lần; thay đổi được lưu vào lịch sử quản trị.</p>
+        <p class="auth-sub">
+          Tên dài 3–30 ký tự. Mỗi 30 ngày chỉ đổi được một lần; thay đổi được
+          lưu vào lịch sử quản trị.
+        </p>
         <form id="renameForm" novalidate>
           <label for="renameInput">Tên hiển thị mới</label>
-          <input id="renameInput" type="text" maxlength="30" autocomplete="nickname" required>
-          <p id="renameMessage" class="profile-message" role="status" aria-live="polite"></p>
+          <input
+            id="renameInput"
+            type="text"
+            maxlength="30"
+            autocomplete="nickname"
+            required
+          />
+          <p
+            id="renameMessage"
+            class="profile-message"
+            role="status"
+            aria-live="polite"
+          ></p>
           <div class="rename-confirm" id="renameConfirm" hidden>
             <p id="renameConfirmText"></p>
-            <div><button class="btn" id="renameBack" type="button">Quay lại</button><button class="btn primary" id="renameConfirmButton" type="button">Xác nhận đổi tên</button></div>
+            <div>
+              <button class="btn" id="renameBack" type="button">Quay lại</button
+              ><button
+                class="btn primary"
+                id="renameConfirmButton"
+                type="button"
+              >
+                Xác nhận đổi tên
+              </button>
+            </div>
           </div>
-          <button class="btn primary rename-continue" id="renameContinue" type="submit">Tiếp tục</button>
+          <button
+            class="btn primary rename-continue"
+            id="renameContinue"
+            type="submit"
+          >
+            Tiếp tục
+          </button>
         </form>
       </section>
     </div>
-    <div class="app-toast" id="appToast" role="status" aria-live="polite" hidden></div>
+    <div
+      class="app-toast"
+      id="appToast"
+      role="status"
+      aria-live="polite"
+      hidden
+    ></div>
     <div class="auth-overlay" id="lbOverlay" hidden>
       <div
         class="auth-card lb-card"
@@ -277,33 +380,88 @@
       </div>
     </div>
     <div class="auth-overlay directory-overlay" id="membersOverlay" hidden>
-      <section class="auth-card directory-card" role="dialog" aria-modal="true" aria-labelledby="membersTitle">
-        <button class="auth-close" type="button" data-close="membersOverlay" aria-label="Đóng">&times;</button>
+      <section
+        class="auth-card directory-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="membersTitle"
+      >
+        <button
+          class="auth-close"
+          type="button"
+          data-close="membersOverlay"
+          aria-label="Đóng"
+        >
+          &times;
+        </button>
         <h2 id="membersTitle">Thành viên</h2>
-        <p class="auth-sub">Tìm thành viên và mở hồ sơ để xem tiến độ học tập.</p>
+        <p class="auth-sub">
+          Tìm thành viên và mở hồ sơ để xem tiến độ học tập.
+        </p>
         <form id="memberSearchForm" class="member-search">
-          <input id="memberSearch" type="search" minlength="2" maxlength="40" placeholder="Tìm theo tên thành viên" aria-label="Tìm hồ sơ thành viên">
+          <input
+            id="memberSearch"
+            type="search"
+            minlength="2"
+            maxlength="40"
+            placeholder="Tìm theo tên thành viên"
+            aria-label="Tìm hồ sơ thành viên"
+          />
           <button class="btn primary" type="submit">Tìm</button>
         </form>
-        <div id="memberSearchResults" class="directory-list" aria-live="polite">Đăng nhập để tìm và xem hồ sơ thành viên.</div>
+        <div id="memberSearchResults" class="directory-list" aria-live="polite">
+          Đăng nhập để tìm và xem hồ sơ thành viên.
+        </div>
       </section>
     </div>
     <div class="auth-overlay directory-overlay" id="submissionsOverlay" hidden>
-      <section class="auth-card directory-card" role="dialog" aria-modal="true" aria-labelledby="submissionsTitle">
-        <button class="auth-close" type="button" data-close="submissionsOverlay" aria-label="Đóng">&times;</button>
+      <section
+        class="auth-card directory-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="submissionsTitle"
+      >
+        <button
+          class="auth-close"
+          type="button"
+          data-close="submissionsOverlay"
+          aria-label="Đóng"
+        >
+          &times;
+        </button>
         <h2 id="submissionsTitle">Lịch sử bài đã nộp</h2>
-        <p class="auth-sub">Mỗi lần chạy lưu lại một bản code cùng kết quả chấm.</p>
+        <p class="auth-sub">
+          Mỗi lần chạy lưu lại một bản code cùng kết quả chấm.
+        </p>
         <div class="submission-toolbar">
-          <div class="submission-tabs" role="group" aria-label="Phạm vi bài nộp">
-            <button class="active" type="button" data-submission-scope="all">Tất cả</button>
-            <button type="button" data-submission-scope="mine">Bài nộp của tôi</button>
+          <div
+            class="submission-tabs"
+            role="group"
+            aria-label="Phạm vi bài nộp"
+          >
+            <button class="active" type="button" data-submission-scope="all">
+              Tất cả
+            </button>
+            <button type="button" data-submission-scope="mine">
+              Bài nộp của tôi
+            </button>
           </div>
           <select id="submissionOutcome" aria-label="Lọc kết quả">
-            <option value="">Mọi kết quả</option><option value="accepted">Đúng</option><option value="partial">Chưa đạt hết</option><option value="wrong">Sai</option><option value="compile_error">Lỗi biên dịch</option><option value="runtime_error">Lỗi chạy</option><option value="cancelled">Đã hủy</option>
+            <option value="">Mọi kết quả</option>
+            <option value="accepted">Đúng</option>
+            <option value="partial">Chưa đạt hết</option>
+            <option value="wrong">Sai</option>
+            <option value="compile_error">Lỗi biên dịch</option>
+            <option value="runtime_error">Lỗi chạy</option>
+            <option value="cancelled">Đã hủy</option>
           </select>
         </div>
-        <div id="submissionList" class="submission-list" aria-live="polite">Đăng nhập để xem lịch sử bài nộp.</div>
-        <button class="btn" id="submissionMore" type="button" hidden>Tải thêm</button>
+        <div id="submissionList" class="submission-list" aria-live="polite">
+          Đăng nhập để xem lịch sử bài nộp.
+        </div>
+        <button class="btn" id="submissionMore" type="button" hidden>
+          Tải thêm
+        </button>
       </section>
     </div>
     <div class="auth-overlay profile-overlay" id="profileOverlay" hidden>
