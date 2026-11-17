@@ -583,9 +583,8 @@ async function loadSubmissions(reset = true) {
   const { data, error } = await supabase.rpc("list_code_submissions", { p_scope: submissionScope, p_limit: SUBMISSION_PAGE_SIZE, p_offset: submissionOffset });
   if (error) { list.textContent = "Không tải được lịch sử: " + error.message; return; }
   const outcomeFilter = $("submissionOutcome").value;
-  // Successful full submissions remain in storage for scoring/audit, but are
-  // intentionally omitted from the visible "submitted code" history.
-  const rows = (data || []).filter(row => row.outcome !== "accepted" && (!outcomeFilter || row.outcome === outcomeFilter));
+  // Include the first accepted submission alongside earlier attempts.
+  const rows = (data || []).filter(row => !outcomeFilter || row.outcome === outcomeFilter);
   const canDeleteSubmissions = myRole === "admin" || myRole === "super_admin";
   const markup = rows.map(row => {
     const outcomeNames = {accepted:"Đúng", partial:"Chưa đạt hết", wrong:"Sai", compile_error:"Lỗi biên dịch", runtime_error:"Lỗi chạy", cancelled:"Đã hủy"};
@@ -722,7 +721,7 @@ async function openProfile(userId) {
     const solved = Number(profile.solved || 0);
     const level = getMemberLevel(solved);
     const progress = progressResult.data || [];
-    const history = (historyResult.data || []).filter((item) => item.outcome !== "accepted");
+    const history = historyResult.data || [];
     const historyNote = ownProfile
       ? "Chỉ bạn và Admin được xem các bản code chưa hoàn thành."
       : isAdmin
@@ -2186,7 +2185,6 @@ $("runall").onclick = async () => {
       persistScores();
     }
     job.state = "completed";
-    const cloudNote = suspendedForRun ? "\nT\u00e0i kho\u1ea3n \u0111ang b\u1ecb \u0111\u00ecnh ch\u1ec9: l\u01b0\u1ee3t ch\u1ea5m n\u00e0y kh\u00f4ng t\u00ednh \u0111i\u1ec3m." : await syncScoreAfterGrading(job.taskId, job.pass, score);
     await saveRunSubmission(
       job,
       job.pass,
@@ -2197,6 +2195,7 @@ $("runall").onclick = async () => {
           ? "wrong"
           : "partial",
     );
+    const cloudNote = suspendedForRun ? "\nT\u00e0i kho\u1ea3n \u0111ang b\u1ecb \u0111\u00ecnh ch\u1ec9: l\u01b0\u1ee3t ch\u1ea5m n\u00e0y kh\u00f4ng t\u00ednh \u0111i\u1ec3m." : await syncScoreAfterGrading(job.taskId, job.pass, score);
     const best = Number(bestScores[job.taskId] ?? (suspendedForRun ? 0 : score));
     const summary = suspendedForRun
       ? `\n\nHoàn tất: ${job.pass}/${job.total} test đúng thuật toán; ${job.formatErrors} test lỗi trình bày. Tài khoản đang bị đình chỉ nên lượt này không được tính điểm.\nĐiểm cao nhất đã lưu trước đó: ${best.toFixed(1)}/10.${cloudNote}`

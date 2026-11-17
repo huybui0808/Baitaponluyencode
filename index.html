@@ -184,8 +184,9 @@
           <p class="notice">
             Code được biên dịch bằng Clang C++20 và chạy cục bộ trong trình
             duyệt; mã nguồn không gửi tới dịch vụ biên dịch. Khi đăng nhập và có
-            mạng, mỗi lần chạy (đúng, sai hoặc lỗi) sẽ lưu bản code cùng kết quả
-            vào lịch sử Supabase. Chủ tài khoản luôn xem được, Admin xem được
+            mạng, các lượt chạy trước khi bài đạt 10/10 (đúng, sai hoặc lỗi),
+            kể cả lần đầu đạt 10/10, được lưu vào lịch sử Supabase.
+            Các lượt hủy và lượt chạy sau khi đã đạt 10/10 không được lưu. Chủ tài khoản luôn xem được, Admin xem được
             mọi bản lưu, thành viên khác chỉ xem code của bài đã hoàn thành.
             Lịch sử cần kết nối mạng để đồng bộ; compiler khoảng 95 MB có thể
             dùng offline sau khi tải và cache đầy đủ.
@@ -432,7 +433,7 @@
         </button>
         <h2 id="submissionsTitle">Lịch sử bài đã nộp</h2>
         <p class="auth-sub">
-          Lịch sử hiển thị các lượt sai hoặc chưa đạt; bài đạt 10/10 được tính ở tiến độ.
+          Lịch sử hiển thị các lượt đúng, sai hoặc lỗi cho đến lần đầu đạt 10/10, bao gồm cả lần đạt 10/10.
         </p>
         <div class="submission-toolbar">
           <div
@@ -449,6 +450,7 @@
           </div>
           <select id="submissionOutcome" aria-label="Lọc kết quả">
             <option value="">Mọi kết quả</option>
+            <option value="accepted">Đúng hoàn toàn</option>
             <option value="partial">Chưa đạt hết</option>
             <option value="wrong">Sai</option>
             <option value="compile_error">Lỗi biên dịch</option>

@@ -1,5 +1,5 @@
 // VI: Cập nhật giao diện và tái sử dụng compiler đã cache, tránh tải lại khoảng 95 MB. EN: Refresh the app shell while reusing cached compiler assets to avoid another ~95 MB download.
-const CACHE_NAME = "onluyencpp-offline-v15";
+const CACHE_NAME = "onluyencpp-offline-v16";
 const APP_FILES = [
   "./",
   "./index.html",
