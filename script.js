@@ -494,6 +494,24 @@ async function saveCodeSubmission(taskId, code, passed = null, testNo = null, ou
     console.warn("Không lưu được lịch sử code:", error.message || error);
   }
 }
+// VI: Chỉ lưu lượt chạy khi bài chưa đạt điểm tối đa trước lúc bắt đầu; không lưu lượt hủy.
+// EN: Store attempts only if the task was not already perfect when the run started; never store cancellations.
+async function saveRunSubmission(job, passed = null, testNo = null, outcome = "partial") {
+  if (
+    !job ||
+    job.maxScoreAtStart ||
+    job.controller?.signal.aborted ||
+    outcome === "cancelled"
+  ) return;
+  await saveCodeSubmission(
+    job.taskId,
+    job.code,
+    passed,
+    testNo,
+    outcome,
+    job.kind,
+  );
+}
 // ----- Bảng xếp hạng: số bài hoàn thành, sau đó tổng số test đúng -----
 function openLeaderboard() {
   openOverlay("lbOverlay");
@@ -1628,6 +1646,7 @@ function createRun(task, code, kind) {
     task,
     code,
     kind,
+    maxScoreAtStart: Number(bestScores[task.id] ?? 0) >= 10,
     controller: new AbortController(),
     state: "running",
     pass: 0,
@@ -2029,14 +2048,7 @@ $("runone").onclick = async () => {
         : grade.status === "FAIL"
           ? "wrong"
           : "partial";
-    await saveCodeSubmission(
-      task.id,
-      job.code,
-      null,
-      target?.no || null,
-      singleRunOutcome,
-      "single",
-    );
+    await saveRunSubmission(job, null, target?.no || null, singleRunOutcome);
     job.state = "completed";
     const text = result.timeLimitExceeded
       ? "Kết quả: TIME LIMIT EXCEEDED (TLE)\nChương trình vượt giới hạn thực thi 1,0 giây."
@@ -2067,15 +2079,19 @@ $("runone").onclick = async () => {
         "\n\nChạy riêng một test không làm thay đổi điểm cao nhất.",
     );
   } catch (error) {
-    await saveCodeSubmission(
-      task.id,
-      job.code,
+    const cancelled =
+      error.name === "AbortError" || job.controller.signal.aborted;
+    await saveRunSubmission(
+      job,
       null,
       target?.no || null,
-      error.name === "AbortError" ? "cancelled" : error.code === "COMPILE_ERROR" ? "compile_error" : "runtime_error",
-      "single",
+      cancelled
+        ? "cancelled"
+        : error.code === "COMPILE_ERROR"
+          ? "compile_error"
+          : "runtime_error",
     );
-    if (error.name === "AbortError") {
+    if (cancelled) {
       job.state = "cancelled";
       updateJobView(
         job,
@@ -2171,13 +2187,15 @@ $("runall").onclick = async () => {
     }
     job.state = "completed";
     const cloudNote = suspendedForRun ? "\nT\u00e0i kho\u1ea3n \u0111ang b\u1ecb \u0111\u00ecnh ch\u1ec9: l\u01b0\u1ee3t ch\u1ea5m n\u00e0y kh\u00f4ng t\u00ednh \u0111i\u1ec3m." : await syncScoreAfterGrading(job.taskId, job.pass, score);
-    await saveCodeSubmission(
-      job.taskId,
-      job.code,
+    await saveRunSubmission(
+      job,
       job.pass,
       null,
-      job.pass === job.total && job.formatErrors === 0 ? "accepted" : job.pass === 0 ? "wrong" : "partial",
-      "batch",
+      job.pass === job.total && job.formatErrors === 0
+        ? "accepted"
+        : job.pass === 0
+          ? "wrong"
+          : "partial",
     );
     const best = Number(bestScores[job.taskId] ?? (suspendedForRun ? 0 : score));
     const summary = suspendedForRun
@@ -2193,9 +2211,8 @@ $("runall").onclick = async () => {
     updateScore();
     renderList();
   } catch (error) {
-    await saveCodeSubmission(
-      job.taskId,
-      job.code,
+    await saveRunSubmission(
+      job,
       job.pass,
       null,
       error.name === "AbortError" || job.controller.signal.aborted
@@ -2203,7 +2220,6 @@ $("runall").onclick = async () => {
         : error.code === "COMPILE_ERROR"
           ? "compile_error"
           : "runtime_error",
-      "batch",
     );
     if (error.name === "AbortError" || job.controller.signal.aborted) {
       job.state = "cancelled";
