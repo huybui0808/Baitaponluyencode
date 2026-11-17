@@ -81,7 +81,11 @@
           <span id="progressSummary">0/150 bài hoàn thành</span>
           <span id="scoreSummary">Điểm: Chưa chấm</span>
         </div>
-        <p id="statement" class="statement"></p>
+        <section class="problem-copy" aria-labelledby="statementHeading">
+          <h2 id="statementHeading" class="problem-copy-title">Đề bài</h2>
+          <p id="statement" class="statement"></p>
+          <aside id="conceptNote" class="concept-note" hidden></aside>
+        </section>
         <div class="grid2">
           <div class="info">
             <h3>INPUT</h3>
@@ -93,18 +97,15 @@
           </div>
         </div>
         <div class="constraints" id="constraints"></div>
+        <aside id="formatGuide" class="format-guide" hidden></aside>
         <div class="secthead">
           <h2>Ví dụ</h2>
-          <span>Đầu vào và kết quả mẫu</span>
+          <span>Màn hình mẫu</span>
         </div>
-        <div class="sample">
+        <div class="sample sample-single">
           <div class="samplebox">
-            <b>Sample input</b>
-            <pre id="samplein"></pre>
-          </div>
-          <div class="samplebox">
-            <b>Sample output</b>
-            <pre id="sampleout"></pre>
+            <b id="sampleCaption">Chương trình chạy mẫu</b>
+            <pre id="sampleRun"></pre>
           </div>
         </div>
         <div class="secthead">

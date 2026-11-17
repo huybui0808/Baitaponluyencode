@@ -846,7 +846,7 @@ async function openUserDrawer(u) {
   modal.addEventListener("click", (e) => e.target === modal && modal.remove());
   let prog = [];
   try {
-    prog = await rpc("admin_user_progress", { p_user: u.user_id });
+    prog = await rpc("admin_user_progress_with_points", { p_user: u.user_id });
   } catch (err) {
     toast(err.message, "err");
   }
@@ -865,7 +865,7 @@ async function openUserDrawer(u) {
         .map(
           (
             r,
-          ) => `<tr><td><b>${pad3(r.problem_id)}</b> <span class="mut">${esc(taskTitle(r.problem_id))}</span></td><td>${(r.best_score / 2).toFixed(1)}/10</td>
+          ) => `<tr><td><b>${pad3(r.problem_id)}</b> <span class="mut">${esc(taskTitle(r.problem_id))}</span></td><td>${Number(r.best_points ?? Number(r.best_score) / 2).toFixed(1)}/10</td>
       <td>${r.best_score}/${MAX_TESTS}</td><td class="mut">${fmt(r.updated_at)}</td></tr>`,
         )
         .join("") ||

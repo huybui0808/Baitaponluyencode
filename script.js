@@ -110,6 +110,7 @@ let current = TASKS[0],
   visible = TASKS;
 const $ = (id) => document.getElementById(id);
 const SCORE_KEY = "tlu_cpp_best_scores_v1";
+const SCORE_META_KEY = "tlu_cpp_best_score_meta_v1";
 const LEGACY_LATEST_SCORE_KEY = "tlu_cpp_latest_scores_v1";
 const TEST_TIME_LIMIT_MS = 1000;
 const activeRuns = new Map(); // Một bài có tối đa một phiên chạy tại một thời điểm.
@@ -124,6 +125,7 @@ function readStore(key) {
   }
 }
 let bestScores = readStore(SCORE_KEY);
+let bestScoreMeta = readStore(SCORE_META_KEY);
 const oldLatestScores = readStore(LEGACY_LATEST_SCORE_KEY);
 // Nâng dữ liệu cũ lên điểm cao nhất, tuyệt đối không hạ điểm đã đạt.
 for (const [id, value] of Object.entries(oldLatestScores)) {
@@ -142,6 +144,7 @@ function persistScores() {
   if (currentUser && navigator.onLine) return;
   try {
     localStorage.setItem(SCORE_KEY, JSON.stringify(bestScores));
+    localStorage.setItem(SCORE_META_KEY, JSON.stringify(bestScoreMeta));
   } catch (_) {
     console.warn("Không thể lưu điểm vào localStorage.");
   }
@@ -296,41 +299,58 @@ function isStrongPassword(password) {
 // Điểm khách (localStorage) được đẩy lên tài khoản khi đăng nhập;
 // máy chủ chỉ giữ điểm cao hơn nên không thể làm tụt điểm.
 async function syncGuestScoresUp() {
-  // VI: Khong gui diem khach khi tai khoan dang bi dinh chi. EN: Never upload guest scores for a suspended account.
   if (accountSuspended) return;
-  const payload = {};
-  for (const [id, value] of Object.entries(readStore(SCORE_KEY))) {
-    const tests = Math.round(Number(value) * 2);
-    if (
-      /^\d{1,4}$/.test(id) &&
-      Number.isFinite(tests) &&
-      tests >= 0 &&
-      tests <= MAX_TESTS
-    )
-      payload[id] = tests;
-  }
-  if (!Object.keys(payload).length) return;
-  const { error } = await supabase.rpc("submit_scores", { p_scores: payload });
-  if (error) {
-    console.warn("Không đồng bộ được điểm khách:", error.message);
-    return; // Giữ nguyên localStorage để thử lại lần sau
+  const scores = readStore(SCORE_KEY);
+  const metadata = readStore(SCORE_META_KEY);
+  for (const [id, value] of Object.entries(scores)) {
+    if (!/^\d{1,4}$/.test(id)) continue;
+    const meta = metadata[id];
+    const tests = Number.isInteger(meta?.testsPassed)
+      ? meta.testsPassed
+      : Math.round(Number(value) * 2);
+    const points = Number.isFinite(Number(meta?.points)) ? Number(meta.points) : Number(value);
+    if (tests < 0 || tests > MAX_TESTS || points < 0 || points > 10) continue;
+    const { error } = await supabase.rpc("submit_score_with_presentation", {
+      p_problem_id: Number(id),
+      p_tests_passed: tests,
+      p_points: points,
+    });
+    if (error) {
+      console.warn("Không đồng bộ được điểm khách:", error.message);
+      return;
+    }
   }
   try {
     localStorage.removeItem(SCORE_KEY);
+    localStorage.removeItem(SCORE_META_KEY);
     localStorage.removeItem(LEGACY_LATEST_SCORE_KEY);
   } catch (_) {}
 }
+
 async function loadCloudProgress() {
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from("user_progress")
-    .select("problem_id,best_score");
+    .select("problem_id,best_score,best_points");
+  if (error && /best_points|column/i.test(error.message || "")) {
+    ({ data, error } = await supabase
+      .from("user_progress")
+      .select("problem_id,best_score"));
+  }
   if (error) {
     console.warn("Không tải được điểm từ tài khoản:", error.message);
     return;
   }
   const cloud = {};
-  for (const row of data) cloud[row.problem_id] = Number(row.best_score) / 2;
+  const cloudMeta = {};
+  for (const row of data) {
+    cloud[row.problem_id] = Number(row.best_points ?? Number(row.best_score) / 2);
+    cloudMeta[row.problem_id] = {
+      testsPassed: Number(row.best_score),
+      points: cloud[row.problem_id],
+    };
+  }
   bestScores = cloud;
+  bestScoreMeta = cloudMeta;
 }
 async function loadProfileName() {
   let { data, error } = await supabase
@@ -439,7 +459,7 @@ async function handleSession(session) {
   refreshScoreViews();
 }
 // Gọi sau mỗi lần chấm đủ 20 test. Trả về dòng ghi chú để hiện trong kết quả.
-async function syncScoreAfterGrading(taskId, passed) {
+async function syncScoreAfterGrading(taskId, passed, points) {
   // VI: Tai khoan bi dinh chi chi duoc luyen tap; khong gui diem len Supabase. EN: Keep suspended-account score writes out of Supabase.
   if (accountSuspended) return "\nT\u00e0i kho\u1ea3n \u0111ang b\u1ecb \u0111\u00ecnh ch\u1ec9; \u0111i\u1ec3m kh\u00f4ng \u0111\u01b0\u1ee3c \u0111\u1ed3ng b\u1ed9.";
   if (!navigator.onLine)
@@ -447,13 +467,14 @@ async function syncScoreAfterGrading(taskId, passed) {
   if (!supabase) return "";
   if (!currentUser)
     return "\nĐăng nhập để lưu điểm lên tài khoản và vào bảng xếp hạng.";
-  const { data, error } = await supabase.rpc("submit_score", {
-    p_problem_id: String(taskId),
+  const { data, error } = await supabase.rpc("submit_score_with_presentation", {
+    p_problem_id: Number(taskId),
     p_tests_passed: passed,
+    p_points: points,
   });
   if (error)
     return `\nChưa lưu được điểm lên tài khoản: ${error.message}. Điểm chỉ có trong phiên này.`;
-  bestScores[taskId] = Number(data) / 2;
+  bestScores[taskId] = Number(data);
   return "\nĐã lưu điểm lên tài khoản.";
 }
 
@@ -734,7 +755,7 @@ async function openProfile(userId) {
             ? progress
                 .map(
                   (item) =>
-                    `<div class="profile-progress-item" role="listitem"><span class="profile-progress-title">${String(item.problem_id).padStart(3, "0")}. ${escapeHTML(taskTitle(item.problem_id))}</span><b>${Number(item.best_score) / 2}/10 · ${Number(item.best_score)}/20</b></div>`,
+                    `<div class="profile-progress-item" role="listitem"><span class="profile-progress-title">${String(item.problem_id).padStart(3, "0")}. ${escapeHTML(taskTitle(item.problem_id))}</span><b>${Number(item.best_points ?? Number(item.best_score) / 2).toFixed(1)}/10 · ${Number(item.best_score)}/20</b></div>`,
                 )
                 .join("")
             : '<p class="profile-subtle">Chưa có tiến độ bài tập.</p>'
@@ -1266,17 +1287,16 @@ function renderRunOutput(text) {
   output.replaceChildren();
   const lines = String(text || "").split("\n");
   lines.forEach((line, index) => {
-    const match = /^(TEST \d{1,2}: )(ĐÚNG|SAI|LỖI CHẠY|QUÁ THỜI GIAN)$/.exec(
-      line,
-    );
+    const match = /^(TEST \d{1,2}: )(.*)$/.exec(line);
     if (match) {
       const row = document.createElement("span");
-      row.className =
-        match[2] === "ĐÚNG"
+      row.className = match[2].includes("LỖI TRÌNH BÀY")
+        ? "test-result-presentation"
+        : match[2] === "ĐÚNG"
           ? "test-result-pass"
-          : match[2] === "QUÁ THỜI GIAN"
+          : match[2].includes("THỜI GIAN")
             ? "test-result-timeout"
-            : match[2] === "LỖI CHẠY"
+            : match[2].includes("LỖI CHẠY")
               ? "test-result-runtime"
               : "test-result-fail";
       row.textContent = line;
@@ -1287,6 +1307,210 @@ function renderRunOutput(text) {
     if (index < lines.length - 1) output.append(document.createTextNode("\n"));
   });
 }
+// VI: Ghi chú khái niệm toán học hiển thị ngay trong đề liên quan. EN: Show a short concept reminder beside each related problem.
+const CONCEPT_NOTES = new Map([
+  [4, "Kiến thức cần nhớ: π là hằng số xấp xỉ 3,14. Chu vi hình tròn C = 2πr; diện tích S = πr². Dùng đúng giá trị π và cách làm tròn đề bài yêu cầu."],
+  [16, "Kiến thức cần nhớ: Năm nhuận là năm chia hết cho 400, hoặc chia hết cho 4 nhưng không chia hết cho 100."],
+  [20, "Kiến thức cần nhớ: Ba cạnh tạo thành tam giác khi tổng độ dài của từng cặp cạnh lớn hơn cạnh còn lại. Cần kiểm tra cả điều kiện độ dài dương."],
+  [21, "Kiến thức cần nhớ: Tam giác đều có ba cạnh bằng nhau; tam giác cân có ít nhất hai cạnh bằng nhau; tam giác thường có ba cạnh khác nhau. Kiểm tra tính hợp lệ trước khi phân loại."],
+  [22, "Kiến thức cần nhớ: Tam giác vuông thỏa mãn định lý Pythagore: bình phương cạnh lớn nhất bằng tổng bình phương hai cạnh còn lại. Ba cạnh cũng phải tạo thành tam giác hợp lệ."],
+  [24, "Kiến thức cần nhớ: Với ax + b = 0, nếu a khác 0 thì x = -b/a. Nếu a = 0, phương trình có vô số nghiệm khi b = 0 và vô nghiệm khi b khác 0."],
+  [30, "Kiến thức cần nhớ: Với ax² + bx + c = 0 và a khác 0, biệt thức Δ = b² - 4ac. Δ > 0 có hai nghiệm thực, Δ = 0 có nghiệm kép, Δ < 0 không có nghiệm thực."],
+  [34, "Kiến thức cần nhớ: N! = 1 × 2 × ... × N; theo quy ước, 0! = 1. Hãy chú ý giới hạn kiểu dữ liệu để tránh tràn số."],
+  [39, "Kiến thức cần nhớ: Số đối xứng có các chữ số đọc từ trái sang phải giống khi đọc từ phải sang trái. Ví dụ: 1221 và 7."],
+  [40, "Kiến thức cần nhớ: GCD (ƯCLN) là ước dương lớn nhất cùng chia hết hai số. Bài này quy ước gcd(0,0) = 0."],
+  [41, "Kiến thức cần nhớ: LCM (BCNN) là bội dương nhỏ nhất cùng chia hết cho hai số. Nếu một trong hai số bằng 0 thì theo đề, kết quả bằng 0."],
+  [47, "Kiến thức cần nhớ: Dãy Fibonacci được xác định bởi F₀ = 0, F₁ = 1 và Fₙ = Fₙ₋₁ + Fₙ₋₂ với n ≥ 2."],
+  [48, "Kiến thức cần nhớ: Số nguyên tố là số nguyên lớn hơn 1 chỉ có đúng hai ước dương: 1 và chính nó. Vì vậy 0, 1 và số âm không phải số nguyên tố."],
+  [49, "Kiến thức cần nhớ: Khi đếm số nguyên tố trong [1, N], chỉ xét số nguyên lớn hơn 1; các số 0 và 1 không phải số nguyên tố."],
+  [50, "Kiến thức cần nhớ: Ước dương của n là số nguyên dương chia n không dư. Chỉ đếm mỗi ước một lần."],
+  [51, "Kiến thức cần nhớ: Ước thực sự của n là các ước dương nhỏ hơn n; không tính chính n."],
+  [52, "Kiến thức cần nhớ: Số hoàn hảo là số nguyên dương bằng tổng các ước dương thực sự của nó. Ví dụ: 6 = 1 + 2 + 3."],
+  [53, "Kiến thức cần nhớ: Số chữ số 0 tận cùng của N! được tính bằng tổng floor(N/5) + floor(N/25) + floor(N/125) + ...; không cần tính trực tiếp N!."],
+  [59, "Kiến thức cần nhớ: Số Armstrong có k chữ số nếu bằng tổng từng chữ số lũy thừa k. Ví dụ: 153 = 1³ + 5³ + 3³."],
+  [60, "Kiến thức cần nhớ: Phân tích thừa số nguyên tố có tính cả số lần lặp. Ví dụ: 12 = 2 × 2 × 3 có 3 thừa số nguyên tố."],
+  [61, "Kiến thức cần nhớ: Thừa số nguyên tố lớn nhất là thừa số lớn nhất trong phân tích n thành tích các số nguyên tố; các thừa số lặp vẫn thuộc phân tích."],
+  [63, "Kiến thức cần nhớ: Quy tắc Collatz: n chẵn thì chia 2; n lẻ thì đổi thành 3n + 1. Đếm số lần biến đổi cho đến khi đạt 1, không tính giá trị ban đầu là một bước."],
+  [79, "Kiến thức cần nhớ: Số đối xứng là số có biểu diễn thập phân đọc xuôi và đọc ngược như nhau. Số 0 cũng là số đối xứng."],
+  [80, "Kiến thức cần nhớ: Số Armstrong có k chữ số nếu bằng tổng từng chữ số lũy thừa k. Cần dùng số chữ số của từng số đang xét."],
+  [86, "Kiến thức cần nhớ: Số Harshad (Niven) là số nguyên dương chia hết cho tổng các chữ số của chính nó."],
+  [88, "Kiến thức cần nhớ: Hai số nguyên tố cùng nhau khi ƯCLN của chúng bằng 1. Không yêu cầu từng số riêng lẻ phải là số nguyên tố."],
+  [90, "Kiến thức cần nhớ: Một số nguyên dương có đúng 3 ước dương khi và chỉ khi nó là bình phương của một số nguyên tố."],
+  [94, "Kiến thức cần nhớ: Số nguyên tố phải lớn hơn 1; số đối xứng có biểu diễn thập phân đọc xuôi và đọc ngược như nhau. Một số phải thỏa mãn đồng thời cả hai điều kiện."],
+  [95, "Kiến thức cần nhớ: Số chính phương là bình phương của một số nguyên không âm, chẳng hạn 0, 1, 4, 9, 16. Khi kiểm tra, tránh sai số do căn bậc hai thực."],
+  [110, "Kiến thức cần nhớ: Trước hết kiểm tra số nguyên tố; sau đó tính tổng chữ số và kiểm tra tổng đó chẵn. Hai điều kiện phải cùng đúng."],
+  [111, "Kiến thức cần nhớ: Số đối xứng là số có biểu diễn thập phân đọc xuôi và đọc ngược như nhau."],
+  [115, "Kiến thức cần nhớ: Chỉ đếm các ước của N mà bản thân chúng là số nguyên tố. Mỗi giá trị nguyên tố chỉ tính một lần."],
+  [116, "Kiến thức cần nhớ: Đếm các ước dương của N đồng thời là số chính phương; ước chính phương có dạng k² với k là số nguyên không âm."],
+  [118, "Kiến thức cần nhớ: Hai số nguyên tố cùng nhau khi gcd(a,b) = 1. Điều kiện a < b nghĩa là mỗi cặp không phân biệt thứ tự và không ghép một số với chính nó."],
+  [128, "Kiến thức cần nhớ: Số nguyên dương có đúng 3 ước dương khi và chỉ khi nó là bình phương của một số nguyên tố."],
+  [129, "Kiến thức cần nhớ: Công thức Leibniz: π = 4(1 - 1/3 + 1/5 - 1/7 + ...). Dùng đúng N số hạng đầu và chú ý phép chia phải thực hiện trên kiểu số thực."],
+]);
+
+const RESULT_LABELS = {
+  2: ["Hieu = ", "Tich = "],
+  3: ["Chu vi = ", "Dien tich = "],
+  4: ["Chu vi C = ", "Dien tich S = "],
+  6: ["Thoi gian (HH:MM:SS) = "],
+};
+const SINGLE_RESULT_LABELS = {
+  1: "Tong cua a va b = ",
+  5: "Trung binh cong = ",
+  7: "Hai so sau khi hoan doi = ",
+  8: "Thuong va so du = ",
+  9: "Tong tien phai tra = ",
+  10: "So tien sau giam = ",
+  25: "Tien dien phai tra = ",
+  26: "Gia ve phai tra = ",
+  27: "Phi van chuyen = ",
+};
+const OUTPUT_RULES = new Map([
+  [2, "In hiệu ở dòng thứ nhất và tích ở dòng thứ hai, mỗi kết quả có nhãn riêng."],
+  [3, "In chu vi trước, diện tích sau; mỗi kết quả trên một dòng và có nhãn."],
+  [4, "In chu vi C trước, diện tích S sau; mỗi kết quả trên một dòng, làm tròn đúng 2 chữ số sau dấu chấm (.), giữ số 0 tận cùng."],
+  [5, "In trung bình cộng với đúng 2 chữ số sau dấu chấm (.), giữ số 0 tận cùng."],
+  [6, "In thời gian theo đúng mẫu HH:MM:SS; giờ có thể lớn hơn 23."],
+  [10, "In giá sau giảm với đúng 2 chữ số sau dấu chấm (.), giữ số 0 tận cùng."],
+  [21, "Chỉ in đúng một nhãn phân loại theo đề bài."],
+  [23, "Chỉ in một chữ cái xếp loại, không kèm lời giải thích."],
+  [24, "In đúng trường hợp vô nghiệm/vô số nghiệm hoặc nghiệm với đúng 2 chữ số sau dấu chấm (.), giữ số 0 tận cùng. Nếu nghiệm bằng 0, in 0.00 không có dấu âm."],
+  [28, "Chỉ in đúng một nhãn vị trí theo đề bài."],
+  [30, "Chỉ in đúng một nhãn phân loại nghiệm theo đề bài."],
+  [65, "In đủ 10 dòng theo mẫu N x i = kết_quả; mỗi phép nhân trên một dòng."],
+  [66, "In đúng N hàng và N cột; các số trên một hàng cách nhau đúng một dấu cách."],
+  [67, "In đúng n hàng, mỗi hàng m dấu *; không thêm dòng mô tả."],
+  [68, "In tam giác căn trái; dòng thứ i có đúng i dấu *."],
+  [69, "In tam giác căn trái từ n dấu * giảm dần đến một dấu *."],
+  [70, "In các số trên từng dòng, cách nhau đúng một dấu cách."],
+  [71, "Dòng thứ i gồm i lần số i, các số cách nhau đúng một dấu cách."],
+  [72, "Căn giữa kim tự tháp bằng dấu cách; dòng i có n-i dấu cách đầu dòng và 2*i-1 dấu *."],
+  [73, "In kim tự tháp ngược; mỗi dòng sau thụt vào một dấu cách và giảm hai dấu *."],
+  [74, "Chỉ in viền hình chữ nhật; phần trong là dấu cách và không có dấu cách thừa cuối dòng."],
+  [75, "Bắt đầu bằng # ở góc trên trái; # và . thay phiên theo cả hàng lẫn cột."],
+  [46, "In H với đúng 6 chữ số sau dấu chấm (.), giữ đủ các số 0 tận cùng."],
+  [93, "In kết quả e^x với đúng 6 chữ số sau dấu chấm (.), giữ đủ các số 0 tận cùng."],
+  [129, "In giá trị Pi xấp xỉ với đúng 6 chữ số sau dấu chấm (.), giữ đủ các số 0 tận cùng."],
+  [130, "In S với đúng 6 chữ số sau dấu chấm (.), giữ đủ các số 0 tận cùng."],
+  [131, "In S với đúng 6 chữ số sau dấu chấm (.), giữ đủ các số 0 tận cùng."],
+  [132, "In S với đúng 6 chữ số sau dấu chấm (.), giữ đủ các số 0 tận cùng."],
+  [133, "Chỉ in viền hình vuông; phần trong là dấu cách."],
+  [134, "In hình X đúng kích thước N x N bằng dấu *."],
+  [135, "In dấu cộng đúng kích thước N x N bằng dấu *."],
+  [136, "Chỉ in hai cạnh và đáy của kim tự tháp; phần trong là dấu cách."],
+  [137, "In đồng hồ cát theo đúng số hàng và vị trí dấu *."],
+  [138, "In hình cánh bướm theo đúng hai nửa đối xứng."],
+  [139, "In tam giác Floyd; các số cách nhau đúng một dấu cách."],
+  [140, "In N dòng số 0 và 1 theo quy tắc bắt đầu của từng dòng."],
+  [141, "In N dòng; dòng i gồm M lần số i, cách nhau đúng một dấu cách."],
+  [142, "In đúng N hàng và M cột; phần tử hàng i, cột j bằng i*j."],
+  [143, "In kim tự tháp số đối xứng và căn giữa bằng dấu cách."],
+  [144, "In kim tự tháp số đối xứng ngược theo đúng số bậc."],
+  [145, "In viền hình thoi rỗng; phần trong là dấu cách."],
+  [146, "In hai cạnh và cạnh đáy của tam giác vuông rỗng."],
+  [147, "In tam giác vuông ngược rỗng theo đúng số hàng."],
+  [148, "Bắt đầu bằng X ở góc trên trái; X và dấu chấm thay phiên nhau."],
+  [149, "In N dòng đầu của tam giác Pascal; các số cùng dòng cách nhau một dấu cách."],
+  [150, "In hình bình hành rỗng; mỗi hàng lệch trái dần và chỉ có viền dấu *."],
+]);
+
+function taskSample(task) {
+  const firstTest = task.tests?.[0] || {};
+  return {
+    input: String(task.sample_input ?? firstTest.input ?? ""),
+    output: String(task.sample_output ?? firstTest.output ?? ""),
+  };
+}
+
+function taskPresentation(task, input = taskSample(task).input) {
+  const fieldNames = [];
+  const inputDescription = String(task.input || "");
+  const fieldPattern = /(^|[^\p{L}\p{N}])([A-Za-z])(?=$|[^\p{L}\p{N}])/gu;
+  for (const match of inputDescription.matchAll(fieldPattern)) {
+    const name = match[2];
+    if (!fieldNames.includes(name)) fieldNames.push(name);
+  }
+  const inputCount = String(input || "").trim().split(/\s+/).filter(Boolean).length;
+  const prompts = fieldNames.slice(0, inputCount).map((name) => `Nhap ${name} = `);
+
+  let resultLabel = SINGLE_RESULT_LABELS[task.id] || "Ket qua la: ";
+  const title = String(task.title || "").toLocaleLowerCase("vi");
+  if (task.id >= 65 && task.id <= 75 || task.id >= 91 && task.id <= 92 || task.id >= 133) {
+    resultLabel = "Ket qua:\n";
+  } else if (SINGLE_RESULT_LABELS[task.id]) {
+  } else if (/đếm/.test(title)) {
+    resultLabel = "So luong la: ";
+  } else if (/tổng/.test(title)) {
+    resultLabel = "Tong la: ";
+  } else if (/tìm/.test(title)) {
+    resultLabel = "Gia tri can tim la: ";
+  } else if (/kiểm tra/.test(title)) {
+    resultLabel = "Ket qua kiem tra: ";
+  } else if (/bảng|dãy|day/.test(title)) {
+    resultLabel = "Day so la:\n";
+  }
+  const lineLabels = RESULT_LABELS[task.id] || null;
+  const formattedOutput = (rawOutput) => {
+    const lines = String(rawOutput ?? "").split("\n");
+    if (lineLabels && lineLabels.length === lines.length)
+      return lines.map((line, index) => lineLabels[index] + line).join("\n");
+    return resultLabel + String(rawOutput ?? "");
+  };
+  const promptText = prompts.length ? prompts.join("\n") + "\n" : "";
+  return {
+    prompts,
+    promptText,
+    resultLabel,
+    lineLabels,
+    expected: (rawOutput) => promptText + formattedOutput(rawOutput),
+    guide: [
+      "Lời nhắc nhập (mỗi lời nhắc in trên một dòng, theo đúng thứ tự):",
+      ...(prompts.length ? prompts : ["Không có dữ liệu vào"]),
+      "Test tự cấp dữ liệu vào; chỉ in lời nhắc, không in lại giá trị đã nhập.",
+      "Mẫu phần kết quả:",
+      ...(lineLabels || [resultLabel.trimEnd()]),
+      OUTPUT_RULES.get(task.id) || "In đúng nhãn kết quả và thứ tự theo mẫu; không thêm lời giải thích hoặc nội dung thừa.",
+    ].join("\n"),
+  };
+}
+
+function renderFormatGuide(task) {
+  const guide = $("formatGuide");
+  const sample = taskSample(task);
+  const presentation = taskPresentation(task, sample.input);
+  guide.replaceChildren();
+  guide.hidden = false;
+  const title = document.createElement("b");
+  title.textContent = "Yêu cầu trình bày";
+  const details = document.createElement("pre");
+  const inputRule = presentation.prompts.length
+    ? `Nhập theo thứ tự: ${presentation.prompts.map((prompt) => prompt.trim()).join(" → ")}`
+    : "Nhập dữ liệu theo mẫu đề bài.";
+  const outputRule = `Kết quả: ${(presentation.lineLabels || [presentation.resultLabel.trimEnd()]).join(" · ")}`;
+  const taskRule = OUTPUT_RULES.get(task.id);
+  details.textContent = [inputRule, outputRule, taskRule].filter(Boolean).join("\n");
+  guide.append(title, details);
+}
+
+function sampleTranscript(task) {
+  const sample = taskSample(task);
+  const input = sample.input.replace(/\r/g, "");
+  const presentation = taskPresentation(task, input);
+  const inputLines = input.split("\n");
+  const inputTokens = input.trim().split(/\s+/).filter(Boolean);
+  let enteredLines;
+  if (presentation.prompts.length === inputTokens.length) {
+    enteredLines = presentation.prompts.map((prompt, index) => prompt + inputTokens[index]);
+  } else if (presentation.prompts.length === inputLines.length) {
+    enteredLines = presentation.prompts.map((prompt, index) => prompt + inputLines[index]);
+  } else {
+    // Arrays and grouped input stay in their original shape instead of inventing prompts.
+    enteredLines = inputLines.map((line) => `> ${line}`);
+  }
+  const promptBlock = presentation.promptText;
+  const formattedOutput = presentation.expected(sample.output).slice(promptBlock.length);
+  return [...enteredLines, formattedOutput].filter((line) => line !== "").join("\n");
+}
+
 function selectTask(id) {
   const task = TASKS.find((t) => t.id === id);
   if (!task) return;
@@ -1297,15 +1521,25 @@ function selectTask(id) {
     String(current.id).padStart(3, "0") + ". " + current.title;
   $("level").textContent = current.level;
   $("statement").textContent = current.statement;
+  const note = CONCEPT_NOTES.get(current.id) || "";
+  $("conceptNote").replaceChildren();
+  $("conceptNote").hidden = !note;
+  if (note) {
+    const noteTitle = document.createElement("b");
+    noteTitle.textContent = "Kiến thức cần nhớ";
+    const noteBody = document.createElement("p");
+    noteBody.textContent = note.replace(/^Kiến thức cần nhớ:\s*/, "");
+    $("conceptNote").append(noteTitle, noteBody);
+  }
+  renderFormatGuide(current);
   $("inputdesc").textContent = current.input;
   $("outputdesc").textContent = current.output;
   $("constraints").textContent = "Ràng buộc: " + current.constraints;
-  $("samplein").textContent = current.sample_input;
-  $("sampleout").textContent = current.sample_output;
+  $("sampleRun").textContent = sampleTranscript(current);
   $("tests").innerHTML = current.tests
     .map(
       (x, i) =>
-        `<div class="case ${i === 0 ? "selected" : ""}" data-index="${i}"><div class="casehead"><b>TEST ${String(x.no).padStart(2, "0")}</b><button data-copy="${i}" type="button">Chép input</button></div><div class="casegrid"><div><label>Input</label><pre>${escapeHTML(x.input)}</pre></div><div><label>Expected output</label><pre>${escapeHTML(x.output)}</pre></div></div></div>`,
+        `<div class="case ${i === 0 ? "selected" : ""}" data-index="${i}"><div class="casehead"><b>TEST ${String(x.no).padStart(2, "0")}</b><button data-copy="${i}" type="button">Chép input</button></div><div class="casegrid"><div><label>Input</label><pre>${escapeHTML(x.input)}</pre></div><div><label>Expected output</label><pre>${escapeHTML(taskPresentation(current, x.input).expected(x.output))}</pre></div></div></div>`,
     )
     .join("");
   $("tests").classList.add("collapsed");
@@ -1370,6 +1604,8 @@ function createRun(task, code, kind) {
     controller: new AbortController(),
     state: "running",
     pass: 0,
+    formatErrors: 0,
+    presentationPenalty: 0,
     lines: [],
     currentTest: 0,
     total: kind === "batch" ? task.tests.length : 1,
@@ -1645,7 +1881,7 @@ async function runCompiled(module, stdin, signal) {
       exitCode: "TLE",
     };
   return {
-    output: String(result.stdout || "").trimEnd(),
+    output: String(result.stdout || "").replace(/\r/g, ""),
     stderr: String(result.stderr || "").trimEnd(),
     runtimeError: result.runtimeError || "",
     timeLimitExceeded: false,
@@ -1662,10 +1898,61 @@ function normalize(s) {
     .replace(/\r/g, "")
     .trimEnd();
 }
-function testResultLabel(result, expected) {
-  if (result.timeLimitExceeded) return "TLE (> 1,0 giây)";
-  if (result.exitCode !== "0") return `RUNTIME ERROR (exit ${result.exitCode})`;
-  return normalize(result.output) === normalize(expected) ? "PASS" : "FAIL";
+function normalizeProgramOutput(value) {
+  return String(value ?? "").replace(/\r\n?/g, "\n").replace(/\n$/, "");
+}
+function hasExpectedSemanticOutput(actual, expected, task) {
+  const a = normalizeProgramOutput(actual);
+  const e = normalizeProgramOutput(expected);
+  const numericOnly = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:\s+[+-]?(?:\d+(?:\.\d*)?|\.\d+))*$/;
+  if (numericOnly.test(e.trim())) {
+    const decimals = Number(String(task.output || "").match(/(\d+)\s+chữ số sau/)?.[1]);
+    const numberPattern = Number.isInteger(decimals)
+      ? /[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)/g
+      : /[+-]?(?:\d+(?:\.\d*)?|\.\d+)/g;
+    const parseNumbers = (text) =>
+      (text.match(numberPattern) || []).map((number) => Number(number.replace(",", ".")));
+    const expectedNumbers = parseNumbers(e);
+    const actualNumbers = parseNumbers(a);
+    if (expectedNumbers.length && actualNumbers.length >= expectedNumbers.length) {
+      const actualSuffix = actualNumbers.slice(-expectedNumbers.length);
+      if (expectedNumbers.every((number, index) => number === actualSuffix[index])) return true;
+      if (Number.isInteger(decimals) && decimals >= 0 && decimals <= 10) {
+        const scale = 10 ** decimals;
+        if (expectedNumbers.every((number, index) =>
+          Math.round(actualSuffix[index] * scale + Number.EPSILON) / scale === number,
+        )) return true;
+      }
+    }
+  }
+  const trimLineTails = (text) => text.split("\n").map((line) => line.replace(/[\t ]+$/g, "")).join("\n").replace(/\n+$/g, "");
+  return trimLineTails(a).includes(trimLineTails(e));
+}
+// VI: Phân loại mức lỗi trình bày sau khi đã khớp nội dung đáp án. EN: Rank formatting-only mismatches after semantic output matches.
+function presentationSeverity(actual, expected, presentation) {
+  const compact = (value) => String(value ?? "").toLocaleLowerCase("vi").replace(/[\s\p{P}\p{S}]/gu, "");
+  if (compact(actual) === compact(expected)) return 0.05;
+  const required = [...presentation.prompts, ...(presentation.lineLabels || [presentation.resultLabel])];
+  const actualText = normalizeProgramOutput(actual);
+  const allLabelsPresent = required.every((label) => actualText.includes(label));
+  if (!allLabelsPresent) return 0.10;
+  return 0.15;
+}
+function classifyTestResult(result, task, test) {
+  if (result.timeLimitExceeded) return { status: "TLE", message: "QUÁ THỜI GIAN", penalty: 0 };
+  if (result.exitCode !== "0") return { status: "RUNTIME", message: "LỖI CHẠY", penalty: 0 };
+  const presentation = taskPresentation(task, test.input);
+  const expected = presentation.expected(test.output);
+  const actual = normalizeProgramOutput(result.output);
+  if (actual === normalizeProgramOutput(expected)) return { status: "PASS", message: "ĐÚNG", penalty: 0 };
+  if (hasExpectedSemanticOutput(actual, test.output, task)) {
+    return {
+      status: "PRESENTATION",
+      message: "ĐÚNG THUẬT TOÁN · LỖI TRÌNH BÀY",
+      penalty: presentationSeverity(actual, expected, presentation),
+    };
+  }
+  return { status: "FAIL", message: "SAI", penalty: 0 };
 }
 function scoreStatusClass(passed, total) {
   const ratio = total ? passed / total : 0;
@@ -1700,17 +1987,23 @@ $("runone").onclick = async () => {
     const result = await compileRun(stdin, job.code, job.controller.signal);
     if (job.controller.signal.aborted)
       throw new DOMException("Đã hủy phiên chấm.", "AbortError");
-    const ok =
-      !result.timeLimitExceeded &&
-      result.exitCode === "0" &&
-      target &&
-      normalize(result.output) === normalize(target.output);
+    const grade = target
+      ? classifyTestResult(result, task, target)
+      : { status: "FAIL", message: "INPUT KHÔNG THUỘC TEST", penalty: 0 };
+    const ok = grade.status === "PASS";
+    const singleRunOutcome = !target
+      ? "wrong"
+      : result.timeLimitExceeded || result.exitCode !== "0"
+        ? "runtime_error"
+        : grade.status === "FAIL"
+          ? "wrong"
+          : "partial";
     await saveCodeSubmission(
       task.id,
       job.code,
       null,
       target?.no || null,
-      !target ? "wrong" : result.timeLimitExceeded ? "runtime_error" : ok ? "accepted" : result.exitCode !== "0" ? "runtime_error" : "wrong",
+      singleRunOutcome,
       "single",
     );
     job.state = "completed";
@@ -1721,17 +2014,17 @@ $("runone").onclick = async () => {
         (result.stderr ? "\n\nStandard error:\n" + result.stderr : "") +
         (result.runtimeError ? "\n\nRuntime error:\n" + result.runtimeError : "") +
         (target
-          ? "\n\nExpected output:\n" + target.output
+          ? "\n\nExpected output:\n" + taskPresentation(task, target.input).expected(target.output)
           : "\n\nInput này không thuộc 20 test mẫu.");
     updateJobView(
       job,
       result.timeLimitExceeded
         ? "QUÁ THỜI GIAN (TLE) · Vượt giới hạn 1,0 giây."
-        : ok
-          ? "ĐÚNG với test đang chọn."
-          : "CHƯA KHỚP output mong đợi.",
+        : grade.message,
       ok
         ? "ok"
+        : grade.status === "PRESENTATION"
+          ? "warn"
         : result.timeLimitExceeded
           ? "warn"
           : result.exitCode !== "0"
@@ -1807,18 +2100,13 @@ $("runall").onclick = async () => {
       const result = await runCompiled(module, test.input, job.controller.signal);
       if (job.controller.signal.aborted)
         throw new DOMException("Đã hủy phiên chấm.", "AbortError");
-      const label = testResultLabel(result, test.output);
-      const ok = label === "PASS";
-      if (ok) job.pass++;
-      const shortResult =
-        label === "PASS"
-          ? "ĐÚNG"
-          : label === "FAIL"
-            ? "SAI"
-            : label.startsWith("TLE")
-              ? "QUÁ THỜI GIAN"
-              : "LỖI CHẠY";
-      job.lines.push(`TEST ${i + 1}: ${shortResult}`);
+      const grade = classifyTestResult(result, job.task, test);
+      if (grade.status === "PASS" || grade.status === "PRESENTATION") job.pass++;
+      if (grade.status === "PRESENTATION") {
+        job.formatErrors++;
+        job.presentationPenalty += grade.penalty;
+      }
+      job.lines.push(`TEST ${i + 1}: ${grade.message}`);
       updateJobView(
         job,
         `Đang chấm bài ${job.taskId}: ${i + 1}/${job.total} test · Đúng ${job.pass} test.`,
@@ -1829,7 +2117,14 @@ $("runall").onclick = async () => {
     if (job.controller.signal.aborted)
       throw new DOMException("Đã hủy phiên chấm.", "AbortError");
     await refreshSuspensionStatus();
-    const score = Math.round((job.pass / job.total) * 100) / 10;
+    // VI: Chấm đủ test trước rồi mới trừ tổng lỗi trình bày; không hạ điểm cao nhất đã lưu.
+    // EN: Apply the capped formatting deduction after all tests; preserve the saved high score.
+    const requestedPenalty = Math.min(1.5, job.presentationPenalty);
+    const rawScore = Math.max(0, job.pass * 0.5 - requestedPenalty);
+    const score = job.formatErrors
+      ? Math.floor(rawScore * 10 + 1e-8) / 10
+      : rawScore;
+    const appliedPenalty = Math.max(0, job.pass * 0.5 - score);
     const suspendedForRun = accountSuspended;
     const oldBest =
       bestScores[job.taskId] === undefined
@@ -1838,26 +2133,27 @@ $("runall").onclick = async () => {
     const improved = score > oldBest;
     if (improved && !suspendedForRun) {
       bestScores[job.taskId] = score;
+      bestScoreMeta[job.taskId] = { testsPassed: job.pass, points: score };
       persistScores();
     }
     job.state = "completed";
-    const cloudNote = suspendedForRun ? "\nT\u00e0i kho\u1ea3n \u0111ang b\u1ecb \u0111\u00ecnh ch\u1ec9: l\u01b0\u1ee3t ch\u1ea5m n\u00e0y kh\u00f4ng t\u00ednh \u0111i\u1ec3m." : await syncScoreAfterGrading(job.taskId, job.pass);
+    const cloudNote = suspendedForRun ? "\nT\u00e0i kho\u1ea3n \u0111ang b\u1ecb \u0111\u00ecnh ch\u1ec9: l\u01b0\u1ee3t ch\u1ea5m n\u00e0y kh\u00f4ng t\u00ednh \u0111i\u1ec3m." : await syncScoreAfterGrading(job.taskId, job.pass, score);
     await saveCodeSubmission(
       job.taskId,
       job.code,
       job.pass,
       null,
-      job.pass === job.total ? "accepted" : job.pass === 0 ? "wrong" : "partial",
+      job.pass === job.total && job.formatErrors === 0 ? "accepted" : job.pass === 0 ? "wrong" : "partial",
       "batch",
     );
     const best = Number(bestScores[job.taskId] ?? (suspendedForRun ? 0 : score));
     const summary = suspendedForRun
-      ? `\n\nHoàn tất: ${job.pass}/${job.total} test đúng. Tài khoản đang bị đình chỉ nên lượt này không được tính điểm.\nĐiểm cao nhất đã lưu trước đó: ${best.toFixed(1)}/10.${cloudNote}`
-      : `\n\nHoàn tất: ${job.pass}/${job.total} test đúng.\nĐiểm cao nhất được lưu: ${best.toFixed(1)}/10${improved ? " (đã cập nhật)" : " (giữ nguyên, không bị giảm)"}.${cloudNote}`;
+      ? `\n\nHoàn tất: ${job.pass}/${job.total} test đúng thuật toán; ${job.formatErrors} test lỗi trình bày. Tài khoản đang bị đình chỉ nên lượt này không được tính điểm.\nĐiểm cao nhất đã lưu trước đó: ${best.toFixed(1)}/10.${cloudNote}`
+      : `\n\nHoàn tất: ${job.pass}/${job.total} test đúng thuật toán; ${job.formatErrors} test lỗi trình bày.\nTrừ ${appliedPenalty.toFixed(1)} điểm do trình bày. Điểm lượt này: ${score.toFixed(1)}/10.\nĐiểm cao nhất được lưu: ${best.toFixed(1)}/10${improved ? " (đã cập nhật)" : " (giữ nguyên, không bị giảm)"}.${cloudNote}`;
     updateJobView(
       job,
       `Đã chấm xong bài ${job.taskId}: ${job.pass}/${job.total} test đúng · Điểm cao nhất ${best.toFixed(1)}/10.`,
-      scoreStatusClass(Math.round(best * 2), job.total),
+      scoreStatusClass(Math.floor(best * 2), job.total),
       job.lines.join("\n") + summary,
     );
     updateProgress();

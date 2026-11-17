@@ -9,7 +9,9 @@ self.onmessage = async (event) => {
     const result = await compile({
       source: event.data.source,
       fileName: "/main.cpp",
-      flags: ["-std=c++20", "-O2", "-Wl,--max-memory=268435456"],
+      // Browsercc's WASI sysroot does not ship the C++ exception runtime.
+      // VI: WASI compiler nay khong co runtime exception; vo hieu hoa exceptions de iostream link duoc.
+      flags: ["-std=c++20", "-O2", "-fno-exceptions", "-Wl,--max-memory=268435456"],
     });
 
     if (!result.module) {

@@ -186,8 +186,61 @@ main {
 }
 .statement {
   color: #dce2fb;
+  font-size: 17px;
+  line-height: 1.75;
+  margin: 0;
+  white-space: pre-line;
+}
+.problem-copy {
+  margin: 16px 0;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent2);
+  border-radius: 14px;
+  background: linear-gradient(135deg, #18223b, #11192e);
+}
+.problem-copy-title {
+  margin: 0 0 10px;
+  color: var(--accent2);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+.concept-note,
+.format-guide {
+  margin-top: 14px;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  color: #e3e9ff;
   font-size: 15px;
-  margin: 8px 0 16px;
+  line-height: 1.65;
+  white-space: pre-line;
+}
+.concept-note {
+  border-left: 4px solid var(--gold);
+  background: #29243a;
+}
+.format-guide {
+  border-left: 4px solid var(--accent2);
+  background: #111c31;
+}
+.concept-note b,
+.format-guide b {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--gold);
+  font-size: 16px;
+}
+.concept-note p {
+  margin: 0;
+}
+.format-guide pre {
+  margin: 6px 0 0;
+  color: inherit;
+  font: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 .grid2 {
   display: grid;
@@ -201,14 +254,16 @@ main {
   background: #10172c;
 }
 .info h3 {
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: 800;
   color: var(--accent2);
   margin: 0 0 6px;
 }
 .info p {
   margin: 0;
   color: #d4dcf5;
-  font-size: 13px;
+  font-size: 15px;
+  line-height: 1.6;
 }
 .constraints {
   margin: 12px 0 16px;
@@ -217,13 +272,16 @@ main {
   background: #28243a;
   border-radius: 6px;
   color: #f4e7c8;
-  font-size: 13px;
+  font-size: 14px;
 }
 .sample {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin: 12px 0 18px;
+}
+.sample-single {
+  grid-template-columns: 1fr;
 }
 .samplebox {
   border: 1px solid var(--line);
@@ -243,8 +301,13 @@ main {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
   margin: 0;
-  font: 12px/1.5 var(--mono);
+  font: 13px/1.55 var(--mono);
   color: #e6eaff;
+}
+.sample-single .samplebox pre {
+  min-height: 2.5em;
+  padding-left: 10px;
+  border-left: 2px solid var(--accent, #7aa2f7);
 }
 .secthead {
   display: flex;
@@ -407,6 +470,10 @@ textarea#stdin {
 }
 #runoutput .test-result-pass {
   color: #68e2a2;
+}
+#runoutput .test-result-presentation {
+  color: #f2c86d;
+  font-weight: 700;
 }
 #runoutput .test-result-fail {
   color: #ff858d;
