@@ -688,7 +688,11 @@ function bindAvatarImages(root) {
   });
 }
 function formatLocalDate(value) {
-  return value ? new Date(value).toLocaleString("vi-VN") : "—";
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  const options = { timeZone: "Asia/Ho_Chi_Minh" };
+  return date.toLocaleTimeString("vi-VN", { ...options, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" }) + " · " + date.toLocaleDateString("vi-VN", { ...options, day: "2-digit", month: "2-digit", year: "numeric" });
 }
 function canManagePassword(user) {
   return (user?.identities || []).some((identity) => identity.provider === "email");
@@ -702,31 +706,20 @@ async function openProfile(userId) {
   content.innerHTML = '<div class="auth-loading">Đang tải hồ sơ…</div>';
   openOverlay("profileOverlay");
   try {
-    const [profileResult, progressResult, historyResult] = await Promise.all([
+    const [profileResult, progressResult] = await Promise.all([
       supabase.rpc("get_member_profile", { p_user_id: userId }),
       supabase.rpc("get_member_progress", { p_user_id: userId }),
-      supabase.rpc("list_member_submissions", {
-        p_user_id: userId,
-        p_limit: 100,
-      }),
     ]);
     const error =
-      profileResult.error || progressResult.error || historyResult.error;
+      profileResult.error || progressResult.error;
     if (error) throw error;
     const profile = profileResult.data?.[0];
     if (!profile) throw new Error("Không tìm thấy hồ sơ thành viên.");
 
     const ownProfile = userId === currentUser.id;
-    const isAdmin = myRole === "admin" || myRole === "super_admin";
     const solved = Number(profile.solved || 0);
     const level = getMemberLevel(solved);
     const progress = progressResult.data || [];
-    const history = historyResult.data || [];
-    const historyNote = ownProfile
-      ? "Chỉ bạn và Admin được xem các bản code chưa hoàn thành."
-      : isAdmin
-        ? "Bạn đang xem toàn bộ lịch sử code của thành viên này với quyền Admin."
-        : "Các bản code chỉ hiển thị khi thành viên đã đạt 10/10 bài tương ứng.";
     const emailIdentity = ownProfile && canManagePassword(currentUser);
     const accountSettings = ownProfile
       ? `<div class="profile-section"><button class="btn" type="button" data-profile-action="rename">✎ Đổi tên hiển thị</button></div>
@@ -779,18 +772,6 @@ async function openProfile(userId) {
                 .join("")
             : '<p class="profile-subtle">Chưa có tiến độ bài tập.</p>'
         }</div>
-      </section>
-      <section class="profile-section"><h3>Lịch sử code</h3><p class="profile-subtle">${historyNote}</p>
-        ${
-          history.length
-            ? history
-                .map(
-                  (item) =>
-                    `<details class="profile-history-item"><summary>Bài ${String(item.problem_id).padStart(3, "0")} · ${({accepted:"Đúng",partial:"Chưa đạt hết",wrong:"Sai",compile_error:"Lỗi biên dịch",runtime_error:"Lỗi chạy",cancelled:"Đã hủy"})[item.outcome] || "Đã chạy"} · ${item.test_no ? `Test ${item.test_no}` : `${item.tests_passed ?? 0}/20 test đúng`} · ${formatLocalDate(item.created_at)}</summary><pre>${escapeHTML(item.source_code)}</pre></details>`,
-                )
-                .join("")
-            : '<p class="profile-subtle">Chưa có bản code sai hoặc chưa đạt được lưu để hiển thị.</p>'
-        }
       </section>
       ${accountSettings}`;
     bindAvatarImages(content);
