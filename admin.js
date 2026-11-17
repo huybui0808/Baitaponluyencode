@@ -880,11 +880,11 @@ async function openUserDrawer(u) {
       if (x === "codes") {
         const target = $("#adminUserCodeHistory");
         target.innerHTML = '<div class="adm-loading">Đang tải lịch sử code…</div>';
-        const codes = await rpc("list_member_submissions", {
+        const codes = (await rpc("list_member_submissions", {
           p_user_id: u.user_id,
           p_limit: 100,
-        });
-        target.innerHTML = `<h2 style="font-size:15px">Lịch sử code (${codes.length})</h2>${codes.length ? codes.map((row) => `<details class="adm-tc"><summary><b>Bài ${pad3(row.problem_id)}</b> · ${row.tests_passed == null ? (row.test_no ? `Test ${row.test_no}` : "Đã chạy") : `${row.tests_passed}/20 test đúng`} · ${fmt(row.created_at)}</summary><textarea class="adm-textarea" readonly style="min-height:240px">${esc(row.source_code)}</textarea></details>`).join("") : '<div class="adm-empty">Chưa có bản code được lưu.</div>'}`;
+        })).filter((row) => row.outcome !== "accepted");
+        target.innerHTML = `<h2 style="font-size:15px">Lịch sử code chưa đạt (${codes.length})</h2>${codes.length ? codes.map((row) => `<details class="adm-tc"><summary><b>Bài ${pad3(row.problem_id)}</b> · ${row.tests_passed == null ? (row.test_no ? `Test ${row.test_no}` : "Đã chạy") : `${row.tests_passed}/20 test đúng`} · ${fmt(row.created_at)}</summary><textarea class="adm-textarea" readonly style="min-height:240px">${esc(row.source_code)}</textarea></details>`).join("") : '<div class="adm-empty">Chưa có bản code sai hoặc chưa đạt để hiển thị.</div>'}`;
         return;
       } else if (x === "lock") {
         if (

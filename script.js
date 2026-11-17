@@ -565,7 +565,9 @@ async function loadSubmissions(reset = true) {
   const { data, error } = await supabase.rpc("list_code_submissions", { p_scope: submissionScope, p_limit: SUBMISSION_PAGE_SIZE, p_offset: submissionOffset });
   if (error) { list.textContent = "Không tải được lịch sử: " + error.message; return; }
   const outcomeFilter = $("submissionOutcome").value;
-  const rows = (data || []).filter(row => !outcomeFilter || row.outcome === outcomeFilter);
+  // Successful full submissions remain in storage for scoring/audit, but are
+  // intentionally omitted from the visible "submitted code" history.
+  const rows = (data || []).filter(row => row.outcome !== "accepted" && (!outcomeFilter || row.outcome === outcomeFilter));
   const canDeleteSubmissions = myRole === "admin" || myRole === "super_admin";
   const markup = rows.map(row => {
     const outcomeNames = {accepted:"Đúng", partial:"Chưa đạt hết", wrong:"Sai", compile_error:"Lỗi biên dịch", runtime_error:"Lỗi chạy", cancelled:"Đã hủy"};
@@ -702,7 +704,7 @@ async function openProfile(userId) {
     const solved = Number(profile.solved || 0);
     const level = getMemberLevel(solved);
     const progress = progressResult.data || [];
-    const history = historyResult.data || [];
+    const history = (historyResult.data || []).filter((item) => item.outcome !== "accepted");
     const historyNote = ownProfile
       ? "Chỉ bạn và Admin được xem các bản code chưa hoàn thành."
       : isAdmin
@@ -770,7 +772,7 @@ async function openProfile(userId) {
                     `<details class="profile-history-item"><summary>Bài ${String(item.problem_id).padStart(3, "0")} · ${({accepted:"Đúng",partial:"Chưa đạt hết",wrong:"Sai",compile_error:"Lỗi biên dịch",runtime_error:"Lỗi chạy",cancelled:"Đã hủy"})[item.outcome] || "Đã chạy"} · ${item.test_no ? `Test ${item.test_no}` : `${item.tests_passed ?? 0}/20 test đúng`} · ${formatLocalDate(item.created_at)}</summary><pre>${escapeHTML(item.source_code)}</pre></details>`,
                 )
                 .join("")
-            : '<p class="profile-subtle">Chưa có bản code được lưu hoặc thành viên chưa hoàn thành bài nào để chia sẻ.</p>'
+            : '<p class="profile-subtle">Chưa có bản code sai hoặc chưa đạt được lưu để hiển thị.</p>'
         }
       </section>
       ${accountSettings}`;
@@ -1364,6 +1366,11 @@ const SINGLE_RESULT_LABELS = {
   26: "Gia ve phai tra = ",
   27: "Phi van chuyen = ",
 };
+// VI: Bài không ghi ký hiệu biến trong mô tả vẫn cần nhãn nhập rõ ràng.
+// EN: Add an explicit input prompt when the statement names a value, not a variable.
+const INPUT_LABELS = {
+  26: ["Nhap tuoi = "],
+};
 const OUTPUT_RULES = new Map([
   [2, "In hiệu ở dòng thứ nhất và tích ở dòng thứ hai, mỗi kết quả có nhãn riêng."],
   [3, "In chu vi trước, diện tích sau; mỗi kết quả trên một dòng và có nhãn."],
@@ -1430,7 +1437,7 @@ function taskPresentation(task, input = taskSample(task).input) {
     if (!fieldNames.includes(name)) fieldNames.push(name);
   }
   const inputCount = String(input || "").trim().split(/\s+/).filter(Boolean).length;
-  const prompts = fieldNames.slice(0, inputCount).map((name) => `Nhap ${name} = `);
+  const prompts = INPUT_LABELS[task.id] || fieldNames.slice(0, inputCount).map((name) => `Nhap ${name} = `);
 
   let resultLabel = SINGLE_RESULT_LABELS[task.id] || "Ket qua la: ";
   const title = String(task.title || "").toLocaleLowerCase("vi");
@@ -1455,17 +1462,51 @@ function taskPresentation(task, input = taskSample(task).input) {
       return lines.map((line, index) => lineLabels[index] + line).join("\n");
     return resultLabel + String(rawOutput ?? "");
   };
-  const promptText = prompts.length ? prompts.join("\n") + "\n" : "";
+  // EN: The judge supplies stdin without terminal echo. Keep program stdout
+  // faithful, then build a visible terminal transcript with echoed inputs.
+  // VI: Test dùng stdin nên không tự echo; giữ stdout thật và ghép input vào
+  // transcript hiển thị ngay sau từng prompt.
+  const promptText = prompts.join("");
+  const inputEchoValues = (inputValue) => {
+    const normalizedInput = String(inputValue ?? "").replace(/\r/g, "").trim();
+    const tokens = normalizedInput ? normalizedInput.split(/\s+/) : [];
+    const lines = normalizedInput ? normalizedInput.split("\n") : [];
+    if (prompts.length && prompts.length === tokens.length) return tokens;
+    if (prompts.length && prompts.length === lines.length) return lines;
+    return null;
+  };
+  const expectedProgramOutput = (rawOutput) => promptText + formattedOutput(rawOutput);
+  const expected = (rawOutput, inputValue = input) => {
+    const values = inputEchoValues(inputValue);
+    if (!values) return expectedProgramOutput(rawOutput);
+    return prompts.map((prompt, index) => `${prompt}${values[index]}\n`).join("") + formattedOutput(rawOutput);
+  };
+  const renderConsoleOutput = (rawOutput, inputValue = input) => {
+    const values = inputEchoValues(inputValue);
+    if (!values) return String(rawOutput ?? "");
+    let cursor = 0;
+    let transcript = "";
+    for (let index = 0; index < prompts.length; index++) {
+      const promptAt = String(rawOutput ?? "").indexOf(prompts[index], cursor);
+      if (promptAt < 0) return String(rawOutput ?? "");
+      transcript += String(rawOutput ?? "").slice(cursor, promptAt);
+      transcript += `${prompts[index]}${values[index]}\n`;
+      cursor = promptAt + prompts[index].length;
+    }
+    return transcript + String(rawOutput ?? "").slice(cursor);
+  };
   return {
     prompts,
     promptText,
     resultLabel,
     lineLabels,
-    expected: (rawOutput) => promptText + formattedOutput(rawOutput),
+    expected,
+    expectedProgramOutput,
+    renderConsoleOutput,
     guide: [
-      "Lời nhắc nhập (mỗi lời nhắc in trên một dòng, theo đúng thứ tự):",
+      "Mỗi lời nhắc nhập giữ trên cùng dòng với giá trị được nhập, đúng thứ tự sau:",
       ...(prompts.length ? prompts : ["Không có dữ liệu vào"]),
-      "Test tự cấp dữ liệu vào; chỉ in lời nhắc, không in lại giá trị đã nhập.",
+      "Test tự cấp dữ liệu và mô phỏng terminal hiện giá trị ngay sau lời nhắc. Không tự xuống dòng sau lời nhắc trước khi nhập.",
       "Mẫu phần kết quả:",
       ...(lineLabels || [resultLabel.trimEnd()]),
       OUTPUT_RULES.get(task.id) || "In đúng nhãn kết quả và thứ tự theo mẫu; không thêm lời giải thích hoặc nội dung thừa.",
@@ -1493,22 +1534,8 @@ function renderFormatGuide(task) {
 
 function sampleTranscript(task) {
   const sample = taskSample(task);
-  const input = sample.input.replace(/\r/g, "");
-  const presentation = taskPresentation(task, input);
-  const inputLines = input.split("\n");
-  const inputTokens = input.trim().split(/\s+/).filter(Boolean);
-  let enteredLines;
-  if (presentation.prompts.length === inputTokens.length) {
-    enteredLines = presentation.prompts.map((prompt, index) => prompt + inputTokens[index]);
-  } else if (presentation.prompts.length === inputLines.length) {
-    enteredLines = presentation.prompts.map((prompt, index) => prompt + inputLines[index]);
-  } else {
-    // Arrays and grouped input stay in their original shape instead of inventing prompts.
-    enteredLines = inputLines.map((line) => `> ${line}`);
-  }
-  const promptBlock = presentation.promptText;
-  const formattedOutput = presentation.expected(sample.output).slice(promptBlock.length);
-  return [...enteredLines, formattedOutput].filter((line) => line !== "").join("\n");
+  const presentation = taskPresentation(task, sample.input);
+  return presentation.expected(sample.output, sample.input);
 }
 
 function selectTask(id) {
@@ -1942,14 +1969,18 @@ function classifyTestResult(result, task, test) {
   if (result.timeLimitExceeded) return { status: "TLE", message: "QUÁ THỜI GIAN", penalty: 0 };
   if (result.exitCode !== "0") return { status: "RUNTIME", message: "LỖI CHẠY", penalty: 0 };
   const presentation = taskPresentation(task, test.input);
-  const expected = presentation.expected(test.output);
   const actual = normalizeProgramOutput(result.output);
-  if (actual === normalizeProgramOutput(expected)) return { status: "PASS", message: "ĐÚNG", penalty: 0 };
+  const expectedProgramOutput = normalizeProgramOutput(
+    presentation.expectedProgramOutput(test.output),
+  );
+  if (actual === expectedProgramOutput) return { status: "PASS", message: "ĐÚNG", penalty: 0 };
   if (hasExpectedSemanticOutput(actual, test.output, task)) {
+    const expectedTranscript = presentation.expected(test.output, test.input);
+    const actualTranscript = presentation.renderConsoleOutput(actual, test.input);
     return {
       status: "PRESENTATION",
       message: "ĐÚNG THUẬT TOÁN · LỖI TRÌNH BÀY",
-      penalty: presentationSeverity(actual, expected, presentation),
+      penalty: presentationSeverity(actualTranscript, expectedTranscript, presentation),
     };
   }
   return { status: "FAIL", message: "SAI", penalty: 0 };
@@ -2010,7 +2041,9 @@ $("runone").onclick = async () => {
     const text = result.timeLimitExceeded
       ? "Kết quả: TIME LIMIT EXCEEDED (TLE)\nChương trình vượt giới hạn thực thi 1,0 giây."
       : "Program output:\n" +
-        (result.output || "(không có output)") +
+        (target
+          ? taskPresentation(task, target.input).renderConsoleOutput(result.output, target.input)
+          : result.output || "(không có output)") +
         (result.stderr ? "\n\nStandard error:\n" + result.stderr : "") +
         (result.runtimeError ? "\n\nRuntime error:\n" + result.runtimeError : "") +
         (target
