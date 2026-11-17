@@ -1540,7 +1540,7 @@
     "level": "Trung bình",
     "statement": "Giải phương trình ax + b = 0. Xét riêng trường hợp a=0: nếu b=0 thì vô số nghiệm, nếu b khác 0 thì vô nghiệm.",
     "input": "Một dòng gồm hai số nguyên a, b.",
-    "output": "In INFINITE, NO SOLUTION hoặc nghiệm x với 2 chữ số sau dấu phẩy.",
+    "output": "In INFINITE, NO SOLUTION hoặc nghiệm x với đúng 2 chữ số sau dấu chấm thập phân (.), giữ số 0 tận cùng. Nếu nghiệm bằng 0, in 0.00 không có dấu âm.",
     "constraints": "-10^6 <= a, b <= 10^6.",
     "kind": "linear",
     "gen": "linear",
