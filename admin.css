@@ -7,8 +7,8 @@
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(ellipse at 15% -10%, rgb(72 61 94 / 18%) 0, transparent 40%),
-    radial-gradient(ellipse at 100% 0, rgb(48 82 94 / 13%) 0, transparent 35%), var(--bg);
+    radial-gradient(ellipse at 15% -10%, color-mix(in srgb, var(--accent) 6%, transparent) 0, transparent 40%),
+    radial-gradient(ellipse at 100% 0, color-mix(in srgb, var(--accent2) 5%, transparent) 0, transparent 35%), var(--bg);
   color: var(--text);
   overflow: hidden;
 }
@@ -26,7 +26,7 @@
   gap: 14px;
   padding: 12px max(16px, calc((100% - 1280px) / 2));
   border-bottom: 1px solid var(--line);
-  background: #0c1020d9;
+  background: var(--header-bg);
   backdrop-filter: blur(14px);
   position: relative;
   z-index: 3;
@@ -46,8 +46,9 @@
   display: grid;
   place-items: center;
   font-size: 16px;
-  background: linear-gradient(135deg, #7a68e6, #3f9bc0);
-  box-shadow: 0 6px 18px #6e5dc455;
+  color: var(--on-accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 34%, transparent);
 }
 .adm-tabs {
   display: flex;
@@ -71,12 +72,12 @@
 }
 .adm-tab:hover {
   color: var(--text);
-  background: #1b2340;
+  background: var(--panel2);
 }
 .adm-tab.active {
-  color: #fff;
-  background: linear-gradient(110deg, #5c4ec0, #3d7fa0);
-  box-shadow: 0 6px 16px #5c4ec040;
+  color: var(--on-accent);
+  background: linear-gradient(110deg, var(--accent), var(--accent2));
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 25%, transparent);
 }
 .adm-spacer {
   flex: 1;
@@ -89,13 +90,13 @@
   letter-spacing: 0.3px;
   border: 1px solid var(--line);
   color: var(--gold);
-  background: #1c1a2e;
+  background: var(--notice-bg);
   white-space: nowrap;
 }
 .adm-role.super {
-  color: #ffd98a;
+  color: var(--gold);
   border-color: #8a6d2c;
-  background: #2b2412;
+  background: var(--doing-bg);
 }
 .adm-iconbtn {
   width: 38px;
@@ -104,7 +105,7 @@
   place-items: center;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #18213d;
+  background: var(--control-bg);
   color: var(--text);
   cursor: pointer;
   font-size: 16px;
@@ -112,7 +113,7 @@
 }
 .adm-iconbtn:hover {
   border-color: var(--accent);
-  background: #232c52;
+  background: var(--panel2);
 }
 .adm-more {
   position: relative;
@@ -126,7 +127,7 @@
   z-index: 10;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #141a31;
+  background: var(--panel);
   box-shadow: 0 18px 50px #000a;
   animation: adm-pop 0.14s ease;
 }
@@ -149,11 +150,11 @@
   cursor: pointer;
 }
 .adm-menu .adm-item:hover {
-  background: #222b50;
+  background: var(--panel2);
 }
 .adm-menu .adm-item.active {
-  background: #29234d;
-  color: #fff;
+  background: var(--active-bg);
+  color: var(--active-text);
 }
 .adm-menu .adm-item small {
   margin-left: auto;
@@ -206,7 +207,7 @@
 .adm-card {
   border: 1px solid var(--line);
   border-radius: 16px;
-  background: linear-gradient(180deg, #171e38, #11172b);
+  background: linear-gradient(180deg, var(--panel-raised), var(--panel));
   box-shadow: 0 14px 36px #0003;
   padding: 18px;
 }
@@ -232,7 +233,7 @@
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background: var(--tint, #6e5dc4);
+  background: var(--tint, var(--accent));
   opacity: 0.16;
 }
 .adm-stat .lbl {
@@ -258,7 +259,7 @@
   padding: 9px 14px;
   border-radius: 10px;
   border: 1px solid var(--line);
-  background: #18213d;
+  background: var(--control-bg);
   color: var(--text);
   font: inherit;
   font-size: 13px;
@@ -267,24 +268,24 @@
 }
 .adm-btn:hover {
   border-color: var(--accent);
-  background: #232c52;
+  background: var(--panel2);
 }
 .adm-btn.primary {
   border: 0;
   font-weight: 700;
-  color: #fff;
-  background: linear-gradient(110deg, #6e5dc4, #4d91b2);
+  color: var(--on-accent);
+  background: linear-gradient(110deg, var(--accent), var(--accent2));
 }
 .adm-btn.primary:hover {
   filter: brightness(1.1);
 }
 .adm-btn.danger {
   border-color: #8f3a4a;
-  background: #3a1d27;
-  color: #ffc9d1;
+  background: var(--error-bg);
+  color: var(--error-text);
 }
 .adm-btn.danger:hover {
-  background: #532636;
+  background: var(--error-text);
 }
 .adm-btn.sm {
   padding: 5px 9px;
@@ -302,7 +303,7 @@
   padding: 10px 12px;
   border: 1px solid var(--line);
   border-radius: 10px;
-  background: #0d1328;
+  background: var(--field-bg);
   color: var(--text);
   font: inherit;
   font-size: 13.5px;
@@ -350,40 +351,40 @@
   font-size: 11px;
   font-weight: 700;
   border: 1px solid var(--line);
-  background: #1b2340;
+  background: var(--panel2);
   color: var(--muted);
   white-space: nowrap;
 }
 .adm-badge.ok {
-  color: #68d6a4;
+  color: var(--good);
   border-color: #2c6a53;
-  background: #12302a;
+  background: var(--success-bg);
 }
 .adm-badge.warn {
-  color: #f2c879;
+  color: var(--gold);
   border-color: #7a6130;
-  background: #2d2713;
+  background: var(--notice-bg);
 }
 .adm-badge.bad {
-  color: #ff9aa2;
+  color: var(--bad);
   border-color: #7d3441;
-  background: #331b24;
+  background: var(--error-bg);
 }
 .adm-badge.sup {
-  color: #ffd98a;
+  color: var(--gold);
   border-color: #8a6d2c;
-  background: #2b2412;
+  background: var(--doing-bg);
 }
 .adm-badge.adm {
-  color: #b7acff;
+  color: var(--accent);
   border-color: #55489a;
-  background: #231f48;
+  background: var(--active-bg);
 }
 .adm-tablewrap {
   overflow: auto;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: #10172c;
+  background: var(--panel);
 }
 .adm-table {
   width: 100%;
@@ -395,7 +396,7 @@
   top: 0;
   padding: 10px 12px;
   text-align: left;
-  background: #1b2340;
+  background: var(--panel2);
   color: var(--muted);
   font-size: 11.5px;
   font-weight: 600;
@@ -412,7 +413,7 @@
   cursor: pointer;
 }
 .adm-table tr.click:hover td {
-  background: #171d3b;
+  background: var(--hover-bg);
 }
 .adm-table .ttl {
   font-weight: 600;
@@ -437,7 +438,7 @@
   width: 38px;
   height: 22px;
   border-radius: 999px;
-  background: #2b355a;
+  background: var(--control-bg);
   border: 0;
   cursor: pointer;
   transition: 0.2s;
@@ -482,7 +483,7 @@
   display: block;
   width: 100%;
   border-radius: 6px 6px 2px 2px;
-  background: linear-gradient(180deg, #8f7be8, #4d91b2);
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
   min-height: 2px;
 }
 .adm-bar b {
@@ -502,14 +503,14 @@
 .adm-progress {
   height: 8px;
   border-radius: 99px;
-  background: #222b4d;
+  background: var(--control-bg);
   overflow: hidden;
   min-width: 80px;
 }
 .adm-progress i {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #36c27b, #6fc9e8);
+  background: linear-gradient(90deg, #36c27b, var(--accent2));
 }
 
 /* Hộp thoại / ngăn bên */
@@ -519,7 +520,7 @@
   z-index: 70;
   display: flex;
   justify-content: flex-end;
-  background: #060914cc;
+  background: var(--overlay-bg);
   backdrop-filter: blur(3px);
 }
 .adm-modal.center {
@@ -533,7 +534,7 @@
   overflow: auto;
   padding: 22px;
   border-left: 1px solid var(--line);
-  background: linear-gradient(180deg, #171e38, #10162a);
+  background: linear-gradient(180deg, var(--panel-raised), var(--panel));
   animation: adm-slide 0.2s ease;
 }
 .adm-modal.center .adm-panel {
@@ -584,7 +585,7 @@
   margin-bottom: -1px;
 }
 .adm-subtab.active {
-  color: #fff;
+  color: var(--active-text);
   border-bottom-color: var(--accent);
 }
 .adm-row2 {
@@ -602,7 +603,7 @@
   border-radius: 12px;
   padding: 10px;
   margin-bottom: 10px;
-  background: #0e152b;
+  background: var(--panel-raised);
 }
 .adm-tc.bad {
   border-color: #8f3a4a;
@@ -624,20 +625,20 @@
   padding: 10px 12px;
   border-left: 3px solid var(--gold);
   border-radius: 6px;
-  background: #28243a;
-  color: #f4e7c8;
+  background: var(--notice-bg);
+  color: var(--notice-text);
   font-size: 12.5px;
   margin-bottom: 12px;
 }
 .adm-note.ok {
   border-color: #36c27b;
-  background: #12302a;
-  color: #c9f5de;
+  background: var(--success-bg);
+  color: var(--success-text);
 }
 .adm-note.err {
-  border-color: #ff858d;
-  background: #331b24;
-  color: #ffd0d5;
+  border-color: var(--bad);
+  background: var(--error-bg);
+  color: var(--error-text);
 }
 .adm-foot {
   position: sticky;
@@ -648,7 +649,7 @@
   gap: 8px;
   justify-content: flex-end;
   border-top: 1px solid var(--line);
-  background: #10162af2;
+  background: var(--header-bg);
   backdrop-filter: blur(8px);
 }
 .adm-toast {
@@ -661,18 +662,18 @@
   padding: 11px 18px;
   border-radius: 12px;
   border: 1px solid var(--line);
-  background: #1b2340;
+  background: var(--panel2);
   color: var(--text);
   font-size: 13px;
   box-shadow: 0 14px 40px #000a;
 }
 .adm-toast.ok {
   border-color: #2c6a53;
-  background: #12302a;
+  background: var(--success-bg);
 }
 .adm-toast.err {
   border-color: #7d3441;
-  background: #331b24;
+  background: var(--error-bg);
 }
 .adm-loading {
   padding: 40px;

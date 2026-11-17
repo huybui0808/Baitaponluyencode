@@ -212,7 +212,7 @@ function renderAuthBox() {
   const avatar = currentUser
     ? `<span class="user-initial user-avatar" aria-hidden="true">${avatarImageMarkup(profileAvatarPath, userDisplayName())}</span>`
     : '<span class="menu-trigger-icon" aria-hidden="true">☰</span>';
-  box.innerHTML = `<div class="user-menu"><button class="user-chip menu-trigger" data-auth="menu" type="button" aria-haspopup="true" aria-expanded="false">${avatar}<span class="user-label">${currentUser ? escapeHTML(userDisplayName()) : "Danh mục"}</span><span class="menu-chevron" aria-hidden="true">▾</span></button><div class="user-dropdown" hidden>${accountHead}<div class="menu-section-label">Học tập & cộng đồng</div><button data-auth="rank" type="button">🏆 Bảng xếp hạng</button><button data-auth="members" type="button">♙ Thành viên</button><button data-auth="submissions" type="button">▤ Bài đã nộp</button><button data-auth="info" type="button">ⓘ Th&#244;ng tin li&#234;n h&#7879;</button>${currentUser ? '<div class="menu-separator"></div>' : ""}${accountActions}</div></div>`;
+  box.innerHTML = `<div class="user-menu ${currentUser ? "" : "unauthenticated"}"><button class="user-chip menu-trigger" data-auth="menu" type="button" aria-haspopup="true" aria-expanded="false">${avatar}<span class="user-label ${currentUser ? "" : "auth-label"}">${currentUser ? escapeHTML(userDisplayName()) : "Đăng nhập / Đăng ký"}</span><span class="menu-chevron" aria-hidden="true">▾</span></button><div class="user-dropdown" hidden>${accountHead}<div class="menu-section-label">Học tập & cộng đồng</div><button data-auth="rank" type="button">🏆 Bảng xếp hạng</button><button data-auth="members" type="button">♙ Thành viên</button><button data-auth="submissions" type="button">▤ Bài đã nộp</button><button data-auth="info" type="button">ⓘ Th&#244;ng tin li&#234;n h&#7879;</button>${currentUser ? '<div class="menu-separator"></div>' : ""}${accountActions}</div></div>`;
   bindAvatarImages(box);
 }
 // ----- Cửa sổ (overlay) -----
@@ -1153,15 +1153,6 @@ $("resendConfirmation").addEventListener("click", async () => {
     button.disabled = false;
   }
 });
-$("authGoogle").addEventListener("click", async () => {
-  if (!supabase) return;
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: "google",
-    options: { redirectTo: window.location.origin + window.location.pathname },
-  });
-  if (error) setAuthMsg(translateAuthError(error), "err");
-});
-
 renderAuthBox();
 if (supabase) {
   // Không await Supabase trực tiếp trong callback (tránh treo SDK) nên dùng setTimeout.

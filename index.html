@@ -11,6 +11,7 @@
       content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://dcdvtpmihijzbieblwfa.supabase.co; connect-src 'self' https://dcdvtpmihijzbieblwfa.supabase.co wss://dcdvtpmihijzbieblwfa.supabase.co; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self' https://dcdvtpmihijzbieblwfa.supabase.co"
     />
     <title>150 bài luyện thi C++ | Nhập môn lập trình</title>
+    <script src="./theme.js"></script>
     <link rel="stylesheet" href="Style.css" />
   </head>
   <body>
@@ -22,7 +23,29 @@
             150 bài luyện tập nhập môn lập trình · Từ cơ bản đến nâng cao
           </div>
         </div>
-        <div class="auth-box" id="authBox"></div>
+        <div class="header-actions">
+          <div class="theme-picker" id="themePicker">
+            <button
+              class="theme-trigger"
+              id="themeTrigger"
+              type="button"
+              aria-label="Chọn màu giao diện"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-controls="themeOptions"
+            >
+              <span class="theme-trigger-icon" aria-hidden="true">◐</span><span class="theme-trigger-label">Sage</span><span class="menu-chevron" aria-hidden="true">▾</span>
+            </button>
+            <div class="theme-options" id="themeOptions" role="group" aria-label="Chọn màu giao diện" hidden>
+              <div class="theme-menu-head"><b>Giao diện</b><span>Chọn tông màu bạn thấy dễ nhìn</span></div>
+              <button class="theme-choice" type="button" data-theme-choice="a" aria-pressed="false"><span class="theme-card-preview theme-preview-a" aria-hidden="true"><i></i><b></b><em></em></span><span class="theme-choice-copy"><b>A · Kem ấm</b><small>Nền dịu, nhấn xanh teal</small></span><span class="theme-choice-check" aria-hidden="true">✓</span></button>
+              <button class="theme-choice" type="button" data-theme-choice="b" aria-pressed="false"><span class="theme-card-preview theme-preview-b" aria-hidden="true"><i></i><b></b><em></em></span><span class="theme-choice-copy"><b>B · Sage</b><small>Nền xanh nhạt, nhấn rừng</small></span><span class="theme-choice-check" aria-hidden="true">✓</span></button>
+              <button class="theme-choice" type="button" data-theme-choice="c" aria-pressed="false"><span class="theme-card-preview theme-preview-c" aria-hidden="true"><i></i><b></b><em></em></span><span class="theme-choice-copy"><b>C · Xanh xám</b><small>Nền mát, nhấn xanh lam</small></span><span class="theme-choice-check" aria-hidden="true">✓</span></button>
+              <button class="theme-choice" type="button" data-theme-choice="d" aria-pressed="false"><span class="theme-card-preview theme-preview-d" aria-hidden="true"><i></i><b></b><em></em></span><span class="theme-choice-copy"><b>D · Tối dịu</b><small>Nền tối than, nhấn bạc hà</small></span><span class="theme-choice-check" aria-hidden="true">✓</span></button>
+            </div>
+          </div>
+          <div class="auth-box" id="authBox"></div>
+        </div>
       </div>
       <!-- VI: Mục phụ nằm trong menu tài khoản để thanh đầu trang gọn hơn. EN: Secondary actions live in the account menu to keep the header compact. -->
       <div class="stats contact-links" id="statsBar" hidden>
@@ -259,33 +282,6 @@
           hidden
         >
           Tiếp tục tạo tài khoản
-        </button>
-        <div class="auth-or"><span>hoặc</span></div>
-        <button class="btn google" id="authGoogle" type="button">
-          <svg
-            class="google-logo"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              fill="#4285F4"
-              d="M23.49 12.27c0-.79-.07-1.55-.2-2.27H12v4.3h6.44a5.5 5.5 0 0 1-2.27 3.36v2.78h3.67c2.15-1.98 3.65-4.9 3.65-8.17z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 24c3.24 0 5.96-1.08 7.94-2.92l-3.67-2.78c-1.08.72-2.46 1.14-4.27 1.14-3.28 0-6.06-2.21-7.05-5.18H1.16v2.87A12 12 0 0 0 12 24z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M4.95 14.26a7.2 7.2 0 0 1 0-4.52V6.87H1.16a12 12 0 0 0 0 11.26l3.79-2.87z"
-            />
-            <path
-              fill="#EA4335"
-              d="M12 4.77c1.77 0 3.35.61 4.6 1.81l3.45-3.45C17.95 1.19 15.23 0 12 0A12 12 0 0 0 1.16 6.87l3.79 2.87C5.94 6.98 8.72 4.77 12 4.77z"
-            />
-          </svg>
-          Tiếp tục với Google
         </button>
         <div id="authMsg" class="auth-msg" role="status"></div>
       </div>
