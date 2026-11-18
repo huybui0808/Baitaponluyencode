@@ -33,22 +33,22 @@
                       },
                       {
                           "no":  5,
+                          "input":  "1",
+                          "output":  "ODD"
+                      },
+                      {
+                          "no":  6,
                           "input":  "2",
                           "output":  "EVEN"
                       },
                       {
-                          "no":  6,
-                          "input":  "-3",
-                          "output":  "ODD"
-                      },
-                      {
                           "no":  7,
-                          "input":  "-11",
+                          "input":  "3",
                           "output":  "ODD"
                       },
                       {
                           "no":  8,
-                          "input":  "1000000000",
+                          "input":  "100",
                           "output":  "EVEN"
                       }
                   ],
@@ -91,23 +91,23 @@
                       },
                       {
                           "no":  5,
-                          "input":  "2",
+                          "input":  "1",
                           "output":  "POSITIVE"
                       },
                       {
                           "no":  6,
-                          "input":  "-3",
-                          "output":  "NEGATIVE"
+                          "input":  "2",
+                          "output":  "POSITIVE"
                       },
                       {
                           "no":  7,
-                          "input":  "-11",
-                          "output":  "NEGATIVE"
+                          "input":  "3",
+                          "output":  "POSITIVE"
                       },
                       {
                           "no":  8,
-                          "input":  "-1000000000",
-                          "output":  "NEGATIVE"
+                          "input":  "100",
+                          "output":  "POSITIVE"
                       }
                   ],
         "sample_input":  "-10",
@@ -164,8 +164,8 @@
                       },
                       {
                           "no":  8,
-                          "input":  "-1000000000 1000000000",
-                          "output":  "1000000000"
+                          "input":  "-100 120",
+                          "output":  "120"
                       }
                   ],
         "sample_input":  "-5 3",
@@ -217,13 +217,13 @@
                       },
                       {
                           "no":  7,
-                          "input":  "123 456 789",
-                          "output":  "789"
+                          "input":  "12 25 18",
+                          "output":  "25"
                       },
                       {
                           "no":  8,
-                          "input":  "1000000000 -1000000000 0",
-                          "output":  "1000000000"
+                          "input":  "-20 15 0",
+                          "output":  "15"
                       }
                   ],
         "sample_input":  "0 0 0",
@@ -275,13 +275,13 @@
                       },
                       {
                           "no":  7,
-                          "input":  "123 456 789",
-                          "output":  "123"
+                          "input":  "12 25 18",
+                          "output":  "12"
                       },
                       {
                           "no":  8,
-                          "input":  "-1000000000 1000000000 0",
-                          "output":  "-1000000000"
+                          "input":  "-20 15 0",
+                          "output":  "-20"
                       }
                   ],
         "sample_input":  "0 0 0",
@@ -313,32 +313,32 @@
                       },
                       {
                           "no":  3,
+                          "input":  "100",
+                          "output":  "COMMON"
+                      },
+                      {
+                          "no":  4,
                           "input":  "400",
                           "output":  "LEAP"
                       },
                       {
-                          "no":  4,
+                          "no":  5,
                           "input":  "1700",
                           "output":  "COMMON"
                       },
                       {
-                          "no":  5,
+                          "no":  6,
                           "input":  "1996",
                           "output":  "LEAP"
                       },
                       {
-                          "no":  6,
-                          "input":  "2001",
-                          "output":  "COMMON"
-                      },
-                      {
                           "no":  7,
-                          "input":  "2200",
-                          "output":  "COMMON"
+                          "input":  "2000",
+                          "output":  "LEAP"
                       },
                       {
                           "no":  8,
-                          "input":  "9999",
+                          "input":  "2200",
                           "output":  "COMMON"
                       }
                   ],
@@ -361,46 +361,46 @@
         "tests":  [
                       {
                           "no":  1,
-                          "input":  "0",
+                          "input":  "-15",
                           "output":  "YES"
                       },
                       {
                           "no":  2,
-                          "input":  "1",
+                          "input":  "-3",
                           "output":  "NO"
                       },
                       {
                           "no":  3,
+                          "input":  "0",
+                          "output":  "YES"
+                      },
+                      {
+                          "no":  4,
+                          "input":  "1",
+                          "output":  "NO"
+                      },
+                      {
+                          "no":  5,
                           "input":  "3",
                           "output":  "NO"
                       },
                       {
-                          "no":  4,
-                          "input":  "15",
-                          "output":  "YES"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "60",
-                          "output":  "YES"
-                      },
-                      {
                           "no":  6,
-                          "input":  "100",
+                          "input":  "5",
                           "output":  "NO"
                       },
                       {
                           "no":  7,
-                          "input":  "300",
+                          "input":  "15",
                           "output":  "YES"
                       },
                       {
                           "no":  8,
-                          "input":  "999999990",
-                          "output":  "YES"
+                          "input":  "100",
+                          "output":  "NO"
                       }
                   ],
-        "sample_input":  "0",
+        "sample_input":  "-15",
         "sample_output":  "YES",
         "difficulty_rank":  1,
         "legacyId":  22
@@ -419,46 +419,46 @@
         "tests":  [
                       {
                           "no":  1,
-                          "input":  "0",
+                          "input":  "-15",
                           "output":  "YES"
                       },
                       {
                           "no":  2,
-                          "input":  "1",
-                          "output":  "NO"
+                          "input":  "-3",
+                          "output":  "YES"
                       },
                       {
                           "no":  3,
-                          "input":  "3",
+                          "input":  "0",
                           "output":  "YES"
                       },
                       {
                           "no":  4,
-                          "input":  "15",
-                          "output":  "YES"
+                          "input":  "1",
+                          "output":  "NO"
                       },
                       {
                           "no":  5,
-                          "input":  "60",
+                          "input":  "3",
                           "output":  "YES"
                       },
                       {
                           "no":  6,
-                          "input":  "100",
+                          "input":  "5",
                           "output":  "YES"
                       },
                       {
                           "no":  7,
-                          "input":  "300",
+                          "input":  "15",
                           "output":  "YES"
                       },
                       {
                           "no":  8,
-                          "input":  "999999999",
+                          "input":  "100",
                           "output":  "YES"
                       }
                   ],
-        "sample_input":  "0",
+        "sample_input":  "-15",
         "sample_output":  "YES",
         "difficulty_rank":  1,
         "legacyId":  23
@@ -512,7 +512,7 @@
                       },
                       {
                           "no":  8,
-                          "input":  "999999999 1000000000",
+                          "input":  "-100 120",
                           "output":  "LESS"
                       }
                   ],
@@ -540,47 +540,57 @@
                       },
                       {
                           "no":  2,
-                          "input":  "2 2 3",
-                          "output":  "VALID"
+                          "input":  "1 2 3",
+                          "output":  "INVALID"
                       },
                       {
                           "no":  3,
-                          "input":  "3 4 5",
+                          "input":  "1 2 2",
                           "output":  "VALID"
                       },
                       {
                           "no":  4,
-                          "input":  "1 1 2",
-                          "output":  "INVALID"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "6 8 10",
-                          "output":  "VALID"
-                      },
-                      {
-                          "no":  6,
                           "input":  "2 3 4",
                           "output":  "VALID"
                       },
                       {
+                          "no":  5,
+                          "input":  "2 3 5",
+                          "output":  "INVALID"
+                      },
+                      {
+                          "no":  6,
+                          "input":  "3 4 5",
+                          "output":  "VALID"
+                      },
+                      {
                           "no":  7,
-                          "input":  "9 9 1",
+                          "input":  "5 5 9",
                           "output":  "VALID"
                       },
                       {
                           "no":  8,
-                          "input":  "100 100 199",
+                          "input":  "7 10 12",
                           "output":  "VALID"
                       },
                       {
                           "no":  9,
-                          "input":  "100 100 201",
-                          "output":  "INVALID"
+                          "input":  "9 9 1",
+                          "output":  "VALID"
                       },
                       {
                           "no":  10,
-                          "input":  "999999999 1000000000 1000000000",
+                          "input":  "12 13 14",
+                          "output":  "VALID"
+                      },
+                      {
+                          "no":  11,
+                          "input":  "20 21 40",
+                          "output":  "VALID"
+                      },
+                      {
+                          "no":  12,
+                          "input":  "25 26 30",
                           "output":  "VALID"
                       }
                   ],
@@ -608,22 +618,22 @@
                       },
                       {
                           "no":  2,
-                          "input":  "2 2 3",
+                          "input":  "1 2 2",
                           "output":  "ISOSCELES"
                       },
                       {
                           "no":  3,
+                          "input":  "2 2 3",
+                          "output":  "ISOSCELES"
+                      },
+                      {
+                          "no":  4,
                           "input":  "3 4 5",
                           "output":  "SCALENE"
                       },
                       {
-                          "no":  4,
-                          "input":  "1 1 2",
-                          "output":  "INVALID"
-                      },
-                      {
                           "no":  5,
-                          "input":  "6 8 10",
+                          "input":  "4 5 6",
                           "output":  "SCALENE"
                       },
                       {
@@ -633,23 +643,33 @@
                       },
                       {
                           "no":  7,
-                          "input":  "9 9 1",
+                          "input":  "5 5 9",
                           "output":  "ISOSCELES"
                       },
                       {
                           "no":  8,
-                          "input":  "100 100 199",
-                          "output":  "ISOSCELES"
+                          "input":  "6 7 8",
+                          "output":  "SCALENE"
                       },
                       {
                           "no":  9,
-                          "input":  "100 100 201",
-                          "output":  "INVALID"
+                          "input":  "9 9 1",
+                          "output":  "ISOSCELES"
                       },
                       {
                           "no":  10,
-                          "input":  "1000000000 1000000000 1000000000",
+                          "input":  "12 12 12",
                           "output":  "EQUILATERAL"
+                      },
+                      {
+                          "no":  11,
+                          "input":  "7 10 12",
+                          "output":  "SCALENE"
+                      },
+                      {
+                          "no":  12,
+                          "input":  "25 26 30",
+                          "output":  "SCALENE"
                       }
                   ],
         "sample_input":  "1 1 1",
@@ -671,28 +691,28 @@
         "tests":  [
                       {
                           "no":  1,
-                          "input":  "1 1 1",
-                          "output":  "NOT RIGHT"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "2 2 3",
-                          "output":  "NOT RIGHT"
-                      },
-                      {
-                          "no":  3,
                           "input":  "3 4 5",
                           "output":  "RIGHT"
                       },
                       {
+                          "no":  2,
+                          "input":  "5 12 13",
+                          "output":  "RIGHT"
+                      },
+                      {
+                          "no":  3,
+                          "input":  "8 15 17",
+                          "output":  "RIGHT"
+                      },
+                      {
                           "no":  4,
-                          "input":  "1 1 2",
-                          "output":  "INVALID"
+                          "input":  "6 8 10",
+                          "output":  "RIGHT"
                       },
                       {
                           "no":  5,
-                          "input":  "6 8 10",
-                          "output":  "RIGHT"
+                          "input":  "1 1 1",
+                          "output":  "NOT RIGHT"
                       },
                       {
                           "no":  6,
@@ -701,27 +721,37 @@
                       },
                       {
                           "no":  7,
-                          "input":  "9 9 1",
+                          "input":  "4 5 6",
                           "output":  "NOT RIGHT"
                       },
                       {
                           "no":  8,
-                          "input":  "100 100 199",
-                          "output":  "NOT RIGHT"
+                          "input":  "7 24 25",
+                          "output":  "RIGHT"
                       },
                       {
                           "no":  9,
-                          "input":  "100 100 201",
-                          "output":  "INVALID"
+                          "input":  "9 40 41",
+                          "output":  "RIGHT"
                       },
                       {
                           "no":  10,
-                          "input":  "600000000 800000000 1000000000",
-                          "output":  "RIGHT"
+                          "input":  "5 5 8",
+                          "output":  "NOT RIGHT"
+                      },
+                      {
+                          "no":  11,
+                          "input":  "12 13 14",
+                          "output":  "NOT RIGHT"
+                      },
+                      {
+                          "no":  12,
+                          "input":  "20 21 28",
+                          "output":  "NOT RIGHT"
                       }
                   ],
-        "sample_input":  "1 1 1",
-        "sample_output":  "NOT RIGHT",
+        "sample_input":  "3 4 5",
+        "sample_output":  "RIGHT",
         "difficulty_rank":  2,
         "legacyId":  27
     },
@@ -744,8 +774,8 @@
                       },
                       {
                           "no":  2,
-                          "input":  "50",
-                          "output":  "D"
+                          "input":  "1",
+                          "output":  "F"
                       },
                       {
                           "no":  3,
@@ -754,37 +784,47 @@
                       },
                       {
                           "no":  4,
-                          "input":  "51",
+                          "input":  "50",
                           "output":  "D"
                       },
                       {
                           "no":  5,
+                          "input":  "59",
+                          "output":  "D"
+                      },
+                      {
+                          "no":  6,
+                          "input":  "60",
+                          "output":  "D"
+                      },
+                      {
+                          "no":  7,
+                          "input":  "69",
+                          "output":  "D"
+                      },
+                      {
+                          "no":  8,
                           "input":  "70",
                           "output":  "C"
                       },
                       {
-                          "no":  6,
+                          "no":  9,
                           "input":  "79",
                           "output":  "C"
                       },
                       {
-                          "no":  7,
-                          "input":  "89",
-                          "output":  "B"
-                      },
-                      {
-                          "no":  8,
+                          "no":  10,
                           "input":  "80",
                           "output":  "B"
                       },
                       {
-                          "no":  9,
-                          "input":  "100",
+                          "no":  11,
+                          "input":  "90",
                           "output":  "A"
                       },
                       {
-                          "no":  10,
-                          "input":  "90",
+                          "no":  12,
+                          "input":  "100",
                           "output":  "A"
                       }
                   ],
@@ -807,57 +847,67 @@
         "tests":  [
                       {
                           "no":  1,
-                          "input":  "1 0",
-                          "output":  "0.00"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "1 1",
-                          "output":  "-1.00"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "1 -1",
-                          "output":  "1.00"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "-2 4",
-                          "output":  "2.00"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "0 1",
-                          "output":  "NO SOLUTION"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "3 9",
-                          "output":  "-3.00"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "10 -20",
-                          "output":  "2.00"
-                      },
-                      {
-                          "no":  8,
                           "input":  "0 0",
                           "output":  "INFINITE"
                       },
                       {
+                          "no":  2,
+                          "input":  "0 5",
+                          "output":  "NO SOLUTION"
+                      },
+                      {
+                          "no":  3,
+                          "input":  "0 -7",
+                          "output":  "NO SOLUTION"
+                      },
+                      {
+                          "no":  4,
+                          "input":  "1 0",
+                          "output":  "0.00"
+                      },
+                      {
+                          "no":  5,
+                          "input":  "1 5",
+                          "output":  "-5.00"
+                      },
+                      {
+                          "no":  6,
+                          "input":  "-1 5",
+                          "output":  "5.00"
+                      },
+                      {
+                          "no":  7,
+                          "input":  "2 -4",
+                          "output":  "2.00"
+                      },
+                      {
+                          "no":  8,
+                          "input":  "-3 -9",
+                          "output":  "-3.00"
+                      },
+                      {
                           "no":  9,
-                          "input":  "1 100",
-                          "output":  "-100.00"
+                          "input":  "5 10",
+                          "output":  "-2.00"
                       },
                       {
                           "no":  10,
-                          "input":  "1000000000 1000000000",
-                          "output":  "-1.00"
+                          "input":  "-7 14",
+                          "output":  "2.00"
+                      },
+                      {
+                          "no":  11,
+                          "input":  "9 -27",
+                          "output":  "3.00"
+                      },
+                      {
+                          "no":  12,
+                          "input":  "12 36",
+                          "output":  "-3.00"
                       }
                   ],
-        "sample_input":  "1 0",
-        "sample_output":  "0.00",
+        "sample_input":  "0 0",
+        "sample_output":  "INFINITE",
         "difficulty_rank":  2,
         "legacyId":  29
     },
@@ -885,43 +935,53 @@
                       },
                       {
                           "no":  3,
-                          "input":  "51",
-                          "output":  "51200"
+                          "input":  "49",
+                          "output":  "49000"
                       },
                       {
                           "no":  4,
-                          "input":  "100",
-                          "output":  "110000"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "101",
-                          "output":  "111500"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "8",
-                          "output":  "8000"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "12",
-                          "output":  "12000"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "20",
-                          "output":  "20000"
-                      },
-                      {
-                          "no":  9,
                           "input":  "50",
                           "output":  "50000"
                       },
                       {
+                          "no":  5,
+                          "input":  "51",
+                          "output":  "51200"
+                      },
+                      {
+                          "no":  6,
+                          "input":  "99",
+                          "output":  "108800"
+                      },
+                      {
+                          "no":  7,
+                          "input":  "100",
+                          "output":  "110000"
+                      },
+                      {
+                          "no":  8,
+                          "input":  "101",
+                          "output":  "111500"
+                      },
+                      {
+                          "no":  9,
+                          "input":  "120",
+                          "output":  "140000"
+                      },
+                      {
                           "no":  10,
-                          "input":  "999999997",
-                          "output":  "1499999955500"
+                          "input":  "150",
+                          "output":  "185000"
+                      },
+                      {
+                          "no":  11,
+                          "input":  "250",
+                          "output":  "335000"
+                      },
+                      {
+                          "no":  12,
+                          "input":  "500",
+                          "output":  "710000"
                       }
                   ],
         "sample_input":  "0",
@@ -948,17 +1008,17 @@
                       },
                       {
                           "no":  2,
-                          "input":  "6",
-                          "output":  "30000"
-                      },
-                      {
-                          "no":  3,
                           "input":  "5",
                           "output":  "0"
                       },
                       {
+                          "no":  3,
+                          "input":  "6",
+                          "output":  "30000"
+                      },
+                      {
                           "no":  4,
-                          "input":  "7",
+                          "input":  "10",
                           "output":  "30000"
                       },
                       {
@@ -968,13 +1028,13 @@
                       },
                       {
                           "no":  6,
-                          "input":  "30",
+                          "input":  "18",
                           "output":  "50000"
                       },
                       {
                           "no":  7,
-                          "input":  "60",
-                          "output":  "40000"
+                          "input":  "30",
+                          "output":  "50000"
                       },
                       {
                           "no":  8,
@@ -983,13 +1043,23 @@
                       },
                       {
                           "no":  9,
-                          "input":  "120",
+                          "input":  "60",
                           "output":  "40000"
                       },
                       {
                           "no":  10,
-                          "input":  "16",
-                          "output":  "30000"
+                          "input":  "61",
+                          "output":  "40000"
+                      },
+                      {
+                          "no":  11,
+                          "input":  "100",
+                          "output":  "40000"
+                      },
+                      {
+                          "no":  12,
+                          "input":  "120",
+                          "output":  "40000"
                       }
                   ],
         "sample_input":  "0",
@@ -1016,12 +1086,12 @@
                       },
                       {
                           "no":  2,
-                          "input":  "1000",
+                          "input":  "999",
                           "output":  "15000"
                       },
                       {
                           "no":  3,
-                          "input":  "999",
+                          "input":  "1000",
                           "output":  "15000"
                       },
                       {
@@ -1031,18 +1101,18 @@
                       },
                       {
                           "no":  5,
-                          "input":  "1999",
+                          "input":  "2000",
                           "output":  "25000"
                       },
                       {
                           "no":  6,
-                          "input":  "5000",
+                          "input":  "4999",
                           "output":  "25000"
                       },
                       {
                           "no":  7,
-                          "input":  "5500",
-                          "output":  "29000"
+                          "input":  "5000",
+                          "output":  "25000"
                       },
                       {
                           "no":  8,
@@ -1051,13 +1121,23 @@
                       },
                       {
                           "no":  9,
-                          "input":  "6001",
-                          "output":  "33000"
+                          "input":  "6000",
+                          "output":  "29000"
                       },
                       {
                           "no":  10,
-                          "input":  "1000000000",
-                          "output":  "4000005000"
+                          "input":  "7500",
+                          "output":  "37000"
+                      },
+                      {
+                          "no":  11,
+                          "input":  "9999",
+                          "output":  "45000"
+                      },
+                      {
+                          "no":  12,
+                          "input":  "10000",
+                          "output":  "45000"
                       }
                   ],
         "sample_input":  "1",
@@ -1084,48 +1164,58 @@
                       },
                       {
                           "no":  2,
-                          "input":  "0 1",
+                          "input":  "0 2",
                           "output":  "Y_AXIS"
                       },
                       {
                           "no":  3,
-                          "input":  "0 -1",
+                          "input":  "0 -3",
                           "output":  "Y_AXIS"
                       },
                       {
                           "no":  4,
-                          "input":  "-1 0",
+                          "input":  "4 0",
                           "output":  "X_AXIS"
                       },
                       {
                           "no":  5,
+                          "input":  "-5 0",
+                          "output":  "X_AXIS"
+                      },
+                      {
+                          "no":  6,
+                          "input":  "1 1",
+                          "output":  "Q1"
+                      },
+                      {
+                          "no":  7,
                           "input":  "-1 1",
                           "output":  "Q2"
                       },
                       {
-                          "no":  6,
-                          "input":  "1 -1",
-                          "output":  "Q4"
-                      },
-                      {
-                          "no":  7,
+                          "no":  8,
                           "input":  "-2 -3",
                           "output":  "Q3"
                       },
                       {
-                          "no":  8,
-                          "input":  "10 20",
-                          "output":  "Q1"
-                      },
-                      {
                           "no":  9,
-                          "input":  "-10 -20",
-                          "output":  "Q3"
+                          "input":  "3 -4",
+                          "output":  "Q4"
                       },
                       {
                           "no":  10,
-                          "input":  "-1000000000 1000000000",
+                          "input":  "5 7",
+                          "output":  "Q1"
+                      },
+                      {
+                          "no":  11,
+                          "input":  "-6 8",
                           "output":  "Q2"
+                      },
+                      {
+                          "no":  12,
+                          "input":  "9 -10",
+                          "output":  "Q4"
                       }
                   ],
         "sample_input":  "0 0",
@@ -1147,57 +1237,67 @@
         "tests":  [
                       {
                           "no":  1,
-                          "input":  "-5 3",
-                          "output":  "A"
-                      },
-                      {
-                          "no":  2,
                           "input":  "0 0",
                           "output":  "EQUAL"
                       },
                       {
+                          "no":  2,
+                          "input":  "0 5",
+                          "output":  "B"
+                      },
+                      {
                           "no":  3,
-                          "input":  "1 1",
+                          "input":  "-5 5",
                           "output":  "EQUAL"
                       },
                       {
                           "no":  4,
-                          "input":  "1 2",
+                          "input":  "3 -8",
                           "output":  "B"
                       },
                       {
                           "no":  5,
-                          "input":  "2 1",
+                          "input":  "-9 2",
                           "output":  "A"
                       },
                       {
                           "no":  6,
-                          "input":  "10 -2",
-                          "output":  "A"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "7 7",
+                          "input":  "10 -10",
                           "output":  "EQUAL"
                       },
                       {
+                          "no":  7,
+                          "input":  "-12 -4",
+                          "output":  "A"
+                      },
+                      {
                           "no":  8,
-                          "input":  "100 -25",
+                          "input":  "17 6",
                           "output":  "A"
                       },
                       {
                           "no":  9,
-                          "input":  "123 456",
-                          "output":  "B"
+                          "input":  "-25 24",
+                          "output":  "A"
                       },
                       {
                           "no":  10,
-                          "input":  "-1000000000 999999999",
+                          "input":  "99 -100",
+                          "output":  "B"
+                      },
+                      {
+                          "no":  11,
+                          "input":  "-120 30",
                           "output":  "A"
+                      },
+                      {
+                          "no":  12,
+                          "input":  "47 -48",
+                          "output":  "B"
                       }
                   ],
-        "sample_input":  "-5 3",
-        "sample_output":  "A",
+        "sample_input":  "0 0",
+        "sample_output":  "EQUAL",
         "difficulty_rank":  2,
         "legacyId":  34
     },
@@ -1220,47 +1320,57 @@
                       },
                       {
                           "no":  2,
-                          "input":  "1 2 1",
-                          "output":  "ONE ROOT"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "1 0 1",
-                          "output":  "NO REAL ROOT"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "1 2 0",
-                          "output":  "TWO ROOTS"
-                      },
-                      {
-                          "no":  5,
                           "input":  "0 1 1",
                           "output":  "NOT QUADRATIC"
                       },
                       {
-                          "no":  6,
-                          "input":  "0 0 5",
+                          "no":  3,
+                          "input":  "0 0 0",
                           "output":  "NOT QUADRATIC"
                       },
                       {
+                          "no":  4,
+                          "input":  "1 2 1",
+                          "output":  "ONE ROOT"
+                      },
+                      {
+                          "no":  5,
+                          "input":  "1 0 1",
+                          "output":  "NO REAL ROOT"
+                      },
+                      {
+                          "no":  6,
+                          "input":  "1 2 0",
+                          "output":  "TWO ROOTS"
+                      },
+                      {
                           "no":  7,
-                          "input":  "3 0 -12",
+                          "input":  "1 5 6",
                           "output":  "TWO ROOTS"
                       },
                       {
                           "no":  8,
-                          "input":  "4 4 1",
+                          "input":  "2 4 2",
                           "output":  "ONE ROOT"
                       },
                       {
                           "no":  9,
-                          "input":  "1 1 -6",
+                          "input":  "3 0 -12",
                           "output":  "TWO ROOTS"
                       },
                       {
                           "no":  10,
-                          "input":  "1000000000 1000000000 -1000000000",
+                          "input":  "-1 2 3",
+                          "output":  "TWO ROOTS"
+                      },
+                      {
+                          "no":  11,
+                          "input":  "4 4 1",
+                          "output":  "ONE ROOT"
+                      },
+                      {
+                          "no":  12,
+                          "input":  "2 -5 2",
                           "output":  "TWO ROOTS"
                       }
                   ],

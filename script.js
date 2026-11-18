@@ -17,7 +17,7 @@ const TASK_DATA_FILES = [
 // VI: Số test của mỗi bài linh hoạt; giới hạn này chỉ để chặn dữ liệu bất thường.
 // EN: Test counts may vary by task; this upper bound only rejects malformed data.
 const MAX_TESTS = 30;
-const MIN_TESTS = 1;
+const MIN_TESTS = 8;
 const MAX_VISIBLE_TESTS = 10;
 const LEGACY_TEST_COUNT = 20;
 function hasValidTestCount(tests) {
@@ -1725,7 +1725,7 @@ function selectTask(id) {
     ? `Có thể xem ${practiceTests.length} test đầu. ${hidden} test còn lại được ẩn và vẫn chạy khi chấm điểm.`
     : `Có thể xem cả ${total} test. Chọn một test để nạp input.`;
   $("testScoringNote").textContent = `Chấm điểm chạy đủ ${total} test. Điểm trước khi trừ lỗi trình bày bằng số test đúng chia cho ${total}, rồi nhân 10. Hệ thống lưu điểm cao nhất.`;
-  $("runall").textContent = `Chấm điểm (${total} test)`;
+  $("runall").textContent = "Chấm điểm";
   $("downloadPdf").textContent = `Xuất đề + ${practiceTests.length} test PDF`;
   $("tests").innerHTML = practiceTests
     .map(

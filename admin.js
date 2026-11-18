@@ -10,7 +10,7 @@ const DATA_FILES = [
   "./data/part3.json",
   "./data/part4.json",
 ].map((f) => new URL(f, import.meta.url));
-const MIN_TESTS = 1;
+const MIN_TESTS = 8;
 const MAX_TESTS = 30;
 const hasValidTestCount = (count) => Number.isInteger(count) && count >= MIN_TESTS && count <= MAX_TESTS;
 
