@@ -137,13 +137,34 @@ function currentBestScore(taskId) {
   const task = TASKS.find((item) => Number(item.id) === Number(taskId));
   const score = bestScores?.[taskId];
   if (!task || score === undefined || score === null) return undefined;
+  const points = Number(score);
+  if (!Number.isFinite(points) || points < 0 || points > 10) return undefined;
   const meta = bestScoreMeta?.[taskId];
-  if (meta?.testSetVersion) {
-    if (meta.testSetVersion !== testSetVersion(task) || meta.testsTotal !== task.tests.length) return undefined;
-  } else if (task.tests.length !== LEGACY_TEST_COUNT) {
-    return undefined;
+  const version = testSetVersion(task);
+  if (
+    meta?.testSetVersion === version &&
+    Number(meta.testsTotal) === task.tests.length
+  ) {
+    return points;
   }
-  return Number(score);
+
+  // Keep a saved best score visible when tests are revised. The migration
+  // archives the old test metadata, then rebases the same points to this set.
+  archiveScoreVersion(taskId, points, meta || {});
+  const oldTotal = Number.isInteger(meta?.testsTotal) && meta.testsTotal > 0
+    ? Number(meta.testsTotal)
+    : LEGACY_TEST_COUNT;
+  const oldPassed = Number.isInteger(meta?.testsPassed)
+    ? Number(meta.testsPassed)
+    : Math.round((points * oldTotal) / 10);
+  bestScoreMeta[taskId] = {
+    testsPassed: Math.max(0, Math.min(task.tests.length, Math.round((oldPassed * task.tests.length) / oldTotal))),
+    testsTotal: task.tests.length,
+    testSetVersion: version,
+    points,
+  };
+  persistScores();
+  return points;
 }
 const starter =
   "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Viet code cua ban o day\n    return 0;\n}\n";
@@ -431,10 +452,12 @@ async function syncGuestScoresUp() {
 async function loadCloudProgress() {
   const userId = currentUser?.id;
   if (!userId) return;
+  let legacySchema = false;
   let { data, error } = await supabase
     .from("user_progress")
     .select("problem_id,best_score,best_points,best_tests_total,test_set_version");
   if (error && /best_points|column/i.test(error.message || "")) {
+    legacySchema = true;
     ({ data, error } = await supabase
       .from("user_progress")
       .select("problem_id,best_score"));
@@ -447,23 +470,38 @@ async function loadCloudProgress() {
     const task = TASKS.find((item) => String(item.id) === String(row.problem_id));
     if (!task) continue;
     const rowVersion = row.test_set_version || null;
-    const rowTotal = Number(row.best_tests_total || task.tests.length);
+    const rowTotal = Number(row.best_tests_total || (legacySchema ? LEGACY_TEST_COUNT : task.tests.length));
     const expectedVersion = testSetVersion(task);
+    const points = Number(row.best_points ?? ((Number(row.best_score) * 10) / rowTotal));
+    if (!Number.isFinite(points) || points < 0 || points > 10) continue;
     if ((rowVersion && rowVersion !== expectedVersion) || rowTotal !== task.tests.length) {
-      archiveScoreVersion(row.problem_id, row.best_points ?? Number(row.best_score) / 2, {
+      archiveScoreVersion(row.problem_id, points, {
         testsPassed: Number(row.best_score), testsTotal: rowTotal, testSetVersion: rowVersion,
       });
-      continue;
     }
-    const points = Number(row.best_points ?? Number(row.best_score) / 2);
-    const local = cloudMeta[row.problem_id];
-    if (local?.testSetVersion === expectedVersion && local.testsTotal === rowTotal && Number(cloud[row.problem_id]) > points) continue;
-    cloud[row.problem_id] = points;
+    const localPoints = Number(cloud[row.problem_id] ?? -1);
+    const localMeta = cloudMeta[row.problem_id];
+    const keepLocal = localPoints > points;
+    const bestPoints = Math.max(points, localPoints);
+    if (keepLocal && (
+      localMeta?.testSetVersion !== expectedVersion ||
+      Number(localMeta?.testsTotal) !== task.tests.length
+    )) {
+      archiveScoreVersion(row.problem_id, localPoints, localMeta || {});
+    }
+    cloud[row.problem_id] = bestPoints;
+    const sourceTotal = keepLocal && Number.isInteger(localMeta?.testsTotal) && localMeta.testsTotal > 0
+      ? localMeta.testsTotal
+      : rowTotal;
+    const oldPassed = keepLocal ? localMeta?.testsPassed : Number(row.best_score);
+    const scaledPassed = Number.isInteger(oldPassed) && sourceTotal > 0
+      ? Math.round((oldPassed * task.tests.length) / sourceTotal)
+      : Math.round((bestPoints * task.tests.length) / 10);
     cloudMeta[row.problem_id] = {
-      testsPassed: Number(row.best_score),
-      testsTotal: rowTotal,
-      testSetVersion: rowVersion,
-      points: cloud[row.problem_id],
+      testsPassed: Math.max(0, Math.min(task.tests.length, scaledPassed)),
+      testsTotal: task.tests.length,
+      testSetVersion: expectedVersion,
+      points: bestPoints,
     };
   }
   bestScores = cloud;
