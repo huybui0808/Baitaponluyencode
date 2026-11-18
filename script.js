@@ -687,6 +687,7 @@ async function saveCodeSubmission(taskId, code, passed = null, testNo = null, ou
 async function saveRunSubmission(job, passed = null, testNo = null, outcome = "partial") {
   if (
     !job ||
+    job.kind === "single" ||
     job.maxScoreAtStart ||
     job.controller?.signal.aborted ||
     outcome === "cancelled"
