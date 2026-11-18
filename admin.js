@@ -10,7 +10,9 @@ const DATA_FILES = [
   "./data/part3.json",
   "./data/part4.json",
 ].map((f) => new URL(f, import.meta.url));
-const MAX_TESTS = 20;
+const MIN_TESTS = 1;
+const MAX_TESTS = 30;
+const hasValidTestCount = (count) => Number.isInteger(count) && count >= MIN_TESTS && count <= MAX_TESTS;
 
 const PRIMARY = [
   ["dash", "▦", "Tổng quan"],
@@ -265,7 +267,7 @@ async function viewDash(body) {
         <button class="adm-btn" data-go="stats">📊 Xem thống kê chi tiết</button>
         ${isSuper ? '<button class="adm-btn" data-go="admins">🛡 Quản trị viên</button>' : ""}</div></div>
       <div class="adm-card"><h2>Lưu ý</h2><p style="margin:0;color:var(--muted);font-size:13px;line-height:1.6">
-        Thay đổi bài tập/test sẽ hiện cho học viên sau khi họ tải lại trang. Chỉ bài đã <b>xuất bản</b> và có đủ <b>${MAX_TESTS} test</b> mới hiển thị.</p></div></div>`;
+        Thay đổi bài tập/test sẽ hiện cho học viên sau khi họ tải lại trang. Bài đã <b>xuất bản</b> cần có từ <b>${MIN_TESTS} đến ${MAX_TESTS} test</b>.</p></div></div>`;
   body.onclick = (e) => {
     const g = e.target.closest("[data-go]");
     if (!g) return;
@@ -344,7 +346,7 @@ async function viewProblems(body) {
     ) +
     `<div class="adm-toolbar"><input class="adm-input" id="pfText" placeholder="Tìm theo số hoặc tên bài…" value="${esc(state.pf.text)}">
       <select class="adm-select" id="pfPart"><option value="all">Mọi phần</option>${[1, 2, 3, 4].map((n) => `<option value="${n}">Phần ${n}</option>`).join("")}</select>
-      <select class="adm-select" id="pfStatus"><option value="all">Mọi trạng thái</option><option value="pub">Đã xuất bản</option><option value="draft">Bản nháp</option><option value="bad">Thiếu test</option></select></div>
+      <select class="adm-select" id="pfStatus"><option value="all">Mọi trạng thái</option><option value="pub">Đã xuất bản</option><option value="draft">Bản nháp</option><option value="bad">Số test không hợp lệ</option></select></div>
     <div id="pList"></div>`;
   $("#pfPart").value = state.pf.part;
   $("#pfStatus").value = state.pf.status;
@@ -368,7 +370,7 @@ function filteredProblems() {
       (status === "all" ||
         (status === "pub" && p.is_published) ||
         (status === "draft" && !p.is_published) ||
-        (status === "bad" && testCount(p) !== MAX_TESTS)),
+        (status === "bad" && !hasValidTestCount(testCount(p)))),
   );
 }
 function renderProblemList() {
@@ -384,7 +386,7 @@ function renderProblemList() {
         .map((p) => {
           const n = testCount(p);
           return `<tr data-id="${p.id}"><td><b>${pad3(p.id)}</b></td><td class="ttl">${esc(p.title)}</td><td class="mut">${esc(p.section.split(" - ")[0])}</td>
-        <td>${esc(p.level)}</td><td><span class="adm-badge ${n === MAX_TESTS ? "ok" : "warn"}">${n}/${MAX_TESTS}</span></td>
+        <td>${esc(p.level)}</td><td><span class="adm-badge ${hasValidTestCount(n) ? "ok" : "warn"}">${n} test</span></td>
         <td><button class="adm-switch ${p.is_published ? "on" : ""}" data-act="pub" aria-label="Xuất bản"></button></td>
         <td><div class="adm-actions"><button class="adm-btn sm" data-act="up" title="Lên">↑</button><button class="adm-btn sm" data-act="down" title="Xuống">↓</button>
         <button class="adm-btn sm" data-act="edit">Sửa</button><button class="adm-btn sm danger" data-act="del">Xóa</button></div></td></tr>`;
@@ -405,9 +407,9 @@ async function onProblemsClick(e) {
     const p = state.problems.find((x) => x.id === id);
     if (act === "edit") return openProblemEditor(id);
     if (act === "pub") {
-      if (!p.is_published && testCount(p) !== MAX_TESTS)
+      if (!p.is_published && !hasValidTestCount(testCount(p)))
         return toast(
-          `Chỉ xuất bản khi đủ ${MAX_TESTS} test (hiện ${testCount(p)}).`,
+          `Cần từ ${MIN_TESTS} đến ${MAX_TESTS} test để xuất bản (hiện ${testCount(p)}).`,
           "err",
         );
       await q(
@@ -540,7 +542,7 @@ async function openProblemEditor(id) {
           <span style="color:var(--muted);font-size:12.5px">${isNew ? "Điền nội dung, thêm test rồi lưu." : esc(p.title)}</span></div>
           <button class="adm-iconbtn" data-x="close" aria-label="Đóng">✕</button></div>
         <div class="adm-subtabs"><button class="adm-subtab ${ed.tab === "info" ? "active" : ""}" data-tab="info">Nội dung</button>
-          <button class="adm-subtab ${ed.tab === "tests" ? "active" : ""}" data-tab="tests">Test case (${ed.tests.length}/${MAX_TESTS})</button></div>
+          <button class="adm-subtab ${ed.tab === "tests" ? "active" : ""}" data-tab="tests">Test case (${ed.tests.length})</button></div>
         <div id="edBody"></div>
         <div class="adm-foot"><button class="adm-btn" data-x="close">Hủy</button><button class="adm-btn primary" data-x="save">Lưu thay đổi</button></div>`;
       const eb = panel.querySelector("#edBody");
@@ -560,7 +562,7 @@ async function openProblemEditor(id) {
       <div class="adm-row2"><label class="adm-field"><span>Sample input</span><textarea class="adm-textarea" id="fSin">${esc(p.sample_input)}</textarea></label>
         <label class="adm-field"><span>Sample output</span><textarea class="adm-textarea" id="fSout">${esc(p.sample_output)}</textarea></label></div>
       <div style="display:flex;align-items:center;gap:10px"><button class="adm-switch ${p.is_published ? "on" : ""}" data-x="pub" aria-label="Xuất bản"></button>
-        <span style="font-size:13px">Xuất bản cho học viên <span style="color:var(--muted)">(cần đủ ${MAX_TESTS} test)</span></span></div>`;
+        <span style="font-size:13px">Xuất bản cho học viên <span style="color:var(--muted)">(cần ${MIN_TESTS}–${MAX_TESTS} test)</span></span></div>`;
     const testsHtml = () => `
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
         <button class="adm-btn sm" data-t="add" ${ed.tests.length >= MAX_TESTS ? "disabled" : ""}>＋ Thêm test</button>
@@ -601,8 +603,8 @@ async function openProblemEditor(id) {
             ));
         else if (k) seen.set(k, i);
       });
-      if (ed.tests.length !== MAX_TESTS)
-        msgs.unshift(`Hiện có ${ed.tests.length}/${MAX_TESTS} test.`);
+      if (!hasValidTestCount(ed.tests.length))
+        msgs.unshift(`Số test phải từ ${MIN_TESTS} đến ${MAX_TESTS} (hiện có ${ed.tests.length}).`);
       return msgs;
     };
     const bindTests = (eb) => {
@@ -646,8 +648,8 @@ async function openProblemEditor(id) {
           const msgs = validate();
           draw();
           panel.querySelector("#tNote").innerHTML = msgs.length
-            ? `<div class="adm-note ${ed.tests.length === MAX_TESTS && !ed.bad.size ? "" : "err"}">${msgs.map(esc).join("<br>")}</div>`
-            : `<div class="adm-note ok">Dữ liệu hợp lệ: đủ ${MAX_TESTS} test, không trống, không trùng input.</div>`;
+            ? `<div class="adm-note err">${msgs.map(esc).join("<br>")}</div>`
+            : `<div class="adm-note ok">Dữ liệu hợp lệ: ${ed.tests.length} test, không trống, không trùng input.</div>`;
         }
       });
     };
@@ -657,9 +659,9 @@ async function openProblemEditor(id) {
       if (!Number.isInteger(n) || n < 1)
         return toast("Số bài phải là số nguyên dương.", "err");
       if (!ed.p.title) return toast("Hãy nhập tên bài.", "err");
-      if (ed.p.is_published && ed.tests.length !== MAX_TESTS)
+      if (ed.p.is_published && !hasValidTestCount(ed.tests.length))
         return toast(
-          `Chỉ xuất bản khi đủ ${MAX_TESTS} test (hiện ${ed.tests.length}).`,
+          `Cần từ ${MIN_TESTS} đến ${MAX_TESTS} test để xuất bản (hiện ${ed.tests.length}).`,
           "err",
         );
       const btn = panel.querySelector("[data-x=save]");
@@ -682,12 +684,15 @@ async function openProblemEditor(id) {
           sample_input: ed.p.sample_input,
           sample_output: ed.p.sample_output,
           sort_order: ed.p.sort_order,
-          is_published: ed.p.is_published,
+          // Publish only after changed tests have been saved and validated server-side.
+          is_published: ed.testsDirty && ed.p.is_published ? false : ed.p.is_published,
           updated_at: new Date().toISOString(),
         };
         await q(sb.from("problems").upsert(row, { onConflict: "id" }));
         if (ed.testsDirty)
           await rpc("admin_save_tests", { p_problem: n, p_tests: ed.tests });
+        if (ed.testsDirty && ed.p.is_published)
+          await q(sb.from("problems").update({ is_published: true }).eq("id", n));
         dirty = true;
         modal.remove();
         toast("Đã lưu bài tập.", "ok");
@@ -748,6 +753,10 @@ async function importFromJson() {
       }),
     );
     const tasks = parts.flat().sort((a, b) => a.id - b.id);
+    const existingProblems = await q(
+      sb.from("problems").select("id,is_published").in("id", tasks.map((task) => task.id)),
+    );
+    const existingById = new Map(existingProblems.map((problem) => [problem.id, problem]));
     const rows = tasks.map((t, i) => ({
       id: t.id,
       title: t.title,
@@ -760,7 +769,8 @@ async function importFromJson() {
       sample_input: t.sample_input ?? "",
       sample_output: t.sample_output ?? "",
       sort_order: (i + 1) * 10,
-      is_published: Array.isArray(t.tests) && t.tests.length === MAX_TESTS,
+      // Keep existing valid publications during import; new rows publish after tests are saved.
+      is_published: Boolean(existingById.get(t.id)?.is_published),
     }));
     for (let i = 0; i < rows.length; i += 50) {
       msg(
@@ -783,6 +793,16 @@ async function importFromJson() {
           output: x.output,
         })),
       });
+    }
+    const publishableIds = tasks
+      .filter((task) => hasValidTestCount(task.tests?.length))
+      .map((task) => task.id);
+    if (publishableIds.length) {
+      await q(
+        sb.from("problems")
+          .update({ is_published: true })
+          .in("id", publishableIds),
+      );
     }
     dirty = true;
     modal.remove();
@@ -865,8 +885,8 @@ async function openUserDrawer(u) {
         .map(
           (
             r,
-          ) => `<tr><td><b>${pad3(r.problem_id)}</b> <span class="mut">${esc(taskTitle(r.problem_id))}</span></td><td>${Number(r.best_points ?? Number(r.best_score) / 2).toFixed(1)}/10</td>
-      <td>${r.best_score}/${MAX_TESTS}</td><td class="mut">${fmt(r.updated_at)}</td></tr>`,
+          ) => `<tr><td><b>${pad3(r.problem_id)}</b> <span class="mut">${esc(taskTitle(r.problem_id))}</span></td><td>${Number(r.best_points ?? Number(r.best_score) / 2).toFixed(2)}/10</td>
+      <td>${r.best_score}/${Number(r.best_tests_total || ctx.tasks?.find((task) => Number(task.id) === Number(r.problem_id))?.tests.length || 0)}</td><td class="mut">${fmt(r.updated_at)}</td></tr>`,
         )
         .join("") ||
       '<tr><td colspan="4" class="adm-empty">Chưa làm bài nào.</td></tr>'
@@ -884,7 +904,7 @@ async function openUserDrawer(u) {
           p_user_id: u.user_id,
           p_limit: 100,
         })).filter((row) => row.outcome !== "accepted");
-        target.innerHTML = `<h2 style="font-size:15px">Lịch sử code chưa đạt (${codes.length})</h2>${codes.length ? codes.map((row) => `<details class="adm-tc"><summary><b>Bài ${pad3(row.problem_id)}</b> · ${row.tests_passed == null ? (row.test_no ? `Test ${row.test_no}` : "Đã chạy") : `${row.tests_passed}/20 test đúng`} · ${fmt(row.created_at)}</summary><textarea class="adm-textarea" readonly style="min-height:240px">${esc(row.source_code)}</textarea></details>`).join("") : '<div class="adm-empty">Chưa có bản code sai hoặc chưa đạt để hiển thị.</div>'}`;
+        target.innerHTML = `<h2 style="font-size:15px">Lịch sử code chưa đạt (${codes.length})</h2>${codes.length ? codes.map((row) => { const total = Number(row.tests_total || ctx.tasks?.find((task) => Number(task.id) === Number(row.problem_id))?.tests.length || 0); return `<details class="adm-tc"><summary><b>Bài ${pad3(row.problem_id)}</b> · ${row.tests_passed == null ? (row.test_no ? `Test ${row.test_no}` : "Đã chạy") : `${row.tests_passed}/${total} test đúng`} · ${fmt(row.created_at)}</summary><textarea class="adm-textarea" readonly style="min-height:240px">${esc(row.source_code)}</textarea></details>`; }).join("") : '<div class="adm-empty">Chưa có bản code sai hoặc chưa đạt để hiển thị.</div>'}`;
         return;
       } else if (x === "lock") {
         if (

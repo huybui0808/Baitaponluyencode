@@ -14,6 +14,34 @@ const TASK_DATA_FILES = [
   "./data/part3.json",
   "./data/part4.json",
 ];
+// VI: Số test của mỗi bài linh hoạt; giới hạn này chỉ để chặn dữ liệu bất thường.
+// EN: Test counts may vary by task; this upper bound only rejects malformed data.
+const MAX_TESTS = 30;
+const MIN_TESTS = 1;
+const MAX_VISIBLE_TESTS = 10;
+const LEGACY_TEST_COUNT = 20;
+function hasValidTestCount(tests) {
+  return Array.isArray(tests) && tests.length >= MIN_TESTS && tests.length <= MAX_TESTS;
+}
+// VI: Giới hạn test công khai để luyện tập. EN: Limit the public practice cases.
+function visibleTests(task) {
+  return task.tests.slice(0, MAX_VISIBLE_TESTS);
+}
+function testSetVersion(task) {
+  if (task?.test_set_version) return String(task.test_set_version);
+  const encoder = new TextEncoder();
+  const data = (task?.tests || []).map((test) => {
+    const input = String(test.input ?? "");
+    const output = String(test.output ?? "");
+    return `${encoder.encode(input).length}:${input}${encoder.encode(output).length}:${output}`;
+  }).join("");
+  let hash = 2166136261;
+  for (const byte of encoder.encode(data)) {
+    hash ^= byte;
+    hash = Math.imul(hash, 16777619);
+  }
+  return `fnv1a-${(hash >>> 0).toString(16).padStart(8, "0")}`;
+}
 
 // [ADMIN] Ưu tiên nạp bài đã xuất bản từ Supabase (bảng problems + test_cases do Admin quản lý).
 // Nếu bảng trống hoặc lỗi mạng thì tự quay về 4 file JSON như cũ.
@@ -43,11 +71,12 @@ async function loadTasksFromSupabase() {
         constraints: r.constraints,
         sample_input: r.sample_input,
         sample_output: r.sample_output,
+        test_set_version: r.test_set_version ?? null,
         tests: (r.test_cases || [])
           .sort((a, b) => a.no - b.no)
           .map((t) => ({ no: t.no, input: t.input, output: t.output })),
       }))
-      .filter((t) => t.tests.length === 20);
+      .filter((t) => hasValidTestCount(t.tests));
     return tasks.length ? tasks : null;
   } catch (_) {
     return null;
@@ -76,8 +105,8 @@ async function loadTaskData() {
     if (!Number.isInteger(task.id) || ids.has(task.id)) {
       throw new Error(`ID bài tập không hợp lệ hoặc bị trùng: ${task.id}`);
     }
-    if (!Array.isArray(task.tests) || task.tests.length !== 20) {
-      throw new Error(`Bài ${task.id} phải có đúng 20 test case.`);
+    if (!hasValidTestCount(task.tests)) {
+      throw new Error(`Bài ${task.id} phải có từ ${MIN_TESTS} đến ${MAX_TESTS} test case.`);
     }
     ids.add(task.id);
   }
@@ -103,6 +132,19 @@ try {
   document.getElementById("loadError").textContent = error.message;
   throw error;
 }
+const TOTAL_TEST_CASES = TASKS.reduce((sum, task) => sum + task.tests.length, 0);
+function currentBestScore(taskId) {
+  const task = TASKS.find((item) => Number(item.id) === Number(taskId));
+  const score = bestScores?.[taskId];
+  if (!task || score === undefined || score === null) return undefined;
+  const meta = bestScoreMeta?.[taskId];
+  if (meta?.testSetVersion) {
+    if (meta.testSetVersion !== testSetVersion(task) || meta.testsTotal !== task.tests.length) return undefined;
+  } else if (task.tests.length !== LEGACY_TEST_COUNT) {
+    return undefined;
+  }
+  return Number(score);
+}
 const starter =
   "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Viet code cua ban o day\n    return 0;\n}\n";
 let current = TASKS[0],
@@ -111,7 +153,9 @@ let current = TASKS[0],
 const $ = (id) => document.getElementById(id);
 const SCORE_KEY = "tlu_cpp_best_scores_v1";
 const SCORE_META_KEY = "tlu_cpp_best_score_meta_v1";
+const SCORE_HISTORY_KEY = "tlu_cpp_best_score_history_v1";
 const LEGACY_LATEST_SCORE_KEY = "tlu_cpp_latest_scores_v1";
+const SCORE_PRECISION = 1_000_000;
 const TEST_TIME_LIMIT_MS = 1000;
 const activeRuns = new Map(); // Một bài có tối đa một phiên chạy tại một thời điểm.
 const runViews = new Map(); // Kết quả/progress được giữ riêng theo ID bài khi chuyển bài.
@@ -123,6 +167,22 @@ function readStore(key) {
   } catch (_) {
     return {};
   }
+}
+function archiveScoreVersion(taskId, score, meta = {}) {
+  if (!Number.isFinite(Number(score))) return;
+  const history = readStore(SCORE_HISTORY_KEY);
+  const version = String(meta.testSetVersion || `legacy-${meta.testsTotal || LEGACY_TEST_COUNT}`);
+  const key = `${taskId}:${version}`;
+  if (history[key]) return;
+  history[key] = {
+    taskId: Number(taskId),
+    points: Number(score),
+    testsPassed: Number.isInteger(meta.testsPassed) ? meta.testsPassed : null,
+    testsTotal: Number.isInteger(meta.testsTotal) ? meta.testsTotal : LEGACY_TEST_COUNT,
+    testSetVersion: version,
+    archivedAt: new Date().toISOString(),
+  };
+  try { localStorage.setItem(SCORE_HISTORY_KEY, JSON.stringify(history)); } catch (_) {}
 }
 let bestScores = readStore(SCORE_KEY);
 let bestScoreMeta = readStore(SCORE_META_KEY);
@@ -140,23 +200,25 @@ for (const [id, value] of Object.entries(oldLatestScores)) {
 let accountSuspended = false;
 let confirmSignupOnce = false;
 let currentUser = null; // Người dùng Supabase đang đăng nhập (null = khách)
+function scoreStoreKey(key, userId = currentUser?.id) {
+  return userId ? `${key}:${userId}` : key;
+}
 function persistScores() {
-  if (currentUser && navigator.onLine) return;
   try {
-    localStorage.setItem(SCORE_KEY, JSON.stringify(bestScores));
-    localStorage.setItem(SCORE_META_KEY, JSON.stringify(bestScoreMeta));
+    localStorage.setItem(scoreStoreKey(SCORE_KEY), JSON.stringify(bestScores));
+    localStorage.setItem(scoreStoreKey(SCORE_META_KEY), JSON.stringify(bestScoreMeta));
+    return true;
   } catch (_) {
     console.warn("Không thể lưu điểm vào localStorage.");
+    return false;
   }
 }
 persistScores();
 
 // ===== Supabase: đăng nhập, lưu điểm lên tài khoản, bảng xếp hạng =====
-// Quy ước lưu: bảng user_progress.best_score = SỐ TEST ĐÚNG (0-20).
-// Điểm hiển thị = số test đúng / 2 (mỗi test 0,5 điểm).
+// Quy ước lưu: best_score giữ số test đúng; best_points lưu điểm theo tổng test của bài.
 const SUPABASE_URL = "https://dcdvtpmihijzbieblwfa.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Fb40gK9h5FiDyJSI05nH0g_TmXM8W-m";
-const MAX_TESTS = 20;
 let supabase = null;
 try {
   if (!navigator.onLine) throw new Error("Offline");
@@ -296,61 +358,117 @@ function isStrongPassword(password) {
 }
 
 // ----- Đồng bộ điểm -----
+// VI: Lấy đơn vị điểm theo độ chính xác của cột Supabase. EN: Use the precision of the Supabase score column.
+function maxScoreUnits(passed, total) {
+  return Math.floor((passed * 10 * SCORE_PRECISION) / total);
+}
+
 // Điểm khách (localStorage) được đẩy lên tài khoản khi đăng nhập;
 // máy chủ chỉ giữ điểm cao hơn nên không thể làm tụt điểm.
 async function syncGuestScoresUp() {
   if (accountSuspended) return;
   const scores = readStore(SCORE_KEY);
   const metadata = readStore(SCORE_META_KEY);
+  const pendingScores = {};
+  const pendingMetadata = {};
   for (const [id, value] of Object.entries(scores)) {
-    if (!/^\d{1,4}$/.test(id)) continue;
+    if (!/^\d{1,4}$/.test(id)) {
+      pendingScores[id] = value;
+      if (metadata[id]) pendingMetadata[id] = metadata[id];
+      continue;
+    }
     const meta = metadata[id];
+    const task = TASKS.find((item) => String(item.id) === String(id));
+    const versionMismatch = task?.test_set_version
+      ? meta?.testSetVersion !== String(task.test_set_version) || meta?.testsTotal !== task.tests.length
+      : meta?.testSetVersion
+        ? meta.testSetVersion !== testSetVersion(task) || meta.testsTotal !== task.tests.length
+        : task?.tests.length !== LEGACY_TEST_COUNT;
+    if (!task || versionMismatch) {
+      pendingScores[id] = value;
+      if (meta) pendingMetadata[id] = meta;
+      if (task) archiveScoreVersion(id, value, meta || {});
+      continue;
+    }
     const tests = Number.isInteger(meta?.testsPassed)
       ? meta.testsPassed
       : Math.round(Number(value) * 2);
     const points = Number.isFinite(Number(meta?.points)) ? Number(meta.points) : Number(value);
-    if (tests < 0 || tests > MAX_TESTS || points < 0 || points > 10) continue;
-    const { error } = await supabase.rpc("submit_score_with_presentation", {
+    if (tests < 0 || tests > task.tests.length || points < 0 || points > 10) {
+      pendingScores[id] = value;
+      if (meta) pendingMetadata[id] = meta;
+      continue;
+    }
+    let { error } = await supabase.rpc("submit_score_with_presentation", {
       p_problem_id: Number(id),
       p_tests_passed: tests,
-      p_points: points,
+      p_tests_total: task.tests.length,
+      p_test_set_version: testSetVersion(task),
+      p_points: Math.min(points, maxScoreUnits(tests, task.tests.length) / SCORE_PRECISION),
     });
+    if (error?.code === "PGRST202" && task.tests.length === LEGACY_TEST_COUNT) {
+      ({ error } = await supabase.rpc("submit_score_with_presentation", {
+        p_problem_id: Number(id), p_tests_passed: tests, p_points: points,
+      }));
+    }
     if (error) {
       console.warn("Không đồng bộ được điểm khách:", error.message);
       return;
     }
   }
   try {
-    localStorage.removeItem(SCORE_KEY);
-    localStorage.removeItem(SCORE_META_KEY);
-    localStorage.removeItem(LEGACY_LATEST_SCORE_KEY);
+    if (Object.keys(pendingScores).length) {
+      localStorage.setItem(SCORE_KEY, JSON.stringify(pendingScores));
+      localStorage.setItem(SCORE_META_KEY, JSON.stringify(pendingMetadata));
+    } else {
+      localStorage.removeItem(SCORE_KEY);
+      localStorage.removeItem(SCORE_META_KEY);
+      localStorage.removeItem(LEGACY_LATEST_SCORE_KEY);
+    }
   } catch (_) {}
 }
 
 async function loadCloudProgress() {
+  const userId = currentUser?.id;
+  if (!userId) return;
   let { data, error } = await supabase
     .from("user_progress")
-    .select("problem_id,best_score,best_points");
+    .select("problem_id,best_score,best_points,best_tests_total,test_set_version");
   if (error && /best_points|column/i.test(error.message || "")) {
     ({ data, error } = await supabase
       .from("user_progress")
       .select("problem_id,best_score"));
   }
-  if (error) {
-    console.warn("Không tải được điểm từ tài khoản:", error.message);
-    return;
-  }
-  const cloud = {};
-  const cloudMeta = {};
-  for (const row of data) {
-    cloud[row.problem_id] = Number(row.best_points ?? Number(row.best_score) / 2);
+  if (currentUser?.id !== userId) return;
+  if (error) console.warn("Không tải được điểm từ tài khoản:", error.message);
+  const cloud = readStore(scoreStoreKey(SCORE_KEY, userId));
+  const cloudMeta = readStore(scoreStoreKey(SCORE_META_KEY, userId));
+  for (const row of data || []) {
+    const task = TASKS.find((item) => String(item.id) === String(row.problem_id));
+    if (!task) continue;
+    const rowVersion = row.test_set_version || null;
+    const rowTotal = Number(row.best_tests_total || task.tests.length);
+    const expectedVersion = testSetVersion(task);
+    if ((rowVersion && rowVersion !== expectedVersion) || rowTotal !== task.tests.length) {
+      archiveScoreVersion(row.problem_id, row.best_points ?? Number(row.best_score) / 2, {
+        testsPassed: Number(row.best_score), testsTotal: rowTotal, testSetVersion: rowVersion,
+      });
+      continue;
+    }
+    const points = Number(row.best_points ?? Number(row.best_score) / 2);
+    const local = cloudMeta[row.problem_id];
+    if (local?.testSetVersion === expectedVersion && local.testsTotal === rowTotal && Number(cloud[row.problem_id]) > points) continue;
+    cloud[row.problem_id] = points;
     cloudMeta[row.problem_id] = {
       testsPassed: Number(row.best_score),
+      testsTotal: rowTotal,
+      testSetVersion: rowVersion,
       points: cloud[row.problem_id],
     };
   }
   bestScores = cloud;
   bestScoreMeta = cloudMeta;
+  persistScores();
 }
 async function loadProfileName() {
   let { data, error } = await supabase
@@ -436,6 +554,7 @@ async function handleSession(session) {
       profileAvatarPath = "";
       myRole = "student";
       bestScores = readStore(SCORE_KEY);
+      bestScoreMeta = readStore(SCORE_META_KEY);
       refreshScoreViews();
     }
     renderAuthBox();
@@ -449,6 +568,8 @@ async function handleSession(session) {
     renderAuthBox();
     return;
   }
+  bestScores = readStore(scoreStoreKey(SCORE_KEY, user.id));
+  bestScoreMeta = readStore(scoreStoreKey(SCORE_META_KEY, user.id));
   loadedForUser = user.id;
   renderAuthBox();
   await syncGuestScoresUp();
@@ -458,8 +579,8 @@ async function handleSession(session) {
   renderAuthBox();
   refreshScoreViews();
 }
-// Gọi sau mỗi lần chấm đủ 20 test. Trả về dòng ghi chú để hiện trong kết quả.
-async function syncScoreAfterGrading(taskId, passed, points) {
+// Gọi sau khi chấm toàn bộ test của bài. Trả về dòng ghi chú để hiện trong kết quả.
+async function syncScoreAfterGrading(taskId, passed, points, testsTotal, version) {
   // VI: Tai khoan bi dinh chi chi duoc luyen tap; khong gui diem len Supabase. EN: Keep suspended-account score writes out of Supabase.
   if (accountSuspended) return "\nT\u00e0i kho\u1ea3n \u0111ang b\u1ecb \u0111\u00ecnh ch\u1ec9; \u0111i\u1ec3m kh\u00f4ng \u0111\u01b0\u1ee3c \u0111\u1ed3ng b\u1ed9.";
   if (!navigator.onLine)
@@ -467,31 +588,60 @@ async function syncScoreAfterGrading(taskId, passed, points) {
   if (!supabase) return "";
   if (!currentUser)
     return "\nĐăng nhập để lưu điểm lên tài khoản và vào bảng xếp hạng.";
-  const { data, error } = await supabase.rpc("submit_score_with_presentation", {
+  const userId = currentUser.id;
+  const local = bestScoreMeta[taskId];
+  if (local?.testSetVersion === version && local.testsTotal === testsTotal &&
+      Number.isInteger(local.testsPassed) && local.points > points) {
+    passed = local.testsPassed;
+    points = local.points;
+  }
+  let { data, error } = await supabase.rpc("submit_score_with_presentation", {
     p_problem_id: Number(taskId),
     p_tests_passed: passed,
-    p_points: points,
+    p_tests_total: testsTotal,
+    p_test_set_version: version,
+    p_points: Math.min(points, maxScoreUnits(passed, testsTotal) / SCORE_PRECISION),
   });
-  if (error)
-    return `\nChưa lưu được điểm lên tài khoản: ${error.message}. Điểm chỉ có trong phiên này.`;
-  bestScores[taskId] = Number(data);
+  if (error?.code === "PGRST202" && testsTotal === LEGACY_TEST_COUNT) {
+    ({ data, error } = await supabase.rpc("submit_score_with_presentation", {
+      p_problem_id: Number(taskId), p_tests_passed: passed, p_points: points,
+    }));
+  }
+  if (currentUser?.id !== userId) return "";
+  if (error) {
+    const saved = persistScores();
+    return `\nChưa đồng bộ được điểm: ${error.message}. ${saved ? "Điểm đã được giữ trên thiết bị này." : "Điểm hiện chỉ có trong phiên này."}`;
+  }
+  bestScores[taskId] = Math.max(Number(bestScores[taskId] ?? 0), Number(data));
+  persistScores();
   return "\nĐã lưu điểm lên tài khoản.";
 }
 
-async function saveCodeSubmission(taskId, code, passed = null, testNo = null, outcome = "partial", runMode = "batch") {
-  if (!supabase || !currentUser || !navigator.onLine) return;
+async function saveCodeSubmission(taskId, code, passed = null, testNo = null, outcome = "partial", runMode = "batch", testsTotal = null, version = null) {
+  if (!currentUser) return "";
+  if (!supabase || !navigator.onLine) return "\nLịch sử bài nộp cần kết nối Internet để lưu mã nguồn.";
   try {
-    const { error } = await supabase.rpc("save_code_submission", {
+    let { data, error } = await supabase.rpc("save_code_submission", {
       p_problem_id: Number(taskId),
       p_source_code: code,
       p_tests_passed: passed,
+      p_tests_total: testsTotal,
+      p_test_set_version: version,
       p_test_no: testNo,
       p_outcome: outcome,
       p_run_mode: runMode,
     });
-    if (error) console.warn("Không lưu được lịch sử code:", error.message);
+    if (error?.code === "PGRST202" && testsTotal === LEGACY_TEST_COUNT && (testNo == null || testNo <= LEGACY_TEST_COUNT)) {
+      ({ data, error } = await supabase.rpc("save_code_submission", {
+        p_problem_id: Number(taskId), p_source_code: code, p_tests_passed: passed,
+        p_test_no: testNo, p_outcome: outcome, p_run_mode: runMode,
+      }));
+    }
+    if (error) throw error;
+    return data == null ? "" : "\nĐã lưu mã nguồn vào lịch sử bài nộp.";
   } catch (error) {
     console.warn("Không lưu được lịch sử code:", error.message || error);
+    return "\nChưa lưu được mã nguồn vào lịch sử bài nộp.";
   }
 }
 // VI: Chỉ lưu lượt chạy khi bài chưa đạt điểm tối đa trước lúc bắt đầu; không lưu lượt hủy.
@@ -502,17 +652,19 @@ async function saveRunSubmission(job, passed = null, testNo = null, outcome = "p
     job.maxScoreAtStart ||
     job.controller?.signal.aborted ||
     outcome === "cancelled"
-  ) return;
-  await saveCodeSubmission(
+  ) return "";
+  return saveCodeSubmission(
     job.taskId,
     job.code,
     passed,
     testNo,
     outcome,
     job.kind,
+    job.testsTotal,
+    testSetVersion(job.task),
   );
 }
-// ----- Bảng xếp hạng: số bài hoàn thành, sau đó tổng số test đúng -----
+// ----- Bảng xếp hạng theo số bài hoàn thành và tổng điểm -----
 function openLeaderboard() {
   openOverlay("lbOverlay");
   loadLeaderboard();
@@ -532,7 +684,7 @@ async function loadLeaderboard() {
   head.innerHTML =
     "<tr><th>Hạng</th><th>Tên</th><th>Bài 10/10</th><th>Test đúng</th><th>Tổng điểm</th></tr>";
   $("lbNote").textContent =
-    "Xếp theo số bài đạt 10/10, rồi tổng số test đúng ở tất cả bài (mỗi test đúng 0,5 điểm).";
+    "Ưu tiên số bài đạt 10/10, sau đó đến tổng điểm và số test đúng.";
   const { data, error } = await supabase.rpc("get_rank_combined", {
     p_limit: 100,
   });
@@ -543,7 +695,7 @@ async function loadLeaderboard() {
   body.innerHTML = data
     .map(
       (r) =>
-        `<tr class="${rankRowClass(r)}"><td class="lb-rank">${Number(r.rank_no)}</td><td class="lb-name"><button class="lb-profile-link" type="button" data-profile="${escapeHTML(r.user_id)}">${escapeHTML(r.display_name || "(chưa đặt tên)")}</button>${r.is_me ? " <small>(bạn)</small>" : ""}</td><td class="lb-score">${Number(r.solved)}/${TASKS.length}</td><td>${Number(r.total_correct)}/${TASKS.length * MAX_TESTS}</td><td>${Number(r.total_points).toFixed(1)}/${TASKS.length * 10}</td></tr>`,
+        `<tr class="${rankRowClass(r)}"><td class="lb-rank">${Number(r.rank_no)}</td><td class="lb-name"><button class="lb-profile-link" type="button" data-profile="${escapeHTML(r.user_id)}">${escapeHTML(r.display_name || "(chưa đặt tên)")}</button>${r.is_me ? " <small>(bạn)</small>" : ""}</td><td class="lb-score">${Number(r.solved)}/${TASKS.length}</td><td>${Number(r.total_correct)}/${TOTAL_TEST_CASES}</td><td>${Number(r.total_points).toFixed(2)}/${TASKS.length * 10}</td></tr>`,
     )
     .join("");
 }
@@ -557,7 +709,7 @@ async function loadMemberDirectory(query = "") {
   results.textContent = "Đang tải thành viên…";
   const { data, error } = await supabase.rpc(query ? "search_member_profiles" : "list_member_directory", query ? { p_search: query, p_limit: 50 } : { p_limit: 100 });
   if (error) { results.textContent = error.message; return; }
-  results.innerHTML = data?.length ? data.map((member) => `<button class="directory-member" type="button" data-profile="${escapeHTML(member.user_id)}"><span class="profile-avatar" aria-hidden="true">${avatarImageMarkup(member.avatar_path, member.display_name)}</span><span><b>${escapeHTML(member.display_name || "Thành viên")}</b><small>${Number(member.solved)}/${TASKS.length} bài hoàn thành · ${Number(member.total_points || 0).toFixed(1)} điểm</small></span><span class="directory-arrow">›</span></button>`).join("") : "Không tìm thấy thành viên phù hợp.";
+  results.innerHTML = data?.length ? data.map((member) => `<button class="directory-member" type="button" data-profile="${escapeHTML(member.user_id)}"><span class="profile-avatar" aria-hidden="true">${avatarImageMarkup(member.avatar_path, member.display_name)}</span><span><b>${escapeHTML(member.display_name || "Thành viên")}</b><small>${Number(member.solved)}/${TASKS.length} bài hoàn thành · ${Number(member.total_points || 0).toFixed(2)} điểm</small></span><span class="directory-arrow">›</span></button>`).join("") : "Không tìm thấy thành viên phù hợp.";
   bindAvatarImages(results);
 }
 $("memberSearchForm").addEventListener("submit", async (event) => {
@@ -588,9 +740,14 @@ async function loadSubmissions(reset = true) {
   const canDeleteSubmissions = myRole === "admin" || myRole === "super_admin";
   const markup = rows.map(row => {
     const outcomeNames = {accepted:"Đúng", partial:"Chưa đạt hết", wrong:"Sai", compile_error:"Lỗi biên dịch", runtime_error:"Lỗi chạy", cancelled:"Đã hủy"};
-    const canViewCode = row.source_code != null;
+    const codeAccessMessage = '<p class="profile-subtle">Bạn có thể xem mã nguồn của người khác sau khi đạt 10/10 ở bài này.</p>';
+    const codeDetails = row.source_code != null
+      ? `<details class="profile-history-item"><summary>Xem mã nguồn đã lưu</summary><pre>${escapeHTML(row.source_code)}</pre></details>`
+      : codeAccessMessage;
     const deleteAction = canDeleteSubmissions ? `<div class="submission-delete-actions"><button class="submission-delete" type="button" data-start-delete aria-label="Xóa bài nộp">Xóa</button><div class="submission-delete-confirm" hidden><span>Xóa mục bài nộp này?</span><button class="submission-delete-confirm-btn" type="button" data-confirm-delete="${Number(row.submission_id)}">Xác nhận xóa</button><button class="submission-delete-cancel" type="button" data-cancel-delete>Hủy</button></div></div>` : "";
-    return `<article class="submission-entry"><div class="submission-entry-head"><span class="submission-badge ${escapeHTML(row.outcome)}">${escapeHTML(outcomeNames[row.outcome] || "Đã chạy")}</span><b>${String(row.problem_id).padStart(3,"0")}. ${escapeHTML(taskTitle(row.problem_id))}</b><time>${formatLocalDate(row.created_at)}</time></div><div class="submission-entry-meta"><button class="lb-profile-link" type="button" data-profile="${escapeHTML(row.user_id)}">${escapeHTML(row.display_name || "Thành viên")}</button><span>${row.test_no ? `Test ${Number(row.test_no)}` : `${Number(row.tests_passed || 0)}/20 test đúng`}</span><span>${row.run_mode === "single" ? "Chạy một test" : "Chạy toàn bộ"}</span></div>${canViewCode ? `<details class="profile-history-item"><summary>Xem mã nguồn đã lưu</summary><pre>${escapeHTML(row.source_code)}</pre></details>` : '<p class="profile-subtle">Mã nguồn chỉ hiển thị cho chủ tài khoản, Admin hoặc khi bài đã hoàn thành.</p>'}${deleteAction}</article>`;
+    const submittedTask = TASKS.find((task) => Number(task.id) === Number(row.problem_id));
+    const submittedTotal = Number(row.tests_total || submittedTask?.tests.length || 0);
+    return `<article class="submission-entry"><div class="submission-entry-head"><span class="submission-badge ${escapeHTML(row.outcome)}">${escapeHTML(outcomeNames[row.outcome] || "Đã chạy")}</span><b>${String(row.problem_id).padStart(3,"0")}. ${escapeHTML(taskTitle(row.problem_id))}</b><time>${formatLocalDate(row.created_at)}</time></div><div class="submission-entry-meta"><button class="lb-profile-link" type="button" data-profile="${escapeHTML(row.user_id)}">${escapeHTML(row.display_name || "Thành viên")}</button><span>${row.test_no ? `Test ${Number(row.test_no)}` : `${Number(row.tests_passed || 0)}/${submittedTotal} test đúng`}</span><span>${row.run_mode === "single" ? "Chạy một test" : "Chạy toàn bộ"}</span></div>${codeDetails}${deleteAction}</article>`;
   }).join("");
   if (reset) list.innerHTML = markup || '<p class="profile-subtle">Chưa có bài nộp trong phạm vi này.</p>';
   else if (markup) list.insertAdjacentHTML("beforeend", markup);
@@ -756,7 +913,7 @@ async function openProfile(userId) {
         <div class="profile-stat"><b>${solved}/${TASKS.length}</b><span>Bài đạt 10/10</span></div>
         <div class="profile-stat"><b>${Number(profile.attempted || 0)}</b><span>Bài đã thử</span></div>
         <div class="profile-stat"><b>${Number(profile.total_correct || 0)}</b><span>Test đúng</span></div>
-        <div class="profile-stat"><b>${Number(profile.total_points || 0).toFixed(1)}</b><span>Tổng điểm</span></div>
+        <div class="profile-stat"><b>${Number(profile.total_points || 0).toFixed(2)}</b><span>Tổng điểm</span></div>
       </div>
       <div class="profile-level-track"><span style="width:${level.percent}%"></span></div>
       <p class="profile-subtle">${level.nextLevel ? `${solved}/${level.nextLevel.min} bài hoàn thành để lên cấp ${level.nextLevel.name}.` : "Đã đạt cấp bậc cao nhất."}</p>
@@ -767,7 +924,7 @@ async function openProfile(userId) {
             ? progress
                 .map(
                   (item) =>
-                    `<div class="profile-progress-item" role="listitem"><span class="profile-progress-title">${String(item.problem_id).padStart(3, "0")}. ${escapeHTML(taskTitle(item.problem_id))}</span><b>${Number(item.best_points ?? Number(item.best_score) / 2).toFixed(1)}/10 · ${Number(item.best_score)}/20</b></div>`,
+                    `<div class="profile-progress-item" role="listitem"><span class="profile-progress-title">${String(item.problem_id).padStart(3, "0")}. ${escapeHTML(taskTitle(item.problem_id))}</span><b>${Number(item.best_points ?? Number(item.best_score) / 2).toFixed(2)}/10 · ${Number(item.best_score)}/${Number(item.best_tests_total || TASKS.find((task) => Number(task.id) === Number(item.problem_id))?.tests.length || 0)}</b></div>`,
                 )
                 .join("")
             : '<p class="profile-subtle">Chưa có tiến độ bài tập.</p>'
@@ -1167,7 +1324,7 @@ const STATUS_LABELS = {
   done: "Đạt 10/10",
 };
 function getTaskState(taskId) {
-  const value = bestScores[taskId];
+  const value = currentBestScore(taskId);
   if (value === undefined || value === null || !Number.isFinite(Number(value)))
     return "todo";
   return Number(value) >= 10 ? "done" : "doing";
@@ -1208,11 +1365,11 @@ function updateProgress() {
     `${done}/${TASKS.length} bài đạt 10/10 · ${doing} bài đã chấm còn lỗi · ${todo} bài chưa chấm`;
 }
 function updateScore() {
-  const best = bestScores[current.id];
+  const best = currentBestScore(current.id);
   $("scoreSummary").textContent =
     best === undefined
       ? "Điểm cao nhất: Chưa chấm"
-      : `Điểm cao nhất: ${Number(best).toFixed(1)}/10`;
+      : `Điểm cao nhất: ${Number(best).toFixed(2)}/10`;
 }
 function renderList() {
   ensureStatusLegend();
@@ -1229,9 +1386,9 @@ function renderList() {
     .map((t) => {
       const state = getTaskState(t.id);
       const label = STATUS_LABELS[state];
-      const best = bestScores[t.id];
+      const best = currentBestScore(t.id);
       const scoreText =
-        best === undefined ? "" : ` · Cao nhất ${Number(best).toFixed(1)}/10`;
+        best === undefined ? "" : ` · Cao nhất ${Number(best).toFixed(2)}/10`;
       const running = activeRuns.has(t.id);
       return `<button class="taskbtn status-${state} ${t.id === current.id ? "active" : ""} ${running ? "is-running" : ""}" data-id="${t.id}" title="${label}${scoreText}${running ? " · Đang chấm" : ""}" aria-label="Bài ${String(t.id).padStart(3, "0")}: ${escapeHTML(t.title)}. Trạng thái: ${label}${running ? ". Đang chấm" : ""}"><b>${String(t.id).padStart(3, "0")}</b><span class="taskbtn-text">${escapeHTML(t.title)}<small>${escapeHTML(t.level)} · ${escapeHTML(t.section.split(" - ")[1].slice(0, 45))}${running ? " · ĐANG CHẤM" : scoreText}</small></span><span class="task-state-mark ${state}" aria-hidden="true"></span></button>`;
     })
@@ -1527,6 +1684,14 @@ function sampleTranscript(task) {
   return presentation.expected(sample.output, sample.input);
 }
 
+function setTestListExpanded(expanded) {
+  const toggle = $("toggleTests");
+  const shown = Math.min(current.tests.length, MAX_VISIBLE_TESTS);
+  $("tests").classList.toggle("collapsed", !expanded);
+  toggle.textContent = expanded ? "Thu gọn test mẫu" : `Xem ${shown} test mẫu`;
+  toggle.setAttribute("aria-expanded", String(expanded));
+}
+
 function selectTask(id) {
   const task = TASKS.find((t) => t.id === id);
   if (!task) return;
@@ -1552,36 +1717,45 @@ function selectTask(id) {
   $("outputdesc").textContent = current.output;
   $("constraints").textContent = "Ràng buộc: " + current.constraints;
   $("sampleRun").textContent = sampleTranscript(current);
-  $("tests").innerHTML = current.tests
+  const practiceTests = visibleTests(current);
+  const total = current.tests.length;
+  const hidden = total - practiceTests.length;
+  $("testHeading").textContent = `${total} test chấm điểm`;
+  $("testVisibilityNote").textContent = hidden
+    ? `Có thể xem ${practiceTests.length} test đầu. ${hidden} test còn lại được ẩn và vẫn chạy khi chấm điểm.`
+    : `Có thể xem cả ${total} test. Chọn một test để nạp input.`;
+  $("testScoringNote").textContent = `Chấm điểm chạy đủ ${total} test. Điểm trước khi trừ lỗi trình bày bằng số test đúng chia cho ${total}, rồi nhân 10. Hệ thống lưu điểm cao nhất.`;
+  $("runall").textContent = `Chấm điểm (${total} test)`;
+  $("downloadPdf").textContent = `Xuất đề + ${practiceTests.length} test PDF`;
+  $("tests").innerHTML = practiceTests
     .map(
       (x, i) =>
         `<div class="case ${i === 0 ? "selected" : ""}" data-index="${i}"><div class="casehead"><b>TEST ${String(x.no).padStart(2, "0")}</b><button data-copy="${i}" type="button">Chép input</button></div><div class="casegrid"><div><label>Input</label><pre>${escapeHTML(x.input)}</pre></div><div><label>Expected output</label><pre>${escapeHTML(taskPresentation(current, x.input).expected(x.output))}</pre></div></div></div>`,
     )
     .join("");
-  $("tests").classList.add("collapsed");
-  $("toggleTests").textContent = `Hiện tất cả ${current.tests.length} test`;
-  $("toggleTests").setAttribute("aria-expanded", "false");
-  document.querySelectorAll(".case").forEach((c) =>
+  $("toggleTests").hidden = practiceTests.length <= 4;
+  setTestListExpanded(false);
+  $("tests").querySelectorAll(".case").forEach((c) =>
     c.addEventListener("click", (e) => {
       if (e.target.dataset.copy !== undefined) {
         e.stopPropagation();
         navigator.clipboard?.writeText(
-          current.tests[+e.target.dataset.copy].input,
+          practiceTests[+e.target.dataset.copy].input,
         );
         return;
       }
-      document
+      $("tests")
         .querySelectorAll(".case")
         .forEach((x) => x.classList.remove("selected"));
       c.classList.add("selected");
-      $("stdin").value = current.tests[+c.dataset.index].input;
+      $("stdin").value = practiceTests[+c.dataset.index].input;
       setStatus(
         "Đã nạp TEST " + String(+c.dataset.index + 1).padStart(2, "0") + ".",
         "",
       );
     }),
   );
-  $("stdin").value = current.tests[0].input;
+  $("stdin").value = practiceTests[0].input;
   updateProgress();
   updateScore();
   renderRunViewForCurrentTask();
@@ -1617,7 +1791,7 @@ function createRun(task, code, kind) {
     task,
     code,
     kind,
-    maxScoreAtStart: Number(bestScores[task.id] ?? 0) >= 10,
+    maxScoreAtStart: Number(currentBestScore(task.id) ?? 0) >= 10,
     controller: new AbortController(),
     state: "running",
     pass: 0,
@@ -1626,6 +1800,7 @@ function createRun(task, code, kind) {
     lines: [],
     currentTest: 0,
     total: kind === "batch" ? task.tests.length : 1,
+    testsTotal: task.tests.length,
     statusMessage: "Đang khởi tạo phiên chạy...",
     statusClass: "",
     output: "",
@@ -1666,7 +1841,8 @@ function wait(ms, signal) {
 }
 
 function buildTaskPdfHtml(task) {
-  const testsHtml = task.tests
+  const practiceTests = visibleTests(task);
+  const testsHtml = practiceTests
     .map(
       (test) => `
     <article class="test-case">
@@ -1722,7 +1898,7 @@ function buildTaskPdfHtml(task) {
     <section class="sample"><h4>Sample input</h4><pre>${escapeHTML(task.sample_input ?? "")}</pre></section>
     <section class="sample"><h4>Sample output</h4><pre>${escapeHTML(task.sample_output ?? "")}</pre></section>
   </div>
-  <h2>20 test case tự kiểm tra</h2>
+  <h2>${practiceTests.length} test mẫu</h2>
   <div class="test-list">${testsHtml}</div>
   <div class="footer">Tài liệu luyện tập được tạo tự động từ dữ liệu của website TLU C++. Các test trong tài liệu này là test luyện tập công khai.</div>
 </main></body></html>`;
@@ -1773,11 +1949,7 @@ document.querySelectorAll("#filters button").forEach((b) =>
   }),
 );
 $("toggleTests").addEventListener("click", () => {
-  const expanded = $("tests").classList.toggle("collapsed") === false;
-  $("toggleTests").textContent = expanded
-    ? "Thu gọn test case"
-    : `Hiện tất cả ${current.tests.length} test`;
-  $("toggleTests").setAttribute("aria-expanded", expanded ? "true" : "false");
+  setTestListExpanded($("tests").classList.contains("collapsed"));
 });
 $("code").addEventListener("input", () => {
   try {
@@ -1956,7 +2128,7 @@ function presentationSeverity(actual, expected, presentation) {
   return 0.15;
 }
 function classifyTestResult(result, task, test) {
-  if (result.timeLimitExceeded) return { status: "TLE", message: "QUÁ THỜI GIAN", penalty: 0 };
+  if (result.timeLimitExceeded) return { status: "TLE", message: "QUÁ THỜI GIAN (TLE)", penalty: 0 };
   if (result.exitCode !== "0") return { status: "RUNTIME", message: "LỖI CHẠY", penalty: 0 };
   const presentation = taskPresentation(task, test.input);
   const actual = normalizeProgramOutput(result.output);
@@ -1988,7 +2160,7 @@ $("runone").onclick = async () => {
   const task = current;
   const code = $("code").value;
   const stdin = $("stdin").value;
-  const target = task.tests.find(
+  const target = visibleTests(task).find(
     (x) => normalize(x.input) === normalize(stdin),
   );
   let job;
@@ -2031,7 +2203,7 @@ $("runone").onclick = async () => {
         (result.runtimeError ? "\n\nRuntime error:\n" + result.runtimeError : "") +
         (target
           ? "\n\nExpected output:\n" + taskPresentation(task, target.input).expected(target.output)
-          : "\n\nInput này không thuộc 20 test mẫu.");
+          : "\n\nInput tự nhập. Kết quả không được so sánh với đáp án mẫu.");
     updateJobView(
       job,
       result.timeLimitExceeded
@@ -2140,24 +2312,32 @@ $("runall").onclick = async () => {
     // VI: Chấm đủ test trước rồi mới trừ tổng lỗi trình bày; không hạ điểm cao nhất đã lưu.
     // EN: Apply the capped formatting deduction after all tests; preserve the saved high score.
     const requestedPenalty = Math.min(1.5, job.presentationPenalty);
-    const rawScore = Math.max(0, job.pass * 0.5 - requestedPenalty);
-    const score = job.formatErrors
-      ? Math.floor(rawScore * 10 + 1e-8) / 10
-      : rawScore;
-    const appliedPenalty = Math.max(0, job.pass * 0.5 - score);
+    const algorithmPoints = job.total ? (job.pass / job.total) * 10 : 0;
+    const scoreUnits = maxScoreUnits(job.pass, job.total) - Math.round(requestedPenalty * SCORE_PRECISION);
+    const score = Math.max(0, scoreUnits) / SCORE_PRECISION;
+    const appliedPenalty = Math.max(0, algorithmPoints - score);
     const suspendedForRun = accountSuspended;
+    const currentScore = currentBestScore(job.taskId);
+    if (currentScore === undefined && bestScores[job.taskId] !== undefined) {
+      archiveScoreVersion(job.taskId, bestScores[job.taskId], bestScoreMeta[job.taskId] || {});
+    }
     const oldBest =
-      bestScores[job.taskId] === undefined
+      currentScore === undefined
         ? -1
-        : Number(bestScores[job.taskId]);
+        : Number(currentScore);
     const improved = score > oldBest;
     if (improved && !suspendedForRun) {
       bestScores[job.taskId] = score;
-      bestScoreMeta[job.taskId] = { testsPassed: job.pass, points: score };
+      bestScoreMeta[job.taskId] = {
+        testsPassed: job.pass,
+        testsTotal: job.testsTotal,
+        testSetVersion: testSetVersion(job.task),
+        points: score,
+      };
       persistScores();
     }
     job.state = "completed";
-    await saveRunSubmission(
+    const historyNote = await saveRunSubmission(
       job,
       job.pass,
       null,
@@ -2167,16 +2347,16 @@ $("runall").onclick = async () => {
           ? "wrong"
           : "partial",
     );
-    const cloudNote = suspendedForRun ? "\nT\u00e0i kho\u1ea3n \u0111ang b\u1ecb \u0111\u00ecnh ch\u1ec9: l\u01b0\u1ee3t ch\u1ea5m n\u00e0y kh\u00f4ng t\u00ednh \u0111i\u1ec3m." : await syncScoreAfterGrading(job.taskId, job.pass, score);
-    const best = Number(bestScores[job.taskId] ?? (suspendedForRun ? 0 : score));
+    const cloudNote = suspendedForRun ? "\nT\u00e0i kho\u1ea3n \u0111ang b\u1ecb \u0111\u00ecnh ch\u1ec9: l\u01b0\u1ee3t ch\u1ea5m n\u00e0y kh\u00f4ng t\u00ednh \u0111i\u1ec3m." : await syncScoreAfterGrading(job.taskId, job.pass, score, job.testsTotal, testSetVersion(job.task));
+    const best = Number(currentBestScore(job.taskId) ?? (suspendedForRun ? 0 : score));
     const summary = suspendedForRun
-      ? `\n\nHoàn tất: ${job.pass}/${job.total} test đúng thuật toán; ${job.formatErrors} test lỗi trình bày. Tài khoản đang bị đình chỉ nên lượt này không được tính điểm.\nĐiểm cao nhất đã lưu trước đó: ${best.toFixed(1)}/10.${cloudNote}`
-      : `\n\nHoàn tất: ${job.pass}/${job.total} test đúng thuật toán; ${job.formatErrors} test lỗi trình bày.\nTrừ ${appliedPenalty.toFixed(1)} điểm do trình bày. Điểm lượt này: ${score.toFixed(1)}/10.\nĐiểm cao nhất được lưu: ${best.toFixed(1)}/10${improved ? " (đã cập nhật)" : " (giữ nguyên, không bị giảm)"}.${cloudNote}`;
+      ? `\n\nHoàn tất: ${job.pass}/${job.total} test đúng thuật toán; ${job.formatErrors} test lỗi trình bày. Tài khoản đang bị đình chỉ nên lượt này không được tính điểm.\nĐiểm cao nhất đã lưu trước đó: ${best.toFixed(2)}/10.${cloudNote}`
+      : `\n\nHoàn tất: ${job.pass}/${job.total} test đúng thuật toán; ${job.formatErrors} test lỗi trình bày.\nTrừ ${appliedPenalty.toFixed(2)} điểm do trình bày. Điểm lượt này: ${score.toFixed(2)}/10.\nĐiểm cao nhất được lưu: ${best.toFixed(2)}/10${improved ? " (đã cập nhật)" : " (giữ nguyên, không bị giảm)"}.${cloudNote}`;
     updateJobView(
       job,
-      `Đã chấm xong bài ${job.taskId}: ${job.pass}/${job.total} test đúng · Điểm cao nhất ${best.toFixed(1)}/10.`,
-      scoreStatusClass(Math.floor(best * 2), job.total),
-      job.lines.join("\n") + summary,
+      `Đã chấm xong bài ${job.taskId}: ${job.pass}/${job.total} test đúng · Điểm cao nhất ${best.toFixed(2)}/10.`,
+      scoreStatusClass(Math.round((best / 10) * job.total), job.total),
+      job.lines.join("\n") + summary + historyNote,
     );
     updateProgress();
     updateScore();

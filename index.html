@@ -97,7 +97,7 @@
           <h1 id="title"></h1>
           <span id="level" class="level"></span>
           <button class="btn export-pdf" id="downloadPdf" type="button">
-            Xuất đề + 20 test PDF
+            Xuất đề và test mẫu PDF
           </button>
         </div>
         <div class="task-summary" aria-live="polite">
@@ -132,21 +132,20 @@
           </div>
         </div>
         <div class="secthead">
-          <h2>20 test case tự kiểm tra</h2>
-          <span>Giới hạn chạy: 1,0 giây/test · Chọn test để nạp INPUT</span>
+          <h2 id="testHeading">Test chấm điểm</h2>
+          <span>Giới hạn thực thi 1 giây cho mỗi test</span>
         </div>
         <div class="test-toggle-row">
           <button
             class="btn"
             id="toggleTests"
             type="button"
+            aria-controls="tests"
             aria-expanded="false"
           >
-            Hiện tất cả 20 test
+            Xem test mẫu
           </button>
-          <span class="hint"
-            >Mặc định hiện 6 test trên màn lớn và 4 test trên màn nhỏ.</span
-          >
+          <span class="hint" id="testVisibilityNote"></span>
         </div>
         <div id="tests" class="testlist collapsed"></div>
         <div class="editorbox">
@@ -170,7 +169,7 @@
             <div class="toolbar">
               <button class="btn primary" id="runone">
                 Biên dịch & chạy test này</button
-              ><button class="btn" id="runall">Chạy cả 20 test</button
+              ><button class="btn" id="runall">Chấm điểm</button
               ><button
                 class="btn cancel-run"
                 id="cancelrun"
@@ -188,21 +187,15 @@
             <pre id="runoutput"></pre>
           </div>
           <p class="notice">
-            Giới hạn thời gian: 1,0 giây cho phần thực thi chương trình của mỗi
-            test; không tính thời gian biên dịch và truyền mạng. Nếu vượt giới
-            hạn, kết quả hiển thị TLE (Time Limit Exceeded) và test đó được tính
-            là sai.
+            Mỗi test có tối đa 1 giây thực thi. Các ca tải lớn kiểm tra hiệu
+            năng. Chương trình vượt thời gian sẽ nhận TLE và mất điểm ở ca đó.
+            Thời gian biên dịch không tính vào giới hạn này.
           </p>
+          <p class="notice" id="testScoringNote"></p>
           <p class="notice">
-            Mỗi lần chấm đủ 20 test, hệ thống tính điểm theo số test đúng (mỗi
-            test 0,5 điểm). Chỉ lưu điểm cao nhất; lần nộp sau thấp hơn không
-            làm tụt điểm hoặc đổi màu bài đã đạt.
-          </p>
-          <p class="notice">
-            Điểm được tính trên trình duyệt này khi chạy đủ 20 test (tối đa 10
-            điểm), không cần đăng nhập. Tiến độ và điểm cao nhất được lưu trên
-            thiết bị bằng localStorage; xóa dữ liệu trình duyệt có thể làm mất
-            thông tin.
+            Bạn có thể chấm điểm trên trình duyệt mà không cần đăng nhập. Tiến
+            độ và điểm cao nhất được lưu trên thiết bị. Nếu xóa dữ liệu trình
+            duyệt, bạn có thể mất thông tin đã lưu trên máy.
           </p>
           <p class="notice">
             Code được biên dịch bằng Clang C++20 và chạy cục bộ trong trình
@@ -210,7 +203,8 @@
             mạng, các lượt chạy trước khi bài đạt 10/10 (đúng, sai hoặc lỗi),
             kể cả lần đầu đạt 10/10, được lưu vào lịch sử Supabase.
             Các lượt hủy và lượt chạy sau khi đã đạt 10/10 không được lưu. Chủ tài khoản luôn xem được, Admin xem được
-            mọi bản lưu, thành viên khác chỉ xem code của bài đã hoàn thành.
+            mọi bản lưu. Thành viên chỉ xem code của người khác khi chính họ
+            đã đạt 10/10 ở bài đó.
             Lịch sử cần kết nối mạng để đồng bộ; compiler khoảng 95 MB có thể
             dùng offline sau khi tải và cache đầy đủ.
           </p>

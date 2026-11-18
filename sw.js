@@ -1,5 +1,5 @@
 // VI: Cập nhật giao diện và tái sử dụng compiler đã cache, tránh tải lại khoảng 95 MB. EN: Refresh the app shell while reusing cached compiler assets to avoid another ~95 MB download.
-const CACHE_NAME = "onluyencpp-offline-v24";
+const CACHE_NAME = "onluyencpp-offline-v30";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -11,6 +11,9 @@ const APP_FILES = [
   "./workers/cpp-compiler-worker.js",
   "./workers/cpp-runner-worker.js",
   "./vendor/cpp-compiler/compiler/index.js",
+  "./vendor/cpp-compiler/compiler/clang.wasm",
+  "./vendor/cpp-compiler/compiler/lld.wasm",
+  "./vendor/cpp-compiler/compiler/sysroot.tar",
   "./vendor/cpp-compiler/compiler/clang.js",
   "./vendor/cpp-compiler/compiler/lld.js",
   "./vendor/cpp-compiler/wasi/index.js",
@@ -48,7 +51,10 @@ self.addEventListener("install", (event) => {
         else missingLargeAssets.push(path);
       }
 
-      await cache.addAll([...shellAndData, ...missingLargeAssets]);
+      await cache.addAll([
+        ...shellAndData.map((path) => new Request(new URL(path, self.registration.scope), { cache: "reload" })),
+        ...missingLargeAssets,
+      ]);
       await self.skipWaiting();
     })(),
   );

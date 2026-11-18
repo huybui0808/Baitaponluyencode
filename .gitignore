@@ -12,6 +12,8 @@
 .vs/
 .codex/
 .agents/
+/.local-backups/
+/CHANGELOG.md
 .DS_Store
 Thumbs.db
 desktop.ini
@@ -27,3 +29,4 @@ npm-debug.log*
 # Supabase SQL is maintained and applied in the separate Supabase project.
 # It is not needed to serve this frontend.
 supabase/migrations/
+/tools/

@@ -3,3 +3,7 @@
 /cloudflare-worker.js
 /wrangler.jsonc
 /.assetsignore
+/.local-backups/
+/CHANGELOG.md
+/supabase/
+/tools/
