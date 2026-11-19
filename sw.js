@@ -1,5 +1,5 @@
 // VI: Cập nhật giao diện và tái sử dụng compiler đã cache, tránh tải lại khoảng 95 MB. EN: Refresh the app shell while reusing cached compiler assets to avoid another ~95 MB download.
-const CACHE_NAME = "onluyencpp-offline-v39";
+const CACHE_NAME = "onluyencpp-offline-v40";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -83,13 +83,19 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   if (request.method !== "GET" || url.origin !== self.location.origin) return;
 
-  event.respondWith(
-    caches.match(request).then(async (cached) => {
-      if (cached) return cached;
+  const isAppShell =
+    request.mode === "navigate" ||
+    (/\.(?:html|css|js|json)$/i.test(url.pathname) && !url.pathname.includes("/vendor/"));
+
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE_NAME);
+
+    // VI: Luon kiem tra ban moi cua giao dien/du lieu khi co mang; cache de du phong offline.
+    // EN: Revalidate app shell/data online; use the cached copy when offline.
+    if (isAppShell) {
       try {
-        const response = await fetch(request);
+        const response = await fetch(new Request(request, { cache: "no-cache" }));
         if (response.ok && response.type === "basic") {
-          const cache = await caches.open(CACHE_NAME);
           try {
             await cache.put(request, response.clone());
           } catch (_) {
@@ -98,12 +104,28 @@ self.addEventListener("fetch", (event) => {
         }
         return response;
       } catch (error) {
+        const cached = await cache.match(request) || await caches.match(request);
+        if (cached) return cached;
         if (request.mode === "navigate") {
           const shell = await caches.match("./index.html");
           if (shell) return shell;
         }
         throw error;
       }
-    }),
-  );
+    }
+
+    // VI: Cac file compiler lon dung cache-first de tranh tai lai WASM.
+    // EN: Keep large compiler assets cache-first to avoid repeated WASM downloads.
+    const cached = await cache.match(request) || await caches.match(request);
+    if (cached) return cached;
+    const response = await fetch(request);
+    if (response.ok && response.type === "basic") {
+      try {
+        await cache.put(request, response.clone());
+      } catch (_) {
+        // Keep the live response usable even if the browser cache is full.
+      }
+    }
+    return response;
+  })());
 });
