@@ -8,7 +8,14 @@ import {
 
 // VI: Thực thi chương trình trong WASI worker và cô lập với giao diện. EN: Run programs in an isolated WASI worker, away from the UI thread.
 
+let compiledModule = null;
+
 self.onmessage = async (event) => {
+  if (event.data?.type === "init") {
+    compiledModule = event.data.module || null;
+    self.postMessage({ type: "ready" });
+    return;
+  }
   if (event.data?.type !== "run") return;
 
   const stdoutDecoder = new TextDecoder();
@@ -33,7 +40,9 @@ self.onmessage = async (event) => {
 
   try {
     const wasi = new WASI(["main.wasm"], [], fds);
-    const instance = await WebAssembly.instantiate(event.data.module, {
+    const module = event.data.module || compiledModule;
+    if (!module) throw new Error("Không nhận được module đã biên dịch.");
+    const instance = await WebAssembly.instantiate(module, {
       wasi_snapshot_preview1: wasi.wasiImport,
     });
     self.postMessage({ type: "started" });

@@ -575,9 +575,16 @@ async function refreshSuspensionStatus() {
   return accountSuspended;
 }
 $("dismissSuspensionNotice")?.addEventListener("click", () => { suspensionDismissed = true; renderSuspensionNotice(); });
-window.addEventListener("online", () => refreshSuspensionStatus());
+window.addEventListener("online", async () => {
+  await refreshSuspensionStatus();
+  void syncGradingStats();
+});
 document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshSuspensionStatus(); });
-setInterval(() => { if (!document.hidden) refreshSuspensionStatus(); }, 30000);
+setInterval(async () => {
+  if (document.hidden) return;
+  await refreshSuspensionStatus();
+  void syncGradingStats();
+}, 30000);
 async function handleSession(session) {
   const user = session?.user || null;
   if (!user) {
@@ -600,6 +607,7 @@ async function handleSession(session) {
   }
   currentUser = user;
   await refreshSuspensionStatus();
+  if (currentUser?.id === user.id) void syncGradingStats();
   clearPendingSignup(user.email || "");
   closeOverlay("authOverlay");
   if (loadedForUser === user.id) {
@@ -702,6 +710,79 @@ async function saveRunSubmission(job, passed = null, testNo = null, outcome = "p
     job.testsTotal,
     testSetVersion(job.task),
   );
+}
+
+// VI: Chỉ lưu mã loại lỗi để đồng bộ sau khi có mạng.
+// EN: Queue verdicts locally until the signed-in account can sync them.
+const GRADING_STATS_QUEUE = "cpp_grading_stats_pending:";
+const gradingStatsInMemory = new Map();
+let gradingStatsSync;
+let gradingStatsSyncNotice = "";
+function queueGradingStats(job, errors) {
+  const userId = job.userId;
+  if (!userId || currentUser?.id !== userId || job.maxScoreAtStart ||
+      accountSuspended || job.controller.signal.aborted) return;
+  const attempt = {
+    taskId: job.taskId,
+    errors: [...errors],
+    countsPerTest: true,
+    queuedAt: Date.now(),
+  };
+  const key = GRADING_STATS_QUEUE + userId + ":" + crypto.getRandomValues(new Uint32Array(4)).join("-");
+  try {
+    localStorage.setItem(key, JSON.stringify(attempt));
+  } catch (_) {
+    gradingStatsInMemory.set(key, attempt);
+  }
+  void syncGradingStats();
+}
+
+function syncGradingStats() {
+  const userId = currentUser?.id;
+  if (!userId || !supabase || accountSuspended) return;
+  if (!navigator.onLine) {
+    gradingStatsSyncNotice = "Có lượt chấm đang chờ mạng để đồng bộ thống kê.";
+    return;
+  }
+  if (gradingStatsSync) return gradingStatsSync;
+  const prefix = GRADING_STATS_QUEUE + userId + ":";
+  const pending = new Map([...gradingStatsInMemory].filter(([key]) => key.startsWith(prefix)));
+  try {
+    for (const key of Object.keys(localStorage)) {
+      if (key.startsWith(prefix)) pending.set(key, readStore(key));
+    }
+  } catch (_) {}
+  if (!pending.size) {
+    gradingStatsSyncNotice = "";
+    return;
+  }
+  const entries = [...pending].sort((a, b) => a[1].queuedAt - b[1].queuedAt);
+  gradingStatsSync = (async () => {
+    for (const [key, entry] of entries) {
+      if (currentUser?.id !== userId || !navigator.onLine || accountSuspended) return;
+      const rpc = entry.countsPerTest ? "record_my_grading_attempt_counts" : "record_my_grading_attempt";
+      const { error } = await supabase.rpc(rpc, {
+        p_user_id: userId,
+        p_problem_id: entry.taskId,
+        p_attempt_id: key.slice(prefix.length),
+        p_errors: entry.errors,
+      });
+      if (error) {
+        gradingStatsSyncNotice = "Có lượt chấm đang chờ đồng bộ. Kiểm tra kết nối và các SQL thống kê trên Supabase.";
+        console.warn("Không đồng bộ được thống kê chấm bài:", error.message || error);
+        return;
+      }
+      gradingStatsInMemory.delete(key);
+      try { localStorage.removeItem(key); } catch (_) {}
+    }
+    gradingStatsSyncNotice = "";
+  })().catch((error) => {
+    gradingStatsSyncNotice = "Có lượt chấm đang chờ đồng bộ. Kiểm tra kết nối và các SQL thống kê trên Supabase.";
+    console.warn("Không đồng bộ được thống kê chấm bài:", error.message || error);
+  }).finally(() => {
+    gradingStatsSync = null;
+  });
+  return gradingStatsSync;
 }
 // ----- Bảng xếp hạng theo số bài hoàn thành và tổng điểm -----
 function openLeaderboard() {
@@ -893,6 +974,69 @@ function formatLocalDate(value) {
 function canManagePassword(user) {
   return (user?.identities || []).some((identity) => identity.provider === "email");
 }
+async function loadProfileGradingChart(container, userId) {
+  try {
+    if (currentUser?.id === userId) await syncGradingStats();
+    if (!currentUser || !container.isConnected) return;
+    const { data, error } = await supabase.rpc("get_member_grading_summary", {
+      p_user_id: userId,
+    });
+    if (error) throw error;
+    if (!currentUser || !container.isConnected) return;
+    const categories = [
+      ["AC", "Kết quả đúng", "Accepted (AC)", "#079b45", "bài"],
+      ["WA", "Sai đáp án", "Wrong Answer (WA)", "#e53935", "test"],
+      ["CE", "Lỗi biên dịch", "Compilation Error (CE)", "#7547d8", "lượt"],
+      ["RE", "Lỗi khi chạy", "Runtime Error (RE)", "#2477c9", "test"],
+      ["TLE", "Quá thời gian", "Time Limit Exceeded (TLE)", "#e88912", "test"],
+      ["PE", "Lỗi trình bày", "Presentation Error (PE)", "#008f83", "test"],
+      ["LEGACY", "Lượt cũ chưa phân loại", "Unclassified legacy result", "#68788a", "lượt"],
+    ];
+    const counts = new Map((data || []).map((row) => [row.verdict, Number(row.item_count)]));
+    const legacyProblems = counts.get("LEGACY_PROGRESS");
+    const legacyNote = Number.isSafeInteger(legacyProblems) && legacyProblems > 0
+      ? `<p class="profile-subtle">${legacyProblems} bài cũ còn điểm nhưng thiếu lịch sử lượt chấm.</p>`
+      : "";
+    const oldCounts = counts.get("LEGACY_ROLLUP");
+    const oldCountsNote = oldCounts > 0
+      ? `<p class="profile-subtle">${oldCounts} lượt cũ chỉ có số liệu theo loại lỗi, chưa có số test lỗi.</p>`
+      : "";
+    const syncNotice = currentUser?.id === userId && gradingStatsSyncNotice
+      ? `<p class="profile-message warn" role="status">${escapeHTML(gradingStatsSyncNotice)}</p>`
+      : "";
+    const bars = categories
+      .map(([code, label, standard, color, unit]) => ({ code, label, standard, color, unit, count: counts.get(code) }))
+      .map((bar) => ({ ...bar, count: Number.isSafeInteger(bar.count) && bar.count > 0 ? bar.count : 0 }))
+      .filter(({ code, count }) => code !== "LEGACY" || count > 0);
+    const maxCount = Math.max(0, ...bars.map(({ count }) => count));
+    const number = new Intl.NumberFormat("vi-VN");
+    container.innerHTML = `
+      <div class="profile-grading-chart" role="list" aria-label="Biểu đồ cột thống kê kết quả chấm bài">
+        ${bars.map(({ code, label, standard, color, count, unit }) => {
+          const height = maxCount ? Number(((count / maxCount) * 100).toFixed(2)) : 0;
+          return `<div class="profile-grading-column" role="listitem" style="--bar-color:${color};--bar-height:${height}%">
+            <strong class="profile-grading-count">${number.format(count)} <small>${unit}</small></strong>
+            <div class="profile-grading-plot" role="img" aria-label="${label}: ${number.format(count)} ${unit}">
+              <span class="profile-grading-bar"></span>
+            </div>
+            <span class="profile-grading-label"><b>${label}</b><small>${standard}</small></span>
+          </div>`;
+        }).join("")}
+      </div>
+      <p class="profile-grading-note">Mỗi test sai được tính riêng. Kết quả đúng tính theo bài hoàn thành; lỗi biên dịch tính theo lượt. Dữ liệu cũ được ghi chú riêng nếu thiếu kết quả từng test.</p>
+      ${legacyNote}${oldCountsNote}${syncNotice}`;
+  } catch (error) {
+    console.warn("Không tải được biểu đồ thống kê:", error?.code || "", error?.message || error);
+    if (!container.isConnected) return;
+    if (error?.code === "PGRST202" || /get_member_grading_summary/i.test(error?.message || "")) {
+      container.textContent = "Chưa cài hàm thống kê hồ sơ trên Supabase. Hãy chạy SQL 20261203 sau SQL 20261202.";
+    } else if (error?.code === "42P01" || error?.code === "42703") {
+      container.textContent = "Cấu trúc bảng thống kê chưa đầy đủ. Hãy chạy lần lượt SQL 20261202 rồi 20261203.";
+    } else {
+      container.textContent = "Chưa tải được biểu đồ. Mở Console để xem lỗi Supabase chi tiết.";
+    }
+  }
+}
 async function openProfile(userId) {
   if (!currentUser) {
     alert("Đăng nhập để xem hồ sơ thành viên.");
@@ -969,8 +1113,11 @@ async function openProfile(userId) {
             : '<p class="profile-subtle">Chưa có tiến độ bài tập.</p>'
         }</div>
       </section>
+      <section class="profile-section"><h3>Thống kê chấm bài</h3>
+        <div id="profileGradingChart">Đang tải thống kê…</div></section>
       ${accountSettings}`;
     bindAvatarImages(content);
+    void loadProfileGradingChart($("profileGradingChart"), userId);
   } catch (error) {
     content.innerHTML = `<h2 id="profileTitle">Không tải được hồ sơ</h2><p class="profile-subtle">${escapeHTML(error.message || String(error))}</p>`;
   }
@@ -1547,14 +1694,151 @@ const RESULT_LABELS = {
 };
 const SINGLE_RESULT_LABELS = {
   1: "Tong cua a va b = ",
-  5: "Trung binh cong = ",
-  7: "Hai so sau khi hoan doi = ",
+  5: "Trung binh cong ba so = ",
+  7: "Thu tu sau khi hoan doi = ",
   8: "Thuong va so du = ",
-  9: "Tong tien phai tra = ",
-  10: "So tien sau giam = ",
-  25: "Tien dien phai tra = ",
-  26: "Gia ve phai tra = ",
-  27: "Phi van chuyen = ",
+  9: "Thanh tien = ",
+  10: "Gia sau khi giam = ",
+  11: "Tinh chan le: ",
+  12: "Phan loai dau so: ",
+  13: "So lon hon = ",
+  14: "Gia tri lon nhat = ",
+  15: "Gia tri nho nhat = ",
+  16: "Ket luan ve nam: ",
+  17: "Kiem tra chia het ca 3 va 5: ",
+  18: "Kiem tra chia het cho 3 hoac 5: ",
+  19: "Quan he giua a va b: ",
+  20: "Ket qua kiem tra tam giac: ",
+  21: "Loai tam giac: ",
+  22: "Ket qua kiem tra tam giac vuong: ",
+  23: "Xep loai diem: ",
+  24: "Nghiem cua phuong trinh: ",
+  25: "Tien dien can thanh toan = ",
+  26: "Gia ve theo do tuoi = ",
+  27: "Cuoc van chuyen = ",
+  28: "Vi tri diem: ",
+  29: "Ket qua so sanh khoang cach: ",
+  30: "Phan loai phuong trinh: ",
+  31: "Tong day so tu 1 den N = ",
+  32: "Tong cac so chan = ",
+  33: "Tong cac so le = ",
+  34: "Gia tri giai thua N! = ",
+  35: "Gia tri a mu b = ",
+  36: "So chu so cua n = ",
+  37: "Tong cac chu so = ",
+  38: "So sau khi dao chu so = ",
+  39: "Kiem tra doi xung: ",
+  40: "Uoc chung lon nhat = ",
+  41: "Boi chung nho nhat = ",
+  42: "So luong boi cua K = ",
+  43: "Tong cac boi cua K = ",
+  44: "Tong binh phuong den N = ",
+  45: "Tong lap phuong den N = ",
+  46: "Tong dieu hoa = ",
+  47: "So Fibonacci thu N = ",
+  48: "Kiem tra so nguyen to: ",
+  49: "So luong so nguyen to = ",
+  50: "So uoc duong = ",
+  51: "Tong cac uoc thuc su = ",
+  52: "Kiem tra so hoan hao: ",
+  53: "So chu so 0 o cuoi N! = ",
+  54: "So lan chu so d xuat hien = ",
+  55: "Chu so lon nhat = ",
+  56: "Chu so nho nhat = ",
+  57: "Tich cac chu so = ",
+  58: "Chu so rut gon = ",
+  59: "Kiem tra so Armstrong: ",
+  60: "So thua so nguyen to (tinh ca lap) = ",
+  61: "Thua so nguyen to lon nhat = ",
+  62: "Uoc duong nho nhat lon hon 1 = ",
+  63: "So buoc de day Collatz ve 1 = ",
+  64: "Tong luan phien den N = ",
+  65: "Bang nhan cua N:\n",
+  66: "Bang tich N x N:\n",
+  67: "Hinh chu nhat dac:\n",
+  68: "Tam giac sao tang dan:\n",
+  69: "Tam giac sao giam dan:\n",
+  70: "Tam giac so tang dan:\n",
+  71: "Tam giac lap so theo hang:\n",
+  72: "Kim tu thap sao:\n",
+  73: "Kim tu thap sao nguoc:\n",
+  74: "Khung chu nhat rong:\n",
+  75: "Bang ky tu xen ke:\n",
+  76: "Tong chu so cua day tu 1 den N = ",
+  77: "So luong boi thoa dieu kien = ",
+  78: "Tong cac so nguyen to trong doan = ",
+  79: "So luong so doi xung = ",
+  80: "So luong so Armstrong = ",
+  81: "So luong so hoan hao = ",
+  82: "So luong gia tri co tong chu so bang S = ",
+  83: "So co tong chu so lon nhat = ",
+  84: "So luong so co chu so tang nghiem ngat = ",
+  85: "So luong so co chu so lien tiep trung nhau = ",
+  86: "So luong so chia het cho tong chu so = ",
+  87: "Tong cac gia tri gcd voi N = ",
+  88: "So luong so nguyen to cung nhau voi N = ",
+  89: "So cap co tong chia het cho K = ",
+  90: "So luong so co dung ba uoc = ",
+  91: "Tam giac vuong rong:\n",
+  92: "Hinh thoi sao:\n",
+  93: "Gia tri gan dung e mu x = ",
+  94: "So luong so vua nguyen to vua doi xung = ",
+  95: "So luong so chinh phuong = ",
+  96: "So chu so chan = ",
+  97: "So chu so le = ",
+  98: "Tong cac chu so chan = ",
+  99: "Tong cac chu so le = ",
+  100: "So chu so 0 = ",
+  101: "Chu so dau tien cua N = ",
+  102: "Kiem tra tat ca chu so chan: ",
+  103: "Kiem tra day chu so khong giam: ",
+  104: "Kiem tra chan le xen ke: ",
+  105: "So chu so lon hon D = ",
+  106: "So luong so thoa dieu kien tong chu so = ",
+  107: "Tong cac so thoa dieu kien tong chu so = ",
+  108: "So luong boi cua A nhung khong cua B = ",
+  109: "Tong cac so chia het cho 3 nhung khong cho 5 = ",
+  110: "So nguyen to co tong chu so chan = ",
+  111: "Tong cac so doi xung trong doan = ",
+  112: "So nguyen to lon nhat trong doan = ",
+  113: "So luong so co dung bon uoc = ",
+  114: "So uoc cua N nam trong doan = ",
+  115: "So uoc nguyen to phan biet = ",
+  116: "So uoc chinh phuong = ",
+  117: "So cap co thu tu thoa dieu kien = ",
+  118: "So cap nguyen to cung nhau = ",
+  119: "So cap co UCLN bang K = ",
+  120: "So gia tri X co gcd(X, N) bang D = ",
+  121: "So luong so co cac chu so khong lap = ",
+  122: "So luong so co it nhat mot chu so 0 = ",
+  123: "So luong so co dung K chu so le = ",
+  124: "So luong so co tong chu so nguyen to = ",
+  125: "Tong cac so co tong chu so nguyen to = ",
+  126: "So doi xung nho nhat tu N tro di = ",
+  127: "So nguyen to nho nhat tu N tro di = ",
+  128: "So nho nhat co dung ba uoc tu N tro di = ",
+  129: "Gia tri Pi xap xi theo N so hang = ",
+  130: "Tong dieu hoa luan phien = ",
+  131: "Tong nghich dao cac so le = ",
+  132: "Tong nghich dao binh phuong = ",
+  133: "Hinh vuong rong:\n",
+  134: "Hai duong cheo tao hinh chu X:\n",
+  135: "Dau cong bang dau sao:\n",
+  136: "Kim tu thap rong:\n",
+  137: "Dong ho cat bang dau sao:\n",
+  138: "Hinh canh buom bang dau sao:\n",
+  139: "Tam giac Floyd:\n",
+  140: "Tam giac nhi phan:\n",
+  141: "Bang so lap theo hang:\n",
+  142: "Bang nhan N x M:\n",
+  143: "Kim tu thap so doi xung:\n",
+  144: "Kim tu thap so doi xung nguoc:\n",
+  145: "Hinh thoi rong:\n",
+  146: "Tam giac vuong rong can phai:\n",
+  147: "Tam giac vuong nguoc rong:\n",
+  148: "Ban co X va cham:\n",
+  149: "Tam giac Pascal:\n",
+  150: "Hinh binh hanh rong:\n",
 };
 // VI: Bài không ghi ký hiệu biến trong mô tả vẫn cần nhãn nhập rõ ràng.
 // EN: Add an explicit input prompt when the statement names a value, not a variable.
@@ -1573,41 +1857,43 @@ const OUTPUT_RULES = new Map([
   [24, "In đúng trường hợp vô nghiệm/vô số nghiệm hoặc nghiệm với đúng 2 chữ số sau dấu chấm (.), giữ số 0 tận cùng. Nếu nghiệm bằng 0, in 0.00 không có dấu âm."],
   [28, "Chỉ in đúng một nhãn vị trí theo đề bài."],
   [30, "Chỉ in đúng một nhãn phân loại nghiệm theo đề bài."],
-  [65, "In đủ 10 dòng theo mẫu N x i = kết_quả; mỗi phép nhân trên một dòng."],
-  [66, "In đúng N hàng và N cột; các số trên một hàng cách nhau đúng một dấu cách."],
-  [67, "In đúng n hàng, mỗi hàng m dấu *; không thêm dòng mô tả."],
-  [68, "In tam giác căn trái; dòng thứ i có đúng i dấu *."],
-  [69, "In tam giác căn trái từ n dấu * giảm dần đến một dấu *."],
-  [70, "In các số trên từng dòng, cách nhau đúng một dấu cách."],
-  [71, "Dòng thứ i gồm i lần số i, các số cách nhau đúng một dấu cách."],
-  [72, "Căn giữa kim tự tháp bằng dấu cách; dòng i có n-i dấu cách đầu dòng và 2*i-1 dấu *."],
-  [73, "In kim tự tháp ngược; mỗi dòng sau thụt vào một dấu cách và giảm hai dấu *."],
-  [74, "Chỉ in viền hình chữ nhật; phần trong là dấu cách và không có dấu cách thừa cuối dòng."],
-  [75, "Bắt đầu bằng # ở góc trên trái; # và . thay phiên theo cả hàng lẫn cột."],
+  [65, "In tiêu đề 'Bang nhan cua N:' trên một dòng, sau đó đủ 10 dòng theo mẫu N x i = kết_quả; mỗi phép nhân nằm trên một dòng."],
+  [66, "In tiêu đề 'Bang tich N x N:' trên một dòng, sau đó đúng N hàng và N cột; các số cùng hàng cách nhau một dấu cách."],
+  [67, "In tiêu đề 'Hinh chu nhat dac:' trên một dòng, rồi đúng n hàng, mỗi hàng m dấu * cách nhau một dấu cách."],
+  [68, "In tiêu đề 'Tam giac sao tang dan:' trên một dòng, rồi in tam giác căn trái; hàng thứ i có đúng i dấu *."],
+  [69, "In tiêu đề 'Tam giac sao giam dan:' trên một dòng, rồi giảm từ n dấu * xuống một dấu * theo từng hàng."],
+  [70, "In tiêu đề 'Tam giac so tang dan:' trên một dòng, rồi in các số theo hàng, cách nhau đúng một dấu cách."],
+  [71, "In tiêu đề 'Tam giac lap so theo hang:' trên một dòng; hàng i gồm i lần số i, cách nhau một dấu cách."],
+  [72, "In tiêu đề 'Kim tu thap sao:' trên một dòng; hàng i có 2 × (n − i) dấu cách đầu dòng và 2 × i − 1 dấu *."],
+  [73, "In tiêu đề 'Kim tu thap sao nguoc:' trên một dòng; mỗi hàng sau thụt vào hai dấu cách và giảm hai dấu *."],
+  [74, "In tiêu đề 'Khung chu nhat rong:' trên một dòng, sau đó chỉ in viền; phần trong là dấu cách, không có dấu cách thừa cuối dòng."],
+  [75, "In tiêu đề 'Bang ky tu xen ke:' trên một dòng; bắt đầu bằng # ở góc trên trái, rồi # và . thay phiên theo hàng và cột."],
+  [91, "In tiêu đề 'Tam giac vuong rong:' trên một dòng, sau đó in ba cạnh theo đúng mẫu và giữ nguyên các khoảng trống bên trong."],
+  [92, "In tiêu đề 'Hinh thoi sao:' trên một dòng, rồi in hình thoi đặc căn giữa với số dấu * tăng và giảm đối xứng."],
   [46, "In H với đúng 6 chữ số sau dấu chấm (.), giữ đủ các số 0 tận cùng."],
   [93, "In kết quả e^x với đúng 6 chữ số sau dấu chấm (.), giữ đủ các số 0 tận cùng."],
   [129, "In giá trị Pi xấp xỉ với đúng 6 chữ số sau dấu chấm (.), giữ đủ các số 0 tận cùng."],
   [130, "In S với đúng 6 chữ số sau dấu chấm (.), giữ đủ các số 0 tận cùng."],
   [131, "In S với đúng 6 chữ số sau dấu chấm (.), giữ đủ các số 0 tận cùng."],
   [132, "In S với đúng 6 chữ số sau dấu chấm (.), giữ đủ các số 0 tận cùng."],
-  [133, "Chỉ in viền hình vuông; phần trong là dấu cách."],
-  [134, "In hình X đúng kích thước N x N bằng dấu *."],
-  [135, "In dấu cộng đúng kích thước N x N bằng dấu *."],
-  [136, "Chỉ in hai cạnh và đáy của kim tự tháp; phần trong là dấu cách."],
-  [137, "In đồng hồ cát theo đúng số hàng và vị trí dấu *."],
-  [138, "In hình cánh bướm theo đúng hai nửa đối xứng."],
-  [139, "In tam giác Floyd; các số cách nhau đúng một dấu cách."],
-  [140, "In N dòng số 0 và 1 theo quy tắc bắt đầu của từng dòng."],
-  [141, "In N dòng; dòng i gồm M lần số i, cách nhau đúng một dấu cách."],
-  [142, "In đúng N hàng và M cột; phần tử hàng i, cột j bằng i*j."],
-  [143, "In kim tự tháp số đối xứng và căn giữa bằng dấu cách."],
-  [144, "In kim tự tháp số đối xứng ngược theo đúng số bậc."],
-  [145, "In viền hình thoi rỗng; phần trong là dấu cách."],
-  [146, "In hai cạnh và cạnh đáy của tam giác vuông rỗng."],
-  [147, "In tam giác vuông ngược rỗng theo đúng số hàng."],
-  [148, "Bắt đầu bằng X ở góc trên trái; X và dấu chấm thay phiên nhau."],
-  [149, "In N dòng đầu của tam giác Pascal; các số cùng dòng cách nhau một dấu cách."],
-  [150, "In hình bình hành rỗng; mỗi hàng lệch trái dần và chỉ có viền dấu *."],
+  [133, "In tiêu đề 'Hinh vuong rong:' trên một dòng, sau đó chỉ in viền hình vuông; phần trong là khoảng trống theo mẫu."],
+  [134, "In tiêu đề 'Hai duong cheo tao hinh chu X:' trên một dòng, rồi in hình X N × N đúng vị trí dấu *."],
+  [135, "In tiêu đề 'Dau cong bang dau sao:' trên một dòng, rồi in dấu cộng đúng kích thước N × N."],
+  [136, "In tiêu đề 'Kim tu thap rong:' trên một dòng, sau đó chỉ in hai cạnh và đáy; phần trong để trống."],
+  [137, "In tiêu đề 'Dong ho cat bang dau sao:' trên một dòng, rồi in đủ hàng và đặt dấu * đối xứng."],
+  [138, "In tiêu đề 'Hinh canh buom bang dau sao:' trên một dòng, sau đó in hai cánh đối xứng theo mẫu."],
+  [139, "In tiêu đề 'Tam giac Floyd:' trên một dòng, rồi in tam giác; các số cùng hàng cách nhau đúng một dấu cách."],
+  [140, "In tiêu đề 'Tam giac nhi phan:' trên một dòng, sau đó in N dòng 0 và 1 theo quy tắc bắt đầu từng hàng."],
+  [141, "In tiêu đề 'Bang so lap theo hang:' trên một dòng, rồi in N hàng; hàng i gồm M lần số i, cách nhau một dấu cách."],
+  [142, "In tiêu đề 'Bang nhan N x M:' trên một dòng, sau đó đúng N hàng và M cột; ô (i, j) bằng i × j."],
+  [143, "In tiêu đề 'Kim tu thap so doi xung:' trên một dòng, rồi in kim tự tháp số cân giữa bằng dấu cách."],
+  [144, "In tiêu đề 'Kim tu thap so doi xung nguoc:' trên một dòng, sau đó in các bậc giảm đúng thứ tự."],
+  [145, "In tiêu đề 'Hinh thoi rong:' trên một dòng, rồi in viền hình thoi; phần trong để trống."],
+  [146, "In tiêu đề 'Tam giac vuong rong can phai:' trên một dòng, sau đó in hai cạnh và cạnh đáy."],
+  [147, "In tiêu đề 'Tam giac vuong nguoc rong:' trên một dòng, rồi in đủ số hàng theo mẫu."],
+  [148, "In tiêu đề 'Ban co X va cham:' trên một dòng; bắt đầu bằng X ở góc trên trái, X và dấu chấm thay phiên."],
+  [149, "In tiêu đề 'Tam giac Pascal:' trên một dòng, rồi in N hàng đầu căn trái; số cùng hàng cách nhau một dấu cách."],
+  [150, "In tiêu đề 'Hinh binh hanh rong:' trên một dòng, sau đó in phần viền và độ lệch từng hàng theo mẫu."],
 ]);
 
 function taskSample(task) {
@@ -1629,22 +1915,9 @@ function taskPresentation(task, input = taskSample(task).input) {
   const inputCount = String(input || "").trim().split(/\s+/).filter(Boolean).length;
   const prompts = INPUT_LABELS[task.id] || fieldNames.slice(0, inputCount).map((name) => `Nhap ${name} = `);
 
-  let resultLabel = SINGLE_RESULT_LABELS[task.id] || "Ket qua la: ";
-  const title = String(task.title || "").toLocaleLowerCase("vi");
-  if (task.id >= 65 && task.id <= 75 || task.id >= 91 && task.id <= 92 || task.id >= 133) {
-    resultLabel = "Ket qua:\n";
-  } else if (SINGLE_RESULT_LABELS[task.id]) {
-  } else if (/đếm/.test(title)) {
-    resultLabel = "So luong la: ";
-  } else if (/tổng/.test(title)) {
-    resultLabel = "Tong la: ";
-  } else if (/tìm/.test(title)) {
-    resultLabel = "Gia tri can tim la: ";
-  } else if (/kiểm tra/.test(title)) {
-    resultLabel = "Ket qua kiem tra: ";
-  } else if (/bảng|dãy|day/.test(title)) {
-    resultLabel = "Day so la:\n";
-  }
+  // Keep visible examples and strict output checking specific to each task.
+  // The former title-based fallback made many unrelated tasks say the same thing.
+  const resultLabel = SINGLE_RESULT_LABELS[task.id] || "Ket qua: ";
   const lineLabels = RESULT_LABELS[task.id] || null;
   const formattedOutput = (rawOutput) => {
     const lines = String(rawOutput ?? "").split("\n");
@@ -1835,6 +2108,7 @@ function createRun(task, code, kind) {
     task,
     code,
     kind,
+    userId: currentUser?.id,
     maxScoreAtStart: Number(currentBestScore(task.id) ?? 0) >= 10,
     controller: new AbortController(),
     state: "running",
@@ -2153,6 +2427,128 @@ async function runCompiled(module, stdin, signal) {
   };
 }
 
+function createRunnerSession(module, signal) {
+  const worker = new Worker(
+    new URL("./workers/cpp-runner-worker.js", import.meta.url),
+    { type: "module" },
+  );
+  let pending = null;
+  let timer = null;
+  let closed = false;
+  let resolveReady;
+  let rejectReady;
+  const ready = new Promise((resolve, reject) => {
+    resolveReady = resolve;
+    rejectReady = reject;
+  });
+  const clearRunTimer = () => {
+    clearTimeout(timer);
+    timer = null;
+  };
+  const close = () => {
+    if (closed) return;
+    closed = true;
+    clearRunTimer();
+    signal?.removeEventListener("abort", onAbort);
+    worker.terminate();
+  };
+  const onAbort = () => {
+    const error = new DOMException("Đã hủy phiên chấm.", "AbortError");
+    if (pending) {
+      const current = pending;
+      pending = null;
+      current.reject(error);
+    } else {
+      rejectReady(error);
+    }
+    close();
+  };
+  signal?.addEventListener("abort", onAbort, { once: true });
+  worker.onmessage = (event) => {
+    const message = event.data;
+    if (message?.type === "ready") {
+      resolveReady();
+    } else if (message?.type === "started" && pending && !timer) {
+      timer = setTimeout(() => {
+        const current = pending;
+        pending = null;
+        close();
+        current?.resolve({
+          output: "",
+          stderr: "",
+          runtimeError: "",
+          timeLimitExceeded: true,
+          exitCode: "TLE",
+        });
+      }, TEST_TIME_LIMIT_MS);
+    } else if (message?.type === "finished" && pending) {
+      clearRunTimer();
+      const current = pending;
+      pending = null;
+      current.resolve({
+        output: String(message.stdout || "").replace(/\r/g, ""),
+        stderr: String(message.stderr || "").trimEnd(),
+        runtimeError: message.runtimeError || "",
+        timeLimitExceeded: false,
+        exitCode: String(message.exitCode ?? 1),
+      });
+    }
+  };
+  worker.onerror = (event) => {
+    const error = new Error(event.message || "Web Worker gặp lỗi.");
+    if (pending) {
+      const current = pending;
+      pending = null;
+      current.reject(error);
+    } else {
+      rejectReady(error);
+    }
+    close();
+  };
+  worker.postMessage({ type: "init", module });
+
+  return {
+    ready,
+    close,
+    run(input) {
+      if (closed) return Promise.reject(new Error("Runner worker đã kết thúc."));
+      if (pending) return Promise.reject(new Error("Runner worker đang bận."));
+      return new Promise((resolve, reject) => {
+        pending = { resolve, reject };
+        try {
+          worker.postMessage({ type: "run", input });
+        } catch (error) {
+          pending = null;
+          reject(error);
+          close();
+        }
+      });
+    },
+  };
+}
+
+async function* runCompiledBatch(module, tests, signal) {
+  let runner = null;
+  try {
+    for (let index = 0; index < tests.length; index++) {
+      if (signal?.aborted)
+        throw new DOMException("Đã hủy phiên chấm.", "AbortError");
+      if (!runner) {
+        runner = createRunnerSession(module, signal);
+        await runner.ready;
+      }
+      const result = await runner.run(tests[index].input);
+      if (result.timeLimitExceeded) {
+        runner.close();
+        runner = null;
+      }
+      yield { index, test: tests[index], result };
+    }
+  } finally {
+    runner?.close();
+  }
+}
+
 async function compileRun(stdin, code, signal) {
   const module = await compileCode(code, signal);
   return runCompiled(module, stdin, signal);
@@ -2165,45 +2561,56 @@ function normalize(s) {
 function normalizeProgramOutput(value) {
   return String(value ?? "").replace(/\r\n?/g, "\n").replace(/\n$/, "");
 }
+const STRICT_LAYOUT_TEST_IDS = new Set([
+  65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 91, 92,
+  133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150,
+]);
+function removePresentationLabels(value, presentation) {
+  let text = String(value ?? "")
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .toLocaleLowerCase("vi");
+  const labels = [
+    presentation.promptText || "",
+    ...(presentation.prompts || []),
+    presentation.resultLabel || "",
+    ...((presentation.lineLabels || [])),
+  ].filter(Boolean);
+  for (const label of labels) {
+    const words = String(label)
+      .normalize("NFD")
+      .replace(/\p{M}/gu, "")
+      .toLocaleLowerCase("vi")
+      .split(/[\s\p{P}\p{S}]+/u)
+      .filter(Boolean);
+    if (!words.length) continue;
+    const separators = "[\\s:=：＝.,，;；!?！？()（）\\-–—]*";
+    const body = words.map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join(separators);
+    const pattern = new RegExp(`(^|[^\\p{L}\\p{N}])(${body})${separators}(?=$|[^\\p{L}\\p{N}])`, "gu");
+    text = text.replace(pattern, "$1 ");
+  }
+  return text;
+}
 function hasExpectedSemanticOutput(actual, expected, task) {
   const a = normalizeProgramOutput(actual);
   const e = normalizeProgramOutput(expected);
   // Tables and character patterns encode row/column positions in whitespace.
   // Treat any changed layout as a wrong answer, even if the number sequence matches.
-  const strictLayoutIds = new Set([
-    65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 91, 92,
-    133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150,
-  ]);
+  const presentation = taskPresentation(task);
   const exactPayloadSuffixMatches = () => {
     if (!e || !a.endsWith(e)) return false;
     const prefix = a.slice(0, a.length - e.length);
-    const presentation = taskPresentation(task);
-    const allowedPrefixes = [
-      presentation.promptText || "",
-      ...(presentation.prompts || []),
-      presentation.resultLabel || "",
-      ...((presentation.lineLabels || [])),
-    ].filter(Boolean);
-    let remaining = prefix;
-    for (const label of allowedPrefixes) remaining = remaining.replaceAll(label, "");
+    const remaining = removePresentationLabels(prefix, presentation);
     return remaining.trim() === "";
   };
-  if (strictLayoutIds.has(Number(task.id))) return exactPayloadSuffixMatches();
+  if (STRICT_LAYOUT_TEST_IDS.has(Number(task.id))) return exactPayloadSuffixMatches();
   const numericOnly = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:\s+[+-]?(?:\d+(?:\.\d*)?|\.\d+))*$/;
   if (numericOnly.test(e.trim())) {
     const decimals = Number(String(task.output || "").match(/(\d+)\s+chữ số sau/)?.[1]);
     const numberPattern = Number.isInteger(decimals)
       ? /[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)/g
       : /[+-]?(?:\d+(?:\.\d*)?|\.\d+)/g;
-    const presentation = taskPresentation(task);
-    const allowedLabels = [
-      presentation.promptText || "",
-      ...(presentation.prompts || []),
-      presentation.resultLabel || "",
-      ...((presentation.lineLabels || [])),
-    ].filter(Boolean);
-    let numericPayload = a;
-    for (const label of allowedLabels) numericPayload = numericPayload.replaceAll(label, "");
+    const numericPayload = removePresentationLabels(a, presentation);
     if (!/^[\s+-\d.,]*$/.test(numericPayload)) return false;
     const parseNumbers = (text) =>
       (text.match(numberPattern) || []).map((number) => Number(number.replace(",", ".")));
@@ -2228,7 +2635,11 @@ function hasExpectedSemanticOutput(actual, expected, task) {
 }
 // VI: Phân loại mức lỗi trình bày sau khi đã khớp nội dung đáp án. EN: Rank formatting-only mismatches after semantic output matches.
 function presentationSeverity(actual, expected, presentation) {
-  const compact = (value) => String(value ?? "").toLocaleLowerCase("vi").replace(/[\s\p{P}\p{S}]/gu, "");
+  const compact = (value) => String(value ?? "")
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .toLocaleLowerCase("vi")
+    .replace(/[\s\p{P}\p{S}]/gu, "");
   if (compact(actual) === compact(expected)) return 0.05;
   const required = [...presentation.prompts, ...(presentation.lineLabels || [presentation.resultLabel])];
   const actualText = normalizeProgramOutput(actual);
@@ -2386,7 +2797,12 @@ $("runall").onclick = async () => {
       "Đang khởi tạo compiler C++20 cục bộ…",
     );
     const module = await compileCode(job.code, job.controller.signal);
-    for (let i = 0; i < job.task.tests.length; i++) {
+    const gradingErrors = [];
+    for await (const { index: i, test, result } of runCompiledBatch(
+      module,
+      job.task.tests,
+      job.controller.signal,
+    )) {
       if (job.controller.signal.aborted)
         throw new DOMException("Đã hủy phiên chấm.", "AbortError");
       job.currentTest = i + 1;
@@ -2396,11 +2812,11 @@ $("runall").onclick = async () => {
         "",
         job.lines.join("\n"),
       );
-      const test = job.task.tests[i];
-      const result = await runCompiled(module, test.input, job.controller.signal);
-      if (job.controller.signal.aborted)
-        throw new DOMException("Đã hủy phiên chấm.", "AbortError");
       const grade = classifyTestResult(result, job.task, test);
+      if (grade.status === "FAIL") gradingErrors.push("WA");
+      if (grade.status === "TLE") gradingErrors.push("TLE");
+      if (grade.status === "RUNTIME") gradingErrors.push("RE");
+      if (grade.status === "PRESENTATION") gradingErrors.push("PE");
       if (grade.status === "PASS" || grade.status === "PRESENTATION") job.pass++;
       if (grade.status === "PRESENTATION") {
         job.formatErrors++;
@@ -2417,6 +2833,9 @@ $("runall").onclick = async () => {
     if (job.controller.signal.aborted)
       throw new DOMException("Đã hủy phiên chấm.", "AbortError");
     await refreshSuspensionStatus();
+    if (job.controller.signal.aborted)
+      throw new DOMException("Đã hủy phiên chấm.", "AbortError");
+    queueGradingStats(job, gradingErrors);
     // VI: Chấm đủ test trước rồi mới trừ tổng lỗi trình bày; không hạ điểm cao nhất đã lưu.
     // EN: Apply the capped formatting deduction after all tests; preserve the saved high score.
     const requestedPenalty = Math.min(1.5, job.presentationPenalty);
@@ -2470,6 +2889,7 @@ $("runall").onclick = async () => {
     updateScore();
     renderList();
   } catch (error) {
+    if (error.code === "COMPILE_ERROR") queueGradingStats(job, ["CE"]);
     await saveRunSubmission(
       job,
       job.pass,

@@ -7,8 +7,17 @@
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(ellipse at 15% -10%, color-mix(in srgb, var(--accent) 6%, transparent) 0, transparent 40%),
-    radial-gradient(ellipse at 100% 0, color-mix(in srgb, var(--accent2) 5%, transparent) 0, transparent 35%), var(--bg);
+    radial-gradient(
+      ellipse at 15% -10%,
+      color-mix(in srgb, var(--accent) 6%, transparent) 0,
+      transparent 40%
+    ),
+    radial-gradient(
+      ellipse at 100% 0,
+      color-mix(in srgb, var(--accent2) 5%, transparent) 0,
+      transparent 35%
+    ),
+    var(--bg);
   color: var(--text);
   overflow: hidden;
 }
@@ -18,7 +27,9 @@
 .adm-root * {
   box-sizing: border-box;
 }
-
+a {
+  text-decoration: none;
+}
 /* Navbar: chỉ giữ mục quan trọng, phần còn lại thu gọn vào menu */
 .adm-nav {
   display: flex;

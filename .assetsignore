@@ -4,6 +4,10 @@
 /wrangler.jsonc
 /.assetsignore
 /.local-backups/
+/README.md
+/AI_COLLABORATION.md
 /CHANGELOG.md
 /supabase/
 /tools/
+/.gitignore
+/mobile-preview-iphone-16.png
