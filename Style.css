@@ -1915,7 +1915,7 @@ header .top {
 
   header .user-label.auth-label { font-size: 0; }
 
-  header .user-label.auth-label::after { content: "??ng nh?p"; font-size: 12px; }
+  header .user-label.auth-label::after { content: "\000110\000103ng nh\001EADp"; font-size: 12px; }
 
   header .user-dropdown {
     right: 0;
