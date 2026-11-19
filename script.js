@@ -2455,32 +2455,58 @@ function hasExpectedSemanticOutput(actual, expected, task) {
   // Tables and character patterns encode row/column positions in whitespace.
   // Treat any changed layout as a wrong answer, even if the number sequence matches.
   const presentation = taskPresentation(task);
+  const allowPresentationPrefix = (prefix) => {
+    const remaining = removePresentationLabels(prefix, presentation).trim();
+    if (!remaining) return true;
+    // A changed prompt/result heading is a presentation fault. Do not let an
+    // extra pattern row, numeric row, or symbol-art fragment hide as a label.
+    if (/[\d*#]/u.test(remaining)) return false;
+    const answerWords = new Set(["not"]);
+    for (const test of task.tests || []) {
+      for (const word of normalizeProgramOutput(test.output).toLocaleLowerCase("vi").match(/[\p{L}\p{N}]+/gu) || []) {
+        answerWords.add(word);
+      }
+    }
+    const prefixWords = remaining.toLocaleLowerCase("vi").match(/[\p{L}\p{N}]+/gu) || [];
+    // Only treat a conflicting answer token immediately before the payload as
+    // an extra answer. A heading may legitimately mention another term/value.
+    const lastPrefixWord = prefixWords.at(-1);
+    const prefixEndsWithLabelSeparator = /[:=,;\-–—]$/u.test(remaining);
+    if (lastPrefixWord && answerWords.has(lastPrefixWord) && !prefixEndsWithLabelSeparator) return false;
+    return /^[\p{L}\s\p{P}\p{S}]+$/u.test(remaining);
+  };
   const exactPayloadSuffixMatches = () => {
     if (!e || !a.endsWith(e)) return false;
     const prefix = a.slice(0, a.length - e.length);
-    const remaining = removePresentationLabels(prefix, presentation);
-    return remaining.trim() === "";
+    return allowPresentationPrefix(prefix);
   };
-  if (STRICT_LAYOUT_TEST_IDS.has(Number(task.id))) return exactPayloadSuffixMatches();
+  if (STRICT_LAYOUT_TEST_IDS.has(Number(task.id))) {
+    const prefix = a.endsWith(e) ? a.slice(0, a.length - e.length) : "";
+    const remaining = removePresentationLabels(prefix, presentation).trim();
+    const words = remaining.match(/[\p{L}]{2,}/gu) || [];
+    // Pattern/table rows may be made only of letters such as X or O. A new
+    // heading needs an actual word; otherwise an extra row must remain WA.
+    if (remaining && !words.length) return false;
+    return exactPayloadSuffixMatches();
+  }
   const numericOnly = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:\s+[+-]?(?:\d+(?:\.\d*)?|\.\d+))*$/;
   if (numericOnly.test(e.trim())) {
     const decimals = Number(String(task.output || "").match(/(\d+)\s+chữ số sau/)?.[1]);
-    const numberPattern = Number.isInteger(decimals)
-      ? /[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)/g
-      : /[+-]?(?:\d+(?:\.\d*)?|\.\d+)/g;
-    const numericPayload = removePresentationLabels(a, presentation);
-    if (!/^[\s+-\d.,]*$/.test(numericPayload)) return false;
+    const numberPattern = /[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:[eE][+-]?\d+)?/g;
     const parseNumbers = (text) =>
       (text.match(numberPattern) || []).map((number) => Number(number.replace(",", ".")));
     const expectedNumbers = parseNumbers(e);
-    const actualNumbers = parseNumbers(numericPayload);
+    const actualNumbers = parseNumbers(a);
+    // Keep the answer at the end of stdout. This lets a different or missing
+    // text label count as presentation while extra output after the answer stays WA.
+    const endsWithResult = /[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:[eE][+-]?\d+)?\s*$/u.test(a);
+    if (!endsWithResult) return false;
     if (expectedNumbers.length && actualNumbers.length === expectedNumbers.length) {
-      const actualSuffix = actualNumbers;
-      if (expectedNumbers.every((number, index) => number === actualSuffix[index])) return true;
+      if (expectedNumbers.every((number, index) => number === actualNumbers[index])) return true;
       if (Number.isInteger(decimals) && decimals >= 0 && decimals <= 10) {
         const scale = 10 ** decimals;
         if (expectedNumbers.every((number, index) =>
-          Math.round(actualSuffix[index] * scale + Number.EPSILON) / scale === number,
+          Math.round(actualNumbers[index] * scale + Number.EPSILON) / scale === number,
         )) return true;
       }
     }
