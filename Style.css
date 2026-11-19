@@ -115,6 +115,9 @@
   --info-bg: #2b3e50;
   --info-text: #c1ddf5;
 }
+a {
+  text-decoration: none;
+}
 * {
   box-sizing: border-box;
 }
