@@ -1858,21 +1858,13 @@ header .top {
     z-index: 30;
   }
 
-  header .top {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 7px 8px;
-  }
+  header .top { display: flex; flex-wrap: nowrap; align-items: center; gap: 6px; }
 
-  header .top > div:first-child {
-    min-width: 100%;
-    flex: 1 0 100%;
-  }
+  header .top > div:first-child { min-width: 0; flex: 1 1 0; }
 
   header .brand {
     overflow: hidden;
-    font-size: clamp(15px, 4.3vw, 18px);
+    font-size: clamp(13px, 3.7vw, 15px);
     line-height: 1.25;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1880,20 +1872,10 @@ header .top {
 
   header .sub { display: none; }
 
-  header .header-actions {
-    display: flex;
-    flex: 1 0 100%;
-    width: 100%;
-    gap: 6px;
-    justify-content: flex-end;
-  }
+  header .header-actions { display: flex; flex: 0 0 auto; width: auto; gap: 5px; justify-content: flex-end; }
 
-  header .theme-trigger {
-    width: 40px;
-    min-width: 40px;
-    justify-content: center;
-    padding: 6px;
-  }
+  header .theme-trigger { width: 34px; min-width: 34px; min-height: 34px; justify-content: center; padding: 4px; }
+  header .theme-trigger > span:first-child { width: 22px; height: 22px; }
 
   header .theme-trigger-label,
   header .theme-trigger .menu-chevron { display: none; }
@@ -1901,22 +1883,11 @@ header .top {
   header .theme-menu-head,
   header .theme-choice-copy small { display: none; }
 
-  header .theme-options {
-    width: min(220px, calc(100vw - 28px));
-    padding: 7px;
-  }
+  header .theme-options { width: min(184px, calc(100vw - 24px)); padding: 6px; }
 
-  header .theme-options .theme-choice {
-    min-height: 40px;
-    gap: 8px;
-    padding: 5px;
-  }
+  header .theme-options .theme-choice { min-height: 34px; gap: 6px; padding: 4px; }
 
-  header .theme-card-preview {
-    flex-basis: 38px;
-    width: 38px;
-    height: 28px;
-  }
+  header .theme-card-preview { flex-basis: 30px; width: 30px; height: 22px; }
 
   header .auth-box {
     display: flex;
@@ -1932,28 +1903,19 @@ header .top {
   header .user-chip,
   header .menu-trigger {
     width: auto;
-    max-width: min(70vw, 280px);
-    min-height: 40px;
-    justify-content: center;
-    padding: 6px 10px;
+    max-width: min(44vw, 170px); min-height: 34px; justify-content: center; gap: 5px; padding: 4px 7px;
   }
 
   header .user-label {
     min-width: 0;
-    max-width: min(30vw, 130px);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    max-width: min(28vw, 105px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px;
   }
 
-  header .user-label.auth-label { max-width: min(42vw, 160px); }
+  header .user-label.auth-label { max-width: min(30vw, 112px); }
 
   header .user-label.auth-label { font-size: 0; }
 
-  header .user-label.auth-label::after {
-    content: "Đăng nhập";
-    font-size: 14px;
-  }
+  header .user-label.auth-label::after { content: "??ng nh?p"; font-size: 12px; }
 
   header .user-dropdown {
     right: 0;
