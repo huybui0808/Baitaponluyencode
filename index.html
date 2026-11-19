@@ -34,25 +34,154 @@
               aria-expanded="false"
               aria-controls="themeOptions"
             >
-              <span class="theme-trigger-icon" aria-hidden="true">◐</span><span class="theme-trigger-label">Sage</span><span class="menu-chevron" aria-hidden="true">▾</span>
+              <span class="theme-trigger-icon" aria-hidden="true">◐</span
+              ><span class="theme-trigger-label">Sage</span
+              ><span class="menu-chevron" aria-hidden="true">▾</span>
             </button>
-            <div class="theme-options" id="themeOptions" role="group" aria-label="Chọn màu giao diện" hidden>
-              <div class="theme-menu-head"><b>Giao diện</b><span>Chọn tông màu bạn thấy dễ nhìn</span></div>
-              <button class="theme-choice" type="button" data-theme-choice="a" aria-pressed="false"><span class="theme-card-preview theme-preview-a" aria-hidden="true"><i></i><b></b><em></em></span><span class="theme-choice-copy"><b>A · Kem ấm</b><small>Nền dịu, nhấn xanh teal</small></span><span class="theme-choice-check" aria-hidden="true">✓</span></button>
-              <button class="theme-choice" type="button" data-theme-choice="b" aria-pressed="false"><span class="theme-card-preview theme-preview-b" aria-hidden="true"><i></i><b></b><em></em></span><span class="theme-choice-copy"><b>B · Sage</b><small>Nền xanh nhạt, nhấn rừng</small></span><span class="theme-choice-check" aria-hidden="true">✓</span></button>
-              <button class="theme-choice" type="button" data-theme-choice="c" aria-pressed="false"><span class="theme-card-preview theme-preview-c" aria-hidden="true"><i></i><b></b><em></em></span><span class="theme-choice-copy"><b>C · Xanh xám</b><small>Nền mát, nhấn xanh lam</small></span><span class="theme-choice-check" aria-hidden="true">✓</span></button>
-              <button class="theme-choice" type="button" data-theme-choice="d" aria-pressed="false"><span class="theme-card-preview theme-preview-d" aria-hidden="true"><i></i><b></b><em></em></span><span class="theme-choice-copy"><b>D · Tối dịu</b><small>Nền tối than, nhấn bạc hà</small></span><span class="theme-choice-check" aria-hidden="true">✓</span></button>
+            <div
+              class="theme-options"
+              id="themeOptions"
+              role="group"
+              aria-label="Chọn màu giao diện"
+              hidden
+            >
+              <div class="theme-menu-head">
+                <b>Giao diện</b><span>Chọn tông màu bạn thấy dễ nhìn</span>
+              </div>
+              <button
+                class="theme-choice"
+                type="button"
+                data-theme-choice="a"
+                aria-pressed="false"
+              >
+                <span
+                  class="theme-card-preview theme-preview-a"
+                  aria-hidden="true"
+                  ><i></i><b></b><em></em></span
+                ><span class="theme-choice-copy"
+                  ><b>A · Kem ấm</b><small>Nền dịu, nhấn xanh teal</small></span
+                ><span class="theme-choice-check" aria-hidden="true">✓</span>
+              </button>
+              <button
+                class="theme-choice"
+                type="button"
+                data-theme-choice="b"
+                aria-pressed="false"
+              >
+                <span
+                  class="theme-card-preview theme-preview-b"
+                  aria-hidden="true"
+                  ><i></i><b></b><em></em></span
+                ><span class="theme-choice-copy"
+                  ><b>B · Sage</b><small>Nền xanh nhạt, nhấn rừng</small></span
+                ><span class="theme-choice-check" aria-hidden="true">✓</span>
+              </button>
+              <button
+                class="theme-choice"
+                type="button"
+                data-theme-choice="c"
+                aria-pressed="false"
+              >
+                <span
+                  class="theme-card-preview theme-preview-c"
+                  aria-hidden="true"
+                  ><i></i><b></b><em></em></span
+                ><span class="theme-choice-copy"
+                  ><b>C · Xanh xám</b
+                  ><small>Nền mát, nhấn xanh lam</small></span
+                ><span class="theme-choice-check" aria-hidden="true">✓</span>
+              </button>
+              <button
+                class="theme-choice"
+                type="button"
+                data-theme-choice="d"
+                aria-pressed="false"
+              >
+                <span
+                  class="theme-card-preview theme-preview-d"
+                  aria-hidden="true"
+                  ><i></i><b></b><em></em></span
+                ><span class="theme-choice-copy"
+                  ><b>D · Tối dịu</b
+                  ><small>Nền tối than, nhấn bạc hà</small></span
+                ><span class="theme-choice-check" aria-hidden="true">✓</span>
+              </button>
             </div>
           </div>
           <div class="auth-box" id="authBox"></div>
         </div>
       </div>
       <!-- VI: Mục phụ nằm trong menu tài khoản để thanh đầu trang gọn hơn. EN: Secondary actions live in the account menu to keep the header compact. -->
-      <div class="stats contact-links" id="statsBar" hidden>
-        <span class="pill">Email: s&#7869; c&#7853;p nh&#7853;t</span
-        ><span class="pill">Facebook: s&#7869; c&#7853;p nh&#7853;t</span
-        ><span class="pill">Zalo: s&#7869; c&#7853;p nh&#7853;t</span>
-      </div>
+      <section
+        class="info-panel"
+        id="statsBar"
+        aria-label="Thông tin và hướng dẫn"
+        hidden
+      >
+        <div class="info-panel-head">
+          <h2>Thông tin</h2>
+          <button
+            id="closeInfo"
+            class="info-close"
+            type="button"
+            aria-label="Đóng thông tin"
+          >
+            ×
+          </button>
+        </div>
+        <div class="info-panel-grid">
+          <section class="info-card" aria-labelledby="studentGuideTitle">
+            <h3 id="studentGuideTitle">Cách sử dụng</h3>
+            <ol>
+              <li>Chọn bài tập, đọc đề và yêu cầu trình bày.</li>
+              <li>
+                Soạn code C++20 trong trình soạn thảo bạn quen dùng, rồi dán vào
+                khung hoặc chọn file .cpp để nạp.
+              </li>
+              <li>
+                Chọn <strong>Biên dịch &amp; chạy test này</strong> để thử một
+                test.
+              </li>
+              <li>
+                Chọn <strong>Chấm điểm</strong> để chấm toàn bộ test của bài.
+              </li>
+            </ol>
+          </section>
+          <section class="info-card" aria-labelledby="scoringGuideTitle">
+            <h3 id="scoringGuideTitle">Cách chấm điểm</h3>
+            <p>
+              Điểm tối đa là 10, tính theo tỉ lệ test đúng trên tổng số test.
+              Lỗi trình bày được trừ sau khi chấm xong, tối đa 1,5 điểm; hệ
+              thống lưu điểm cao nhất.
+            </p>
+            <p>
+              Chạy thử một test chỉ để kiểm tra code, không thay thế thao tác
+              <strong>Chấm điểm</strong>.
+            </p>
+          </section>
+          <section
+            class="info-card info-contact"
+            aria-labelledby="contactTitle"
+          >
+            <h3 id="contactTitle">Thông tin liên hệ</h3>
+            <a
+              href="https://zalo.me/0346814435"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Zalo: 0346 814 435</a
+            >
+            <a
+              href="https://www.facebook.com/share/1JY86GknMQ/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Facebook: Trung Huy</a
+            >
+            <a href="mailto:buitrunghuy20082@gmail.com"
+              >Email: buitrunghuy20082@gmail.com</a
+            >
+          </section>
+        </div>
+      </section>
     </header>
     <aside
       id="suspensionNotice"
@@ -152,10 +281,21 @@
           <div class="editortop">
             <h2>Trình chạy thử C++20</h2>
             <div class="editor-actions">
+              <button class="btn" id="loadCppFile">Chọn file .cpp</button>
+              <input
+                id="cppFileInput"
+                type="file"
+                accept=".cpp,text/x-c++src,text/plain"
+                hidden
+              />
               <button class="btn" id="resetcode">Khôi phục code mẫu</button
               ><button class="btn" id="clearcode">Xóa code</button>
             </div>
           </div>
+          <p id="fileLoadStatus" class="file-load-status" aria-live="polite">
+            Có thể dán code hoặc nạp file .cpp; nội dung sẽ mở trong khung để
+            xem lại trước khi chạy.
+          </p>
           <textarea
             id="code"
             spellcheck="false"
@@ -182,7 +322,7 @@
           </div>
           <div class="runresult">
             <div id="runstatus" class="status">
-              Dán code C++ vào khung trên, chọn test và nhấn chạy.
+              Dán code hoặc nạp file .cpp, chọn test rồi chạy thử hay chấm điểm.
             </div>
             <pre id="runoutput"></pre>
           </div>
@@ -200,13 +340,13 @@
           <p class="notice">
             Code được biên dịch bằng Clang C++20 và chạy cục bộ trong trình
             duyệt; mã nguồn không gửi tới dịch vụ biên dịch. Khi đăng nhập và có
-            mạng, các lượt chạy trước khi bài đạt 10/10 (đúng, sai hoặc lỗi),
-            kể cả lần đầu đạt 10/10, được lưu vào lịch sử Supabase.
-            Các lượt hủy và lượt chạy sau khi đã đạt 10/10 không được lưu. Chủ tài khoản luôn xem được, Admin xem được
-            mọi bản lưu. Thành viên chỉ xem code của người khác khi chính họ
-            đã đạt 10/10 ở bài đó.
-            Lịch sử cần kết nối mạng để đồng bộ; compiler khoảng 95 MB có thể
-            dùng offline sau khi tải và cache đầy đủ.
+            mạng, các lượt chạy trước khi bài đạt 10/10 (đúng, sai hoặc lỗi), kể
+            cả lần đầu đạt 10/10, được lưu vào lịch sử Supabase. Các lượt hủy và
+            lượt chạy sau khi đã đạt 10/10 không được lưu. Chủ tài khoản luôn
+            xem được, Admin xem được mọi bản lưu. Thành viên chỉ xem code của
+            người khác khi chính họ đã đạt 10/10 ở bài đó. Lịch sử cần kết nối
+            mạng để đồng bộ; compiler khoảng 95 MB có thể dùng offline sau khi
+            tải và cache đầy đủ.
           </p>
         </div>
       </section>
@@ -423,7 +563,8 @@
         </button>
         <h2 id="submissionsTitle">Lịch sử bài đã nộp</h2>
         <p class="auth-sub">
-          Lịch sử hiển thị các lượt đúng, sai hoặc lỗi cho đến lần đầu đạt 10/10, bao gồm cả lần đạt 10/10.
+          Lịch sử hiển thị các lượt đúng, sai hoặc lỗi cho đến lần đầu đạt
+          10/10, bao gồm cả lần đạt 10/10.
         </p>
         <div class="submission-toolbar">
           <div

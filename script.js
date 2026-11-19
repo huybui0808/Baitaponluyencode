@@ -295,7 +295,7 @@ function renderAuthBox() {
   const avatar = currentUser
     ? `<span class="user-initial user-avatar" aria-hidden="true">${avatarImageMarkup(profileAvatarPath, userDisplayName())}</span>`
     : '<span class="menu-trigger-icon" aria-hidden="true">☰</span>';
-  box.innerHTML = `<div class="user-menu ${currentUser ? "" : "unauthenticated"}"><button class="user-chip menu-trigger" data-auth="menu" type="button" aria-haspopup="true" aria-expanded="false">${avatar}<span class="user-label ${currentUser ? "" : "auth-label"}">${currentUser ? escapeHTML(userDisplayName()) : "Đăng nhập / Đăng ký"}</span><span class="menu-chevron" aria-hidden="true">▾</span></button><div class="user-dropdown" hidden>${accountHead}<div class="menu-section-label">Học tập & cộng đồng</div><button data-auth="rank" type="button">🏆 Bảng xếp hạng</button><button data-auth="members" type="button">♙ Thành viên</button><button data-auth="submissions" type="button">▤ Bài đã nộp</button><button data-auth="info" type="button">ⓘ Th&#244;ng tin li&#234;n h&#7879;</button>${currentUser ? '<div class="menu-separator"></div>' : ""}${accountActions}</div></div>`;
+  box.innerHTML = `<div class="user-menu ${currentUser ? "" : "unauthenticated"}"><button class="user-chip menu-trigger" data-auth="menu" type="button" aria-haspopup="true" aria-expanded="false">${avatar}<span class="user-label ${currentUser ? "" : "auth-label"}">${currentUser ? escapeHTML(userDisplayName()) : "Đăng nhập / Đăng ký"}</span><span class="menu-chevron" aria-hidden="true">▾</span></button><div class="user-dropdown" hidden>${accountHead}<div class="menu-section-label">Học tập & cộng đồng</div><button data-auth="rank" type="button">🏆 Bảng xếp hạng</button><button data-auth="members" type="button">♙ Thành viên</button><button data-auth="submissions" type="button">▤ Bài đã nộp</button><button data-auth="info" type="button">ⓘ Thông tin</button>${currentUser ? '<div class="menu-separator"></div>' : ""}${accountActions}</div></div>`;
   bindAvatarImages(box);
 }
 // ----- Cửa sổ (overlay) -----
@@ -1177,6 +1177,7 @@ $("authBox").addEventListener("click", async (e) => {
   }
   if (action === "info") {
     $("statsBar").hidden = !$("statsBar").hidden;
+    if (!$("statsBar").hidden) $("closeInfo").focus();
     return;
   }
   if (action === "login") {
@@ -1194,6 +1195,10 @@ $("authBox").addEventListener("click", async (e) => {
   else if (action === "admin") openAdminPanel();
   else if (action === "rename") renameUser();
   else if (action === "logout") await supabase.auth.signOut();
+});
+$("closeInfo").addEventListener("click", () => {
+  $("statsBar").hidden = true;
+  document.querySelector('[data-auth="info"]')?.focus();
 });
 document
   .querySelectorAll("[data-close]")
@@ -1990,6 +1995,37 @@ document.querySelectorAll("#filters button").forEach((b) =>
 $("toggleTests").addEventListener("click", () => {
   setTestListExpanded($("tests").classList.contains("collapsed"));
 });
+$("loadCppFile").addEventListener("click", () => $("cppFileInput").click());
+$("cppFileInput").addEventListener("change", async (event) => {
+  const file = event.target.files?.[0];
+  const status = $("fileLoadStatus");
+  if (!file) return;
+  if (!/\.cpp$/i.test(file.name)) {
+    status.textContent = "Chỉ nhận tệp có đuôi .cpp.";
+    status.classList.add("err");
+    event.target.value = "";
+    return;
+  }
+  if (file.size > 2 * 1024 * 1024) {
+    status.textContent = "Tệp quá lớn (tối đa 2 MB). Hãy chọn đúng file mã nguồn .cpp.";
+    status.classList.add("err");
+    event.target.value = "";
+    return;
+  }
+  try {
+    const code = await file.text();
+    if (!code.trim()) throw new Error("Tệp đang trống.");
+    $("code").value = code.replace(/^\uFEFF/, "");
+    $("code").dispatchEvent(new Event("input", { bubbles: true }));
+    status.textContent = `Đã nạp ${file.name}. Mã nguồn nằm trong trình duyệt; hãy chọn test chạy thử hoặc bấm Chấm điểm.`;
+    status.classList.remove("err");
+  } catch (error) {
+    status.textContent = error.message || "Không đọc được tệp. Hãy lưu lại dưới dạng UTF-8 rồi thử lại.";
+    status.classList.add("err");
+  } finally {
+    event.target.value = "";
+  }
+});
 $("code").addEventListener("input", () => {
   try {
     localStorage.setItem("cppcode_" + storageId(current), $("code").value);
@@ -2132,18 +2168,49 @@ function normalizeProgramOutput(value) {
 function hasExpectedSemanticOutput(actual, expected, task) {
   const a = normalizeProgramOutput(actual);
   const e = normalizeProgramOutput(expected);
+  // Tables and character patterns encode row/column positions in whitespace.
+  // Treat any changed layout as a wrong answer, even if the number sequence matches.
+  const strictLayoutIds = new Set([
+    65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 91, 92,
+    133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150,
+  ]);
+  const exactPayloadSuffixMatches = () => {
+    if (!e || !a.endsWith(e)) return false;
+    const prefix = a.slice(0, a.length - e.length);
+    const presentation = taskPresentation(task);
+    const allowedPrefixes = [
+      presentation.promptText || "",
+      ...(presentation.prompts || []),
+      presentation.resultLabel || "",
+      ...((presentation.lineLabels || [])),
+    ].filter(Boolean);
+    let remaining = prefix;
+    for (const label of allowedPrefixes) remaining = remaining.replaceAll(label, "");
+    return remaining.trim() === "";
+  };
+  if (strictLayoutIds.has(Number(task.id))) return exactPayloadSuffixMatches();
   const numericOnly = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:\s+[+-]?(?:\d+(?:\.\d*)?|\.\d+))*$/;
   if (numericOnly.test(e.trim())) {
     const decimals = Number(String(task.output || "").match(/(\d+)\s+chữ số sau/)?.[1]);
     const numberPattern = Number.isInteger(decimals)
       ? /[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)/g
       : /[+-]?(?:\d+(?:\.\d*)?|\.\d+)/g;
+    const presentation = taskPresentation(task);
+    const allowedLabels = [
+      presentation.promptText || "",
+      ...(presentation.prompts || []),
+      presentation.resultLabel || "",
+      ...((presentation.lineLabels || [])),
+    ].filter(Boolean);
+    let numericPayload = a;
+    for (const label of allowedLabels) numericPayload = numericPayload.replaceAll(label, "");
+    if (!/^[\s+-\d.,]*$/.test(numericPayload)) return false;
     const parseNumbers = (text) =>
       (text.match(numberPattern) || []).map((number) => Number(number.replace(",", ".")));
     const expectedNumbers = parseNumbers(e);
-    const actualNumbers = parseNumbers(a);
-    if (expectedNumbers.length && actualNumbers.length >= expectedNumbers.length) {
-      const actualSuffix = actualNumbers.slice(-expectedNumbers.length);
+    const actualNumbers = parseNumbers(numericPayload);
+    if (expectedNumbers.length && actualNumbers.length === expectedNumbers.length) {
+      const actualSuffix = actualNumbers;
       if (expectedNumbers.every((number, index) => number === actualSuffix[index])) return true;
       if (Number.isInteger(decimals) && decimals >= 0 && decimals <= 10) {
         const scale = 10 ** decimals;
@@ -2152,9 +2219,12 @@ function hasExpectedSemanticOutput(actual, expected, task) {
         )) return true;
       }
     }
+    return false;
   }
-  const trimLineTails = (text) => text.split("\n").map((line) => line.replace(/[\t ]+$/g, "")).join("\n").replace(/\n+$/g, "");
-  return trimLineTails(a).includes(trimLineTails(e));
+  // Non-numeric answers (including character art) must match as a complete,
+  // ordered output block. Allow only the configured prompts/labels before it.
+  // Never ignore internal spaces, line positions, missing rows, or extra rows.
+  return exactPayloadSuffixMatches();
 }
 // VI: Phân loại mức lỗi trình bày sau khi đã khớp nội dung đáp án. EN: Rank formatting-only mismatches after semantic output matches.
 function presentationSeverity(actual, expected, presentation) {
@@ -2199,7 +2269,7 @@ $("runone").onclick = async () => {
   const task = current;
   const code = $("code").value;
   const stdin = $("stdin").value;
-  const target = visibleTests(task).find(
+  const target = task.tests.find(
     (x) => normalize(x.input) === normalize(stdin),
   );
   let job;
@@ -2221,7 +2291,7 @@ $("runone").onclick = async () => {
       throw new DOMException("Đã hủy phiên chấm.", "AbortError");
     const grade = target
       ? classifyTestResult(result, task, target)
-      : { status: "FAIL", message: "INPUT KHÔNG THUỘC TEST", penalty: 0 };
+      : { status: "CUSTOM", message: "ĐÃ CHẠY · INPUT TỰ NHẬP", penalty: 0 };
     const ok = grade.status === "PASS";
     const singleRunOutcome = !target
       ? "wrong"
@@ -2230,19 +2300,17 @@ $("runone").onclick = async () => {
         : grade.status === "FAIL"
           ? "wrong"
           : "partial";
-    await saveRunSubmission(job, null, target?.no || null, singleRunOutcome);
+    if (target) await saveRunSubmission(job, null, target.no, singleRunOutcome);
     job.state = "completed";
     const text = result.timeLimitExceeded
       ? "Kết quả: TIME LIMIT EXCEEDED (TLE)\nChương trình vượt giới hạn thực thi 1,0 giây."
-      : "Program output:\n" +
-        (target
-          ? taskPresentation(task, target.input).renderConsoleOutput(result.output, target.input)
-          : result.output || "(không có output)") +
+      : "Kết quả chạy:\n" +
+        (taskPresentation(task, stdin).renderConsoleOutput(result.output, stdin) || "(không có output)") +
         (result.stderr ? "\n\nStandard error:\n" + result.stderr : "") +
         (result.runtimeError ? "\n\nRuntime error:\n" + result.runtimeError : "") +
         (target
           ? "\n\nExpected output:\n" + taskPresentation(task, target.input).expected(target.output)
-          : "\n\nInput tự nhập. Kết quả không được so sánh với đáp án mẫu.");
+          : "\n\nĐây là lượt chạy thử với input bạn nhập, không chấm điểm.");
     updateJobView(
       job,
       result.timeLimitExceeded
@@ -2250,6 +2318,8 @@ $("runone").onclick = async () => {
         : grade.message,
       ok
         ? "ok"
+        : grade.status === "CUSTOM"
+          ? ""
         : grade.status === "PRESENTATION"
           ? "warn"
         : result.timeLimitExceeded
@@ -2257,8 +2327,7 @@ $("runone").onclick = async () => {
           : result.exitCode !== "0"
             ? "low"
             : "err",
-      text +
-        "\n\nChạy riêng một test không làm thay đổi điểm cao nhất.",
+      text + "\n\nLượt chạy thử không làm thay đổi điểm cao nhất.",
     );
   } catch (error) {
     const cancelled =

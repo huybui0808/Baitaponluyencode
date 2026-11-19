@@ -495,6 +495,13 @@ main {
   gap: 7px;
   flex-wrap: wrap;
 }
+.file-load-status {
+  margin: 8px 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.file-load-status.err { color: var(--danger, #a83232); }
 .btn {
   font-size: 12px;
 }
@@ -1104,6 +1111,31 @@ header .stats {
   border-top: 1px dashed var(--line);
 }
 header .contact-links .pill { padding: 8px 12px; font-size: 13.5px; }
+.info-panel {
+  margin-top: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface, var(--panel));
+  color: var(--text);
+  box-shadow: 0 12px 30px rgb(20 35 50 / 8%);
+}
+.info-panel[hidden] { display: none; }
+.info-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+.info-panel-head h2 { margin: 0; font-size: 20px; }
+.info-close { width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: inherit; font-size: 24px; cursor: pointer; }
+.info-panel-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.info-card { min-width: 0; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: color-mix(in srgb, var(--panel) 88%, var(--accent) 12%); }
+.info-card h3 { margin: 0 0 9px; font-size: 16px; }
+.info-card p, .info-card li { font-size: 14px; line-height: 1.55; }
+.info-card p { margin: 7px 0 0; }
+.info-card ol { margin: 0; padding-left: 20px; }
+.info-contact { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.info-contact a { color: var(--accent-strong, var(--accent)); overflow-wrap: anywhere; }
+@media (max-width: 760px) {
+  .info-panel-grid { grid-template-columns: 1fr; }
+  .info-panel { padding: 14px; }
+}
 header {
   padding-top: 14px;
   padding-bottom: 14px;
@@ -1825,14 +1857,14 @@ header .top {
 
   header .top {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
+    gap: 7px 8px;
   }
 
   header .top > div:first-child {
-    min-width: 0;
-    flex: 1 1 auto;
+    min-width: 100%;
+    flex: 1 0 100%;
   }
 
   header .brand {
@@ -1847,9 +1879,10 @@ header .top {
 
   header .header-actions {
     display: flex;
-    flex: 0 1 auto;
-    width: auto;
+    flex: 1 0 100%;
+    width: 100%;
     gap: 6px;
+    justify-content: flex-end;
   }
 
   header .theme-trigger {
@@ -1861,6 +1894,26 @@ header .top {
 
   header .theme-trigger-label,
   header .theme-trigger .menu-chevron { display: none; }
+
+  header .theme-menu-head,
+  header .theme-choice-copy small { display: none; }
+
+  header .theme-options {
+    width: min(220px, calc(100vw - 28px));
+    padding: 7px;
+  }
+
+  header .theme-options .theme-choice {
+    min-height: 40px;
+    gap: 8px;
+    padding: 5px;
+  }
+
+  header .theme-card-preview {
+    flex-basis: 38px;
+    width: 38px;
+    height: 28px;
+  }
 
   header .auth-box {
     display: flex;
@@ -1876,7 +1929,7 @@ header .top {
   header .user-chip,
   header .menu-trigger {
     width: auto;
-    max-width: min(48vw, 210px);
+    max-width: min(70vw, 280px);
     min-height: 40px;
     justify-content: center;
     padding: 6px 10px;
@@ -1891,6 +1944,13 @@ header .top {
   }
 
   header .user-label.auth-label { max-width: min(42vw, 160px); }
+
+  header .user-label.auth-label { font-size: 0; }
+
+  header .user-label.auth-label::after {
+    content: "Đăng nhập";
+    font-size: 14px;
+  }
 
   header .user-dropdown {
     right: 0;
