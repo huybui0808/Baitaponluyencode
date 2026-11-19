@@ -577,13 +577,11 @@ async function refreshSuspensionStatus() {
 $("dismissSuspensionNotice")?.addEventListener("click", () => { suspensionDismissed = true; renderSuspensionNotice(); });
 window.addEventListener("online", async () => {
   await refreshSuspensionStatus();
-  void syncGradingStats();
 });
 document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshSuspensionStatus(); });
 setInterval(async () => {
   if (document.hidden) return;
   await refreshSuspensionStatus();
-  void syncGradingStats();
 }, 30000);
 async function handleSession(session) {
   const user = session?.user || null;
@@ -607,7 +605,6 @@ async function handleSession(session) {
   }
   currentUser = user;
   await refreshSuspensionStatus();
-  if (currentUser?.id === user.id) void syncGradingStats();
   clearPendingSignup(user.email || "");
   closeOverlay("authOverlay");
   if (loadedForUser === user.id) {
@@ -712,78 +709,6 @@ async function saveRunSubmission(job, passed = null, testNo = null, outcome = "p
   );
 }
 
-// VI: Chỉ lưu mã loại lỗi để đồng bộ sau khi có mạng.
-// EN: Queue verdicts locally until the signed-in account can sync them.
-const GRADING_STATS_QUEUE = "cpp_grading_stats_pending:";
-const gradingStatsInMemory = new Map();
-let gradingStatsSync;
-let gradingStatsSyncNotice = "";
-function queueGradingStats(job, errors) {
-  const userId = job.userId;
-  if (!userId || currentUser?.id !== userId || job.maxScoreAtStart ||
-      accountSuspended || job.controller.signal.aborted) return;
-  const attempt = {
-    taskId: job.taskId,
-    errors: [...errors],
-    countsPerTest: true,
-    queuedAt: Date.now(),
-  };
-  const key = GRADING_STATS_QUEUE + userId + ":" + crypto.getRandomValues(new Uint32Array(4)).join("-");
-  try {
-    localStorage.setItem(key, JSON.stringify(attempt));
-  } catch (_) {
-    gradingStatsInMemory.set(key, attempt);
-  }
-  void syncGradingStats();
-}
-
-function syncGradingStats() {
-  const userId = currentUser?.id;
-  if (!userId || !supabase || accountSuspended) return;
-  if (!navigator.onLine) {
-    gradingStatsSyncNotice = "Có lượt chấm đang chờ mạng để đồng bộ thống kê.";
-    return;
-  }
-  if (gradingStatsSync) return gradingStatsSync;
-  const prefix = GRADING_STATS_QUEUE + userId + ":";
-  const pending = new Map([...gradingStatsInMemory].filter(([key]) => key.startsWith(prefix)));
-  try {
-    for (const key of Object.keys(localStorage)) {
-      if (key.startsWith(prefix)) pending.set(key, readStore(key));
-    }
-  } catch (_) {}
-  if (!pending.size) {
-    gradingStatsSyncNotice = "";
-    return;
-  }
-  const entries = [...pending].sort((a, b) => a[1].queuedAt - b[1].queuedAt);
-  gradingStatsSync = (async () => {
-    for (const [key, entry] of entries) {
-      if (currentUser?.id !== userId || !navigator.onLine || accountSuspended) return;
-      const rpc = entry.countsPerTest ? "record_my_grading_attempt_counts" : "record_my_grading_attempt";
-      const { error } = await supabase.rpc(rpc, {
-        p_user_id: userId,
-        p_problem_id: entry.taskId,
-        p_attempt_id: key.slice(prefix.length),
-        p_errors: entry.errors,
-      });
-      if (error) {
-        gradingStatsSyncNotice = "Có lượt chấm đang chờ đồng bộ. Kiểm tra kết nối và các SQL thống kê trên Supabase.";
-        console.warn("Không đồng bộ được thống kê chấm bài:", error.message || error);
-        return;
-      }
-      gradingStatsInMemory.delete(key);
-      try { localStorage.removeItem(key); } catch (_) {}
-    }
-    gradingStatsSyncNotice = "";
-  })().catch((error) => {
-    gradingStatsSyncNotice = "Có lượt chấm đang chờ đồng bộ. Kiểm tra kết nối và các SQL thống kê trên Supabase.";
-    console.warn("Không đồng bộ được thống kê chấm bài:", error.message || error);
-  }).finally(() => {
-    gradingStatsSync = null;
-  });
-  return gradingStatsSync;
-}
 // ----- Bảng xếp hạng theo số bài hoàn thành và tổng điểm -----
 function openLeaderboard() {
   openOverlay("lbOverlay");
@@ -974,69 +899,6 @@ function formatLocalDate(value) {
 function canManagePassword(user) {
   return (user?.identities || []).some((identity) => identity.provider === "email");
 }
-async function loadProfileGradingChart(container, userId) {
-  try {
-    if (currentUser?.id === userId) await syncGradingStats();
-    if (!currentUser || !container.isConnected) return;
-    const { data, error } = await supabase.rpc("get_member_grading_summary", {
-      p_user_id: userId,
-    });
-    if (error) throw error;
-    if (!currentUser || !container.isConnected) return;
-    const categories = [
-      ["AC", "Kết quả đúng", "Accepted (AC)", "#079b45", "bài"],
-      ["WA", "Sai đáp án", "Wrong Answer (WA)", "#e53935", "test"],
-      ["CE", "Lỗi biên dịch", "Compilation Error (CE)", "#7547d8", "lượt"],
-      ["RE", "Lỗi khi chạy", "Runtime Error (RE)", "#2477c9", "test"],
-      ["TLE", "Quá thời gian", "Time Limit Exceeded (TLE)", "#e88912", "test"],
-      ["PE", "Lỗi trình bày", "Presentation Error (PE)", "#008f83", "test"],
-      ["LEGACY", "Lượt cũ chưa phân loại", "Unclassified legacy result", "#68788a", "lượt"],
-    ];
-    const counts = new Map((data || []).map((row) => [row.verdict, Number(row.item_count)]));
-    const legacyProblems = counts.get("LEGACY_PROGRESS");
-    const legacyNote = Number.isSafeInteger(legacyProblems) && legacyProblems > 0
-      ? `<p class="profile-subtle">${legacyProblems} bài cũ còn điểm nhưng thiếu lịch sử lượt chấm.</p>`
-      : "";
-    const oldCounts = counts.get("LEGACY_ROLLUP");
-    const oldCountsNote = oldCounts > 0
-      ? `<p class="profile-subtle">${oldCounts} lượt cũ chỉ có số liệu theo loại lỗi, chưa có số test lỗi.</p>`
-      : "";
-    const syncNotice = currentUser?.id === userId && gradingStatsSyncNotice
-      ? `<p class="profile-message warn" role="status">${escapeHTML(gradingStatsSyncNotice)}</p>`
-      : "";
-    const bars = categories
-      .map(([code, label, standard, color, unit]) => ({ code, label, standard, color, unit, count: counts.get(code) }))
-      .map((bar) => ({ ...bar, count: Number.isSafeInteger(bar.count) && bar.count > 0 ? bar.count : 0 }))
-      .filter(({ code, count }) => code !== "LEGACY" || count > 0);
-    const maxCount = Math.max(0, ...bars.map(({ count }) => count));
-    const number = new Intl.NumberFormat("vi-VN");
-    container.innerHTML = `
-      <div class="profile-grading-chart" role="list" aria-label="Biểu đồ cột thống kê kết quả chấm bài">
-        ${bars.map(({ code, label, standard, color, count, unit }) => {
-          const height = maxCount ? Number(((count / maxCount) * 100).toFixed(2)) : 0;
-          return `<div class="profile-grading-column" role="listitem" style="--bar-color:${color};--bar-height:${height}%">
-            <strong class="profile-grading-count">${number.format(count)} <small>${unit}</small></strong>
-            <div class="profile-grading-plot" role="img" aria-label="${label}: ${number.format(count)} ${unit}">
-              <span class="profile-grading-bar"></span>
-            </div>
-            <span class="profile-grading-label"><b>${label}</b><small>${standard}</small></span>
-          </div>`;
-        }).join("")}
-      </div>
-      <p class="profile-grading-note">Mỗi test sai được tính riêng. Kết quả đúng tính theo bài hoàn thành; lỗi biên dịch tính theo lượt. Dữ liệu cũ được ghi chú riêng nếu thiếu kết quả từng test.</p>
-      ${legacyNote}${oldCountsNote}${syncNotice}`;
-  } catch (error) {
-    console.warn("Không tải được biểu đồ thống kê:", error?.code || "", error?.message || error);
-    if (!container.isConnected) return;
-    if (error?.code === "PGRST202" || /get_member_grading_summary/i.test(error?.message || "")) {
-      container.textContent = "Chưa cài hàm thống kê hồ sơ trên Supabase. Hãy chạy SQL 20261203 sau SQL 20261202.";
-    } else if (error?.code === "42P01" || error?.code === "42703") {
-      container.textContent = "Cấu trúc bảng thống kê chưa đầy đủ. Hãy chạy lần lượt SQL 20261202 rồi 20261203.";
-    } else {
-      container.textContent = "Chưa tải được biểu đồ. Mở Console để xem lỗi Supabase chi tiết.";
-    }
-  }
-}
 async function openProfile(userId) {
   if (!currentUser) {
     alert("Đăng nhập để xem hồ sơ thành viên.");
@@ -1113,11 +975,8 @@ async function openProfile(userId) {
             : '<p class="profile-subtle">Chưa có tiến độ bài tập.</p>'
         }</div>
       </section>
-      <section class="profile-section"><h3>Thống kê chấm bài</h3>
-        <div id="profileGradingChart">Đang tải thống kê…</div></section>
       ${accountSettings}`;
     bindAvatarImages(content);
-    void loadProfileGradingChart($("profileGradingChart"), userId);
   } catch (error) {
     content.innerHTML = `<h2 id="profileTitle">Không tải được hồ sơ</h2><p class="profile-subtle">${escapeHTML(error.message || String(error))}</p>`;
   }
@@ -2108,7 +1967,6 @@ function createRun(task, code, kind) {
     task,
     code,
     kind,
-    userId: currentUser?.id,
     maxScoreAtStart: Number(currentBestScore(task.id) ?? 0) >= 10,
     controller: new AbortController(),
     state: "running",
@@ -2797,7 +2655,6 @@ $("runall").onclick = async () => {
       "Đang khởi tạo compiler C++20 cục bộ…",
     );
     const module = await compileCode(job.code, job.controller.signal);
-    const gradingErrors = [];
     for await (const { index: i, test, result } of runCompiledBatch(
       module,
       job.task.tests,
@@ -2813,10 +2670,6 @@ $("runall").onclick = async () => {
         job.lines.join("\n"),
       );
       const grade = classifyTestResult(result, job.task, test);
-      if (grade.status === "FAIL") gradingErrors.push("WA");
-      if (grade.status === "TLE") gradingErrors.push("TLE");
-      if (grade.status === "RUNTIME") gradingErrors.push("RE");
-      if (grade.status === "PRESENTATION") gradingErrors.push("PE");
       if (grade.status === "PASS" || grade.status === "PRESENTATION") job.pass++;
       if (grade.status === "PRESENTATION") {
         job.formatErrors++;
@@ -2835,7 +2688,6 @@ $("runall").onclick = async () => {
     await refreshSuspensionStatus();
     if (job.controller.signal.aborted)
       throw new DOMException("Đã hủy phiên chấm.", "AbortError");
-    queueGradingStats(job, gradingErrors);
     // VI: Chấm đủ test trước rồi mới trừ tổng lỗi trình bày; không hạ điểm cao nhất đã lưu.
     // EN: Apply the capped formatting deduction after all tests; preserve the saved high score.
     const requestedPenalty = Math.min(1.5, job.presentationPenalty);
@@ -2889,7 +2741,6 @@ $("runall").onclick = async () => {
     updateScore();
     renderList();
   } catch (error) {
-    if (error.code === "COMPILE_ERROR") queueGradingStats(job, ["CE"]);
     await saveRunSubmission(
       job,
       job.pass,

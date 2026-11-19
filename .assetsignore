@@ -1,4 +1,4 @@
-/vendor/cpp-compiler/compiler/clang.wasm
+﻿/vendor/cpp-compiler/compiler/clang.wasm
 /vendor/cpp-compiler/compiler/sysroot.tar
 /cloudflare-worker.js
 /wrangler.jsonc
@@ -10,4 +10,3 @@
 /supabase/
 /tools/
 /.gitignore
-/mobile-preview-iphone-16.png
