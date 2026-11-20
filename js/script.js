@@ -234,6 +234,7 @@ const SCORE_KEY = "tlu_cpp_best_scores_v1";
 const SCORE_META_KEY = "tlu_cpp_best_score_meta_v1";
 const SCORE_HISTORY_KEY = "tlu_cpp_best_score_history_v1";
 const LEGACY_LATEST_SCORE_KEY = "tlu_cpp_latest_scores_v1";
+const PROBLEM_RESET_VERSION_KEY = "tlu_cpp_problem_reset_versions_v1";
 const SCORE_PRECISION = 1_000_000;
 const TEST_TIME_LIMIT_MS = 1000;
 const activeRuns = new Map(); // Một bài có tối đa một phiên chạy tại một thời điểm.
@@ -282,6 +283,52 @@ let currentUser = null; // Người dùng Supabase đang đăng nhập (null = k
 function scoreStoreKey(key, userId = currentUser?.id) {
   return userId ? `${key}:${userId}` : key;
 }
+async function reconcileProblemLearningResets() {
+  if (!supabase || !navigator.onLine) return false;
+  const { data, error } = await supabase.rpc("get_problem_learning_reset_versions");
+  if (error) {
+    console.warn("Could not sync task reset markers:", error.message);
+    return false;
+  }
+  const seen = readStore(PROBLEM_RESET_VERSION_KEY);
+  let changed = false;
+  for (const marker of data || []) {
+    const id = String(marker.problem_id);
+    const version = Number(marker.reset_version);
+    if (!Number.isInteger(version) || version <= Number(seen[id] || 0)) continue;
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key === SCORE_KEY || key === SCORE_META_KEY || key === LEGACY_LATEST_SCORE_KEY ||
+          key?.startsWith(`${SCORE_KEY}:`) || key?.startsWith(`${SCORE_META_KEY}:`)) keys.push(key);
+    }
+    for (const key of keys) {
+      const values = readStore(key);
+      if (Object.hasOwn(values, id)) {
+        delete values[id];
+        localStorage.setItem(key, JSON.stringify(values));
+      }
+    }
+    const history = readStore(SCORE_HISTORY_KEY);
+    for (const key of Object.keys(history)) {
+      if (key.startsWith(`${id}:`)) delete history[key];
+    }
+    localStorage.setItem(SCORE_HISTORY_KEY, JSON.stringify(history));
+    seen[id] = version;
+    changed = true;
+  }
+  if (changed) {
+    localStorage.setItem(PROBLEM_RESET_VERSION_KEY, JSON.stringify(seen));
+    bestScores = readStore(scoreStoreKey(SCORE_KEY));
+    bestScoreMeta = readStore(scoreStoreKey(SCORE_META_KEY));
+  }
+  return changed;
+}
+window.addEventListener("problem-learning-reset", () => {
+  void reconcileProblemLearningResets().then((changed) => {
+    if (changed) refreshScoreViews();
+  });
+});
 function persistScores() {
   try {
     localStorage.setItem(scoreStoreKey(SCORE_KEY), JSON.stringify(bestScores));
@@ -308,6 +355,9 @@ try {
 } catch (error) {
   console.error("Không tải được Supabase SDK:", error);
 }
+void reconcileProblemLearningResets().then((changed) => {
+  if (changed && !currentUser) refreshScoreViews();
+});
 let profileName = "";
 let profileAvatarPath = "";
 let myRole = "student"; // [ADMIN] student | admin | super_admin (lấy từ Supabase RPC get_my_role)
@@ -512,6 +562,7 @@ async function syncGuestScoresUp() {
 async function loadCloudProgress() {
   const userId = currentUser?.id;
   if (!userId) return;
+  await reconcileProblemLearningResets();
   let legacySchema = false;
   let { data, error } = await supabase
     .from("user_progress")

@@ -436,12 +436,13 @@ async function onProblemsClick(e) {
     if (act === "del") {
       if (
         !(await confirmBox(
-          `Xóa bài ${pad3(id)}. ${p.title}? Toàn bộ test case của bài sẽ bị xóa theo (điểm học viên đã lưu không bị xóa).`,
+          `Xóa bài ${pad3(id)}. ${p.title}? Toàn bộ test, điểm, lịch sử nộp và thống kê của riêng bài này sẽ bị xóa. Dữ liệu bài khác vẫn được giữ.`,
           { danger: true, okText: "Xóa bài" },
         ))
       )
         return;
-      await q(sb.from("problems").delete().eq("id", id));
+      await rpc("admin_delete_problem_and_learning_data", { p_problem: id });
+      window.dispatchEvent(new Event("problem-learning-reset"));
       dirty = true;
       toast("Đã xóa bài.", "ok");
       await loadProblems();
@@ -552,6 +553,7 @@ async function openProblemEditor(id) {
       isNew,
       tab: "info",
       testsDirty: false,
+      resetLearning: false,
       bad: new Set(),
     };
     const modal = openModal("");
@@ -593,6 +595,9 @@ async function openProblemEditor(id) {
         <div class="adm-foot"><button class="adm-btn" data-x="close">Hủy</button><button class="adm-btn primary" data-x="save">Lưu thay đổi</button></div>`;
       const eb = panel.querySelector("#edBody");
       eb.innerHTML = ed.tab === "info" ? infoHtml() : testsHtml();
+      panel.querySelector("#fResetLearning")?.addEventListener("change", (event) => {
+        ed.resetLearning = event.target.checked;
+      });
       if (ed.tab === "tests") bindTests(eb);
     };
     const infoHtml = () => `
@@ -608,6 +613,7 @@ async function openProblemEditor(id) {
       <div class="adm-row2"><label class="adm-field"><span>Sample input</span><textarea class="adm-textarea" id="fSin">${esc(p.sample_input)}</textarea></label>
         <label class="adm-field"><span>Sample output</span><textarea class="adm-textarea" id="fSout">${esc(p.sample_output)}</textarea></label></div>
       <p class="mut" style="margin:0 0 12px;color:var(--muted);font-size:13px">Để đổi nhãn một lần cho các test, ghi màn hình mẫu đầy đủ vào Sample output: mỗi lời nhắc nhập kèm giá trị từ Sample input, sau đó là nhãn và kết quả mẫu. Ví dụ: Nhap a = 3, Nhap b = 4, Tong = 7.</p>
+      ${!isNew ? `<label class="adm-field" style="display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--danger,#b84b58);border-radius:10px"><input id="fResetLearning" type="checkbox" ${ed.resetLearning ? "checked" : ""} style="margin-top:3px"><span><b>Xóa dữ liệu học viên của bài này</b><br><span class="mut">Chỉ bật khi nội dung bài đã đổi thành bài khác. Sẽ xóa điểm, lịch sử nộp và thống kê của riêng bài này.</span></span></label>` : ""}
       <div style="display:flex;align-items:center;gap:10px"><button class="adm-switch ${p.is_published ? "on" : ""}" data-x="pub" aria-label="Xuất bản"></button>
         <span style="font-size:13px">Xuất bản cho học viên <span style="color:var(--muted)">(cần ${MIN_TESTS}–${MAX_TESTS} test)</span></span></div>`;
     const testsHtml = () => `
@@ -702,6 +708,7 @@ async function openProblemEditor(id) {
     };
     const save = async () => {
       collect();
+        ed.resetLearning = Boolean(panel.querySelector("#fResetLearning")?.checked);
       const n = ed.p.id;
       if (!Number.isInteger(n) || n < 1)
         return toast("Số bài phải là số nguyên dương.", "err");
@@ -721,6 +728,10 @@ async function openProblemEditor(id) {
           (await q(sb.from("problems").select("id").eq("id", n).maybeSingle()))
         )
           throw new Error(`Bài số ${n} đã tồn tại.`);
+        if (!isNew && ed.resetLearning) {
+          await rpc("admin_reset_problem_learning_data", { p_problem: n });
+          window.dispatchEvent(new Event("problem-learning-reset"));
+        }
         const row = {
           id: n,
           title: ed.p.title,
