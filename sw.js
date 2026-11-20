@@ -1,5 +1,5 @@
 // VI: Cập nhật giao diện và tái sử dụng compiler đã cache, tránh tải lại khoảng 95 MB. EN: Refresh the app shell while reusing cached compiler assets to avoid another ~95 MB download.
-const CACHE_NAME = "onluyencpp-offline-v51";
+const CACHE_NAME = "onluyencpp-offline-v53";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -12,6 +12,8 @@ const APP_FILES = [
   "./js/streak-sync.js",
   "./js/streak.js",
   "./js/admin.js",
+  "./js/admin-export.js",
+  "./js/task-parts.js",
   "./css/admin.css",
   "./workers/cpp-compiler-worker.js",
   "./workers/cpp-runner-worker.js",
@@ -33,6 +35,7 @@ const APP_FILES = [
   "./data/part2.json",
   "./data/part3.json",
   "./data/part4.json",
+  "./data/manifest.json",
 ];
 
 self.addEventListener("install", (event) => {
@@ -48,6 +51,12 @@ self.addEventListener("install", (event) => {
         ? await caches.open(previousCaches[0])
         : await caches.open(CACHE_NAME);
       const missingLargeAssets = [];
+      const manifestResponse = await fetch(new Request(new URL("./data/manifest.json", self.registration.scope), { cache: "reload" }));
+      if (!manifestResponse.ok) throw new Error("Không tải được danh sách các phần bài tập.");
+      const manifest = await manifestResponse.json();
+      const extraParts = (manifest.parts || [])
+        .filter((number) => Number.isInteger(number) && number > 4 && number <= 99)
+        .map((number) => `./data/part${number}.json`);
 
       for (const path of largeAssets) {
         const url = new URL(path, self.registration.scope).href;
@@ -58,6 +67,7 @@ self.addEventListener("install", (event) => {
 
       await cache.addAll([
         ...shellAndData.map((path) => new Request(new URL(path, self.registration.scope), { cache: "reload" })),
+        ...extraParts.map((path) => new Request(new URL(path, self.registration.scope), { cache: "reload" })),
         ...missingLargeAssets,
       ]);
       await self.skipWaiting();

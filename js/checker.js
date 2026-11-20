@@ -10,6 +10,7 @@ function labelPattern(presentation) {
   const labels = [...presentation.prompts, ...(presentation.lineLabels || [presentation.resultLabel])];
   const bodies = labels.map(label => foldLabel(label).match(/[\p{L}\p{N}]+/gu)?.join("[\\s:=()!.,_-]*"))
     .filter(Boolean).sort((a, b) => b.length - a.length);
+  if (!bodies.length) return /a^/gu;
   // Never consume the minus sign or a digit from the start of a value.
   return new RegExp("(?<![\\p{L}\\p{N}_])(?:" + bodies.join("|") + ")(?![\\p{L}\\p{N}_])[!)]*[ \\t]*(?:[:=：＝;!?]+|[.,](?=\\s))?", "gu");
 }
@@ -74,7 +75,9 @@ function semanticMatch(actual, expected, task, presentation) {
   if (strictLayout.has(Number(task.id)) || /^[\s*#.]+$/.test(expected)) {
     return layoutMatches(actual, expected, pattern, task);
   }
-  const expectedTokens = expected.trim().split(/\s+/);
+  // VI: Nhãn ở từng dòng output là phần trình bày; so giá trị sau nhãn theo đúng thứ tự.
+  // EN: Compare values after each output label before judging presentation.
+  const expectedTokens = removeHeadings(expected, pattern, task).trim().split(/\s+/);
   const isNumeric = expectedTokens.every(token => decimalToken.test(token));
   if (isNumeric) {
     if (!/[\d.,]\s*$/.test(actual)) return false;

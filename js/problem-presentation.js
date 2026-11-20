@@ -256,6 +256,9 @@ function taskSample(task) {
 }
 
 function taskPresentation(task, input = taskSample(task).input) {
+  // VI: Bài mới dùng nguyên văn test.output; không tự áp nhãn của 150 bài cũ.
+  // EN: New tasks use literal expected output instead of invented legacy labels.
+  const legacy = Number(task.id) >= 1 && Number(task.id) <= 150;
   const fieldNames = [];
   const inputDescription = String(task.input || "");
   const fieldPattern = /(^|[^\p{L}\p{N}])([A-Za-z])(?=$|[^\p{L}\p{N}])/gu;
@@ -264,11 +267,11 @@ function taskPresentation(task, input = taskSample(task).input) {
     if (!fieldNames.includes(name)) fieldNames.push(name);
   }
   const inputCount = String(input || "").trim().split(/\s+/).filter(Boolean).length;
-  const prompts = INPUT_LABELS[task.id] || fieldNames.slice(0, inputCount).map((name) => `Nhap ${name} = `);
+  const prompts = INPUT_LABELS[task.id] || (legacy ? fieldNames.slice(0, inputCount).map((name) => `Nhap ${name} = `) : []);
 
   // Keep visible examples and strict output checking specific to each task.
   // The former title-based fallback made many unrelated tasks say the same thing.
-  const resultLabel = SINGLE_RESULT_LABELS[task.id] || "Ket qua: ";
+  const resultLabel = SINGLE_RESULT_LABELS[task.id] || (legacy ? "Ket qua: " : "");
   const lineLabels = RESULT_LABELS[task.id] || null;
   const formattedOutput = (rawOutput) => {
     const lines = String(rawOutput ?? "").split("\n");
@@ -317,12 +320,15 @@ function taskPresentation(task, input = taskSample(task).input) {
     expected,
     expectedProgramOutput,
     renderConsoleOutput,
-    guide: [
+    guide: !legacy ? [
+      "Output chuẩn là toàn bộ văn bản trong test output, gồm đủ các dòng, nhãn và thứ tự.",
+      "Chỉ ghi vào test output những gì chương trình tự in; dữ liệu nhập không tự xuất hiện trong stdout.",
+    ].join("\n") : [
       "Mỗi lời nhắc nhập giữ trên cùng dòng với giá trị được nhập, đúng thứ tự sau:",
       ...(prompts.length ? prompts : ["Không có dữ liệu vào"]),
       "Test tự cấp dữ liệu và mô phỏng terminal hiện giá trị ngay sau lời nhắc. Không tự xuống dòng sau lời nhắc trước khi nhập.",
       "Mẫu phần kết quả:",
-      ...(lineLabels || [resultLabel.trimEnd()]),
+      ...(lineLabels || [resultLabel.trimEnd() || "Theo đúng từng dòng trong test output"]),
       OUTPUT_RULES.get(task.id) || "In đúng nhãn kết quả và thứ tự theo mẫu; không thêm lời giải thích hoặc nội dung thừa.",
     ].join("\n"),
   };

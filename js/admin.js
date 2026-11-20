@@ -2,14 +2,10 @@
 // Mọi thao tác ghi đều cần Supabase kiểm tra lại bằng RLS / RPC đã cấu hình trong dự án Supabase;
 // việc ẩn nút ở giao diện chỉ để tiện dùng, KHÔNG phải lớp bảo mật.
 // VI: Công cụ quản trị được bổ sung theo yêu cầu của chủ dự án; AI có hỗ trợ viết và chỉnh sửa mã. EN: Admin tools follow the project owner's requirements; AI assisted with writing and editing code.
+import { buildExportParts, buildJsonZip } from "./admin-export.js";
+import { bundledPartUrls } from "./task-parts.js";
 
 const CSS_URL = new URL("../css/admin.css", import.meta.url).href;
-const DATA_FILES = [
-  "../data/part1.json",
-  "../data/part2.json",
-  "../data/part3.json",
-  "../data/part4.json",
-].map((f) => new URL(f, import.meta.url));
 const MIN_TESTS = 8;
 const MAX_TESTS = 30;
 const hasValidTestCount = (count) => Number.isInteger(count) && count >= MIN_TESTS && count <= MAX_TESTS;
@@ -267,7 +263,7 @@ async function viewDash(body) {
         <button class="adm-btn" data-go="stats">📊 Xem thống kê chi tiết</button>
         ${isSuper ? '<button class="adm-btn" data-go="admins">🛡 Quản trị viên</button>' : ""}</div></div>
       <div class="adm-card"><h2>Lưu ý</h2><p style="margin:0;color:var(--muted);font-size:13px;line-height:1.6">
-        Thay đổi bài tập/test sẽ hiện cho học viên sau khi họ tải lại trang. Bài đã <b>xuất bản</b> cần có từ <b>${MIN_TESTS} đến ${MAX_TESTS} test</b>.</p></div></div>`;
+        Thay đổi bài tập/test sẽ hiện cho học viên sau khi họ tải lại trang. Để dùng bộ test mới khi offline, thiết bị cần mở trang một lần lúc có mạng. Bài đã <b>xuất bản</b> cần có từ <b>${MIN_TESTS} đến ${MAX_TESTS} test</b>.</p></div></div>`;
   body.onclick = (e) => {
     const g = e.target.closest("[data-go]");
     if (!g) return;
@@ -342,10 +338,11 @@ async function viewProblems(body) {
     head(
       "Quản lý bài tập",
       "Thêm, sửa, xóa, sắp xếp thứ tự, quản lý test case",
-      `<button class="adm-btn" data-act="import">⇪ Nhập từ file JSON</button> <button class="adm-btn primary" data-act="new">＋ Thêm bài</button>`,
+      `<button class="adm-btn" data-act="export" title="Tải ZIP chứa manifest và mọi phần đã xuất bản">⇩ Xuất JSON</button> <button class="adm-btn" data-act="upload">⇧ Tải nhiều JSON lên</button> <button class="adm-btn" data-act="import">⇪ Nhập JSON trên web</button> <button class="adm-btn primary" data-act="new">＋ Thêm bài</button>`,
     ) +
+    `<input id="admImportFiles" type="file" accept=".json,application/json" multiple hidden>` +
     `<div class="adm-toolbar"><input class="adm-input" id="pfText" placeholder="Tìm theo số hoặc tên bài…" value="${esc(state.pf.text)}">
-      <select class="adm-select" id="pfPart"><option value="all">Mọi phần</option>${[1, 2, 3, 4].map((n) => `<option value="${n}">Phần ${n}</option>`).join("")}</select>
+      <select class="adm-select" id="pfPart"><option value="all">Mọi phần</option>${[...new Set(state.problems.map((p) => Number(partOf(p))).filter(Number.isInteger))].sort((a, b) => a - b).map((n) => `<option value="${n}">Phần ${n}</option>`).join("")}</select>
       <select class="adm-select" id="pfStatus"><option value="all">Mọi trạng thái</option><option value="pub">Đã xuất bản</option><option value="draft">Bản nháp</option><option value="bad">Số test không hợp lệ</option></select></div>
     <div id="pList"></div>`;
   $("#pfPart").value = state.pf.part;
@@ -357,6 +354,11 @@ async function viewProblems(body) {
     (state.pf.status = e.target.value),
     rerender()
   );
+  $("#admImportFiles").onchange = (event) => {
+    const files = [...event.target.files];
+    event.target.value = "";
+    if (files.length) importFromJson(files);
+  };
   body.onclick = onProblemsClick;
   renderProblemList();
 }
@@ -402,6 +404,12 @@ async function onProblemsClick(e) {
   const act = b.dataset.act;
   try {
     if (act === "new") return openProblemEditor(null);
+    if (act === "upload") return $("#admImportFiles").click();
+    if (act === "export") {
+      b.disabled = true;
+      try { await exportToJson(); } finally { b.disabled = false; }
+      return;
+    }
     if (act === "import") return importFromJson();
     const id = Number(b.closest("tr")?.dataset.id);
     const p = state.problems.find((x) => x.id === id);
@@ -444,6 +452,44 @@ async function onProblemsClick(e) {
   } catch (err) {
     toast(err.message, "err");
   }
+}
+
+async function exportToJson() {
+  await loadProblems();
+  const published = state.problems.filter((problem) => problem.is_published);
+  if (!published.length) throw new Error("Chưa có bài đã xuất bản để xuất JSON.");
+  const rows = await q(
+    sb.from("problems")
+      .select("id,section,title,level,statement,input,output,constraints,sample_input,sample_output,test_cases(no,input,output)")
+      .eq("is_published", true)
+      .order("sort_order")
+      .order("id")
+      .limit(1000),
+  );
+  const expected = new Map(published.map((problem) => [problem.id, testCount(problem)]));
+  if (rows.length !== expected.size || rows.some((row) => (row.test_cases || []).length !== expected.get(row.id))) {
+    throw new Error("Dữ liệu bài/test đang thay đổi hoặc tải chưa đủ. Hãy thử xuất lại.");
+  }
+  const dataFiles = await bundledPartUrls(import.meta.url);
+  const originals = await Promise.all(dataFiles.map(async (url) => {
+    const response = await fetch(url, { cache: "no-cache" });
+    if (!response.ok) throw new Error(`Không tải được ${url.pathname} để giữ metadata bài tập.`);
+    const part = await response.json();
+    if (!Array.isArray(part)) throw new Error(`${url.pathname} không đúng định dạng JSON.`);
+    return part;
+  }));
+  const parts = buildExportParts(rows, originals);
+  const zip = buildJsonZip(parts);
+  const blob = new Blob([zip], { type: "application/zip" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `onluyencpp-data-${new Date().toISOString().slice(0, 10)}.zip`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+  toast(`Đã xuất ${rows.length} bài vào ZIP gồm manifest và ${parts.length} file phần.`, "ok");
 }
 async function moveProblem(id, dir) {
   const view = filteredProblems();
@@ -519,7 +565,7 @@ async function openProblemEditor(id) {
       ]),
     ];
     const m = /^Phần\s*(\d+)\s*-\s*(.*)$/.exec(p.section) || [];
-    ed.partNo = m[1] && +m[1] >= 1 && +m[1] <= 4 ? m[1] : "1";
+    ed.partNo = m[1] && +m[1] >= 1 && +m[1] <= 99 ? m[1] : "1";
     ed.partName = m[2] ?? "";
 
     const collect = () => {
@@ -553,7 +599,7 @@ async function openProblemEditor(id) {
       <div class="adm-row3"><label class="adm-field"><span>Số bài (ID)</span><input class="adm-input" id="fId" type="number" min="1" value="${p.id}" ${isNew ? "" : "disabled"}></label>
         <label class="adm-field"><span>Tên bài</span><input class="adm-input" id="fTitle" value="${esc(p.title)}"></label>
         <label class="adm-field"><span>Mức độ khó</span><input class="adm-input" id="fLevel" list="fLevels" value="${esc(p.level)}"><datalist id="fLevels">${levels.map((l) => `<option value="${esc(l)}">`).join("")}</datalist></label></div>
-      <div class="adm-row2"><label class="adm-field"><span>Phần</span><select class="adm-select" id="fPartNo">${[1, 2, 3, 4].map((n) => `<option value="${n}" ${String(n) === ed.partNo ? "selected" : ""}>Phần ${n}</option>`).join("")}</select></label>
+      <div class="adm-row2"><label class="adm-field"><span>Phần</span><input class="adm-input" id="fPartNo" type="number" min="1" max="99" step="1" value="${esc(ed.partNo)}"></label>
         <label class="adm-field"><span>Tên phần (nhóm bài)</span><input class="adm-input" id="fPartName" value="${esc(ed.partName)}" placeholder="VD: Vòng lặp cơ bản"></label></div>
       <label class="adm-field"><span>Đề bài</span><textarea class="adm-textarea" id="fStatement" style="min-height:120px">${esc(p.statement)}</textarea></label>
       <div class="adm-row2"><label class="adm-field"><span>Mô tả INPUT</span><textarea class="adm-textarea" id="fInput">${esc(p.input)}</textarea></label>
@@ -658,6 +704,8 @@ async function openProblemEditor(id) {
       const n = ed.p.id;
       if (!Number.isInteger(n) || n < 1)
         return toast("Số bài phải là số nguyên dương.", "err");
+      if (!Number.isInteger(Number(ed.partNo)) || Number(ed.partNo) < 1 || Number(ed.partNo) > 99)
+        return toast("Số phần phải là số nguyên từ 1 đến 99.", "err");
       if (!ed.p.title) return toast("Hãy nhập tên bài.", "err");
       if (ed.p.is_published && !hasValidTestCount(ed.tests.length))
         return toast(
@@ -726,92 +774,109 @@ async function openProblemEditor(id) {
   }
 }
 
-// ----- Nhập 150 bài từ file JSON hiện có vào Supabase -----
-async function importFromJson() {
-  if (
-    !(await confirmBox(
-      "Nhập toàn bộ bài và test từ 4 file JSON (data/part1–4.json) vào Supabase? Bài trùng số (ID) sẽ bị ghi đè cả nội dung lẫn test.",
-      { okText: "Bắt đầu nhập" },
-    ))
-  )
-    return;
-  const modal = openModal(
-    `<h2>Đang nhập dữ liệu…</h2><p id="impMsg" style="color:var(--muted);font-size:13px">Đang đọc file JSON…</p><div class="adm-progress" style="margin-top:10px"><i id="impBar" style="width:0"></i></div>`,
-    true,
-  );
-  const msg = (t, pct) => {
-    modal.querySelector("#impMsg").textContent = t;
-    if (pct != null) modal.querySelector("#impBar").style.width = pct + "%";
-  };
+// VI: Chọn nhiều JSON trên máy hoặc nhập các file đã triển khai trên web.
+// EN: Import multiple local JSON files or the deployed manifest files.
+async function importFromJson(selectedFiles = null) {
+  let tasks;
   try {
-    const parts = await Promise.all(
-      DATA_FILES.map(async (u) => {
-        const r = await fetch(u, { cache: "no-cache" });
-        if (!r.ok)
-          throw new Error(`Không tải được ${u.pathname} (HTTP ${r.status}).`);
-        return r.json();
-      }),
-    );
-    const tasks = parts.flat().sort((a, b) => a.id - b.id);
-    const existingProblems = await q(
-      sb.from("problems").select("id,is_published").in("id", tasks.map((task) => task.id)),
-    );
-    const existingById = new Map(existingProblems.map((problem) => [problem.id, problem]));
-    const rows = tasks.map((t, i) => ({
-      id: t.id,
-      title: t.title,
-      section: t.section,
-      level: t.level,
-      statement: t.statement ?? "",
-      input: t.input ?? "",
-      output: t.output ?? "",
-      constraints: t.constraints ?? "",
-      sample_input: t.sample_input ?? "",
-      sample_output: t.sample_output ?? "",
-      sort_order: (i + 1) * 10,
-      // Keep existing valid publications during import; new rows publish after tests are saved.
-      is_published: Boolean(existingById.get(t.id)?.is_published),
-    }));
-    for (let i = 0; i < rows.length; i += 50) {
-      msg(
-        `Đang lưu thông tin bài… ${Math.min(i + 50, rows.length)}/${rows.length}`,
-        5,
-      );
-      await q(
-        sb.from("problems").upsert(rows.slice(i, i + 50), { onConflict: "id" }),
-      );
+    const sources = selectedFiles?.length
+      ? await Promise.all(selectedFiles.map(async (file) => ({ name: file.name, content: await file.text() })))
+      : await Promise.all((await bundledPartUrls(import.meta.url)).map(async (url) => {
+          const response = await fetch(url, { cache: "no-cache" });
+          if (!response.ok) throw new Error(`Không tải được ${url.pathname} (HTTP ${response.status}).`);
+          return { name: url.pathname, content: await response.text() };
+        }));
+    const ids = new Set();
+    tasks = [];
+    for (const source of sources) {
+      let part;
+      try { part = JSON.parse(source.content); }
+      catch (_) { throw new Error(`${source.name}: nội dung JSON không hợp lệ.`); }
+      if (!Array.isArray(part)) throw new Error(`${source.name}: cần mảng các bài tập.`);
+      for (const task of part) {
+        if (!Number.isInteger(task?.id) || task.id < 1 || ids.has(task.id))
+          throw new Error(`${source.name}: ID bài tập không hợp lệ hoặc bị trùng (${task?.id}).`);
+        ids.add(task.id);
+        const group = /^Phần\s+(\d+)\s*-\s*.+/u.exec(task.section || "");
+        if (!group || Number(group[1]) < 1 || Number(group[1]) > 99)
+          throw new Error(`Bài ${task.id}: section cần dạng “Phần 5 - Tên phần”.`);
+        if (!String(task.title || "").trim() || !hasValidTestCount(task.tests?.length))
+          throw new Error(`Bài ${task.id}: thiếu tên hoặc cần từ ${MIN_TESTS} đến ${MAX_TESTS} test.`);
+        const inputs = new Set();
+        for (const test of task.tests) {
+          const input = String(test?.input ?? "").replace(/\r/g, "").trimEnd();
+          if (!input.trim() || !String(test?.output ?? "").trim() || inputs.has(input))
+            throw new Error(`Bài ${task.id}: test có input/output trống hoặc input trùng.`);
+          inputs.add(input);
+        }
+        tasks.push(task);
+      }
     }
-    for (let i = 0; i < tasks.length; i++) {
-      msg(
-        `Đang lưu test case bài ${tasks[i].id}… (${i + 1}/${tasks.length})`,
-        5 + ((i + 1) / tasks.length) * 95,
-      );
-      await rpc("admin_save_tests", {
-        p_problem: tasks[i].id,
-        p_tests: tasks[i].tests.map((x) => ({
-          input: x.input,
-          output: x.output,
-        })),
-      });
-    }
-    const publishableIds = tasks
-      .filter((task) => hasValidTestCount(task.tests?.length))
-      .map((task) => task.id);
-    if (publishableIds.length) {
-      await q(
-        sb.from("problems")
-          .update({ is_published: true })
-          .in("id", publishableIds),
-      );
-    }
-    dirty = true;
-    modal.remove();
-    toast(`Đã nhập ${tasks.length} bài.`, "ok");
+    if (!tasks.length) throw new Error("Các file đã chọn không chứa bài tập nào.");
+    tasks.sort((a, b) => a.id - b.id);
     await loadProblems();
-    renderProblemList();
-  } catch (err) {
-    modal.remove();
-    toast("Nhập thất bại: " + err.message, "err");
+    const existingById = new Map(state.problems.map((problem) => [problem.id, problem]));
+    const overlap = tasks.filter((task) => existingById.has(task.id)).length;
+    const label = selectedFiles?.length ? `${selectedFiles.length} file đã chọn` : "JSON trên web";
+    if (!(await confirmBox(
+      `Nhập ${tasks.length} bài từ ${label}? ${overlap} bài trùng ID sẽ bị ghi đè nội dung và test. Điểm đã lưu được giữ theo cơ chế hiện tại.`,
+      { okText: "Bắt đầu nhập" },
+    ))) return;
+
+    const modal = openModal(
+      `<h2>Đang nhập dữ liệu…</h2><p id="impMsg" style="color:var(--muted);font-size:13px">Đang lưu bài tập…</p><div class="adm-progress" style="margin-top:10px"><i id="impBar" style="width:0"></i></div>`,
+      true,
+    );
+    try {
+      const msg = (value, percent) => {
+        modal.querySelector("#impMsg").textContent = value;
+        modal.querySelector("#impBar").style.width = percent + "%";
+      };
+      let nextOrder = state.problems.reduce((max, problem) => Math.max(max, problem.sort_order || 0), 0);
+      const rows = tasks.map((task) => {
+        const existing = existingById.get(task.id);
+        if (!existing) nextOrder += 10;
+        return {
+          id: task.id,
+          title: task.title,
+          section: task.section,
+          level: task.level || "Dễ",
+          statement: task.statement ?? "",
+          input: task.input ?? "",
+          output: task.output ?? "",
+          constraints: task.constraints ?? "",
+          sample_input: task.sample_input ?? "",
+          sample_output: task.sample_output ?? "",
+          sort_order: existing?.sort_order ?? nextOrder,
+          is_published: Boolean(existing?.is_published),
+        };
+      });
+      for (let i = 0; i < rows.length; i += 50) {
+        msg(`Đang lưu thông tin bài… ${Math.min(i + 50, rows.length)}/${rows.length}`, 5);
+        await q(sb.from("problems").upsert(rows.slice(i, i + 50), { onConflict: "id" }));
+      }
+      for (let i = 0; i < tasks.length; i++) {
+        msg(`Đang lưu test case bài ${tasks[i].id}… (${i + 1}/${tasks.length})`, 5 + ((i + 1) / tasks.length) * 90);
+        await rpc("admin_save_tests", {
+          p_problem: tasks[i].id,
+          p_tests: tasks[i].tests.map((test) => ({ input: test.input, output: test.output })),
+        });
+      }
+      for (let i = 0; i < tasks.length; i += 100) {
+        await q(sb.from("problems").update({ is_published: true })
+          .in("id", tasks.slice(i, i + 100).map((task) => task.id)));
+      }
+      dirty = true;
+      modal.remove();
+      toast(`Đã nhập ${tasks.length} bài từ ${sources.length} file.`, "ok");
+      await loadProblems();
+      renderProblemList();
+    } catch (error) {
+      modal.remove();
+      throw error;
+    }
+  } catch (error) {
+    toast("Nhập thất bại: " + error.message, "err");
   }
 }
 

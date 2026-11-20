@@ -2,8 +2,10 @@ import { classifyTestResult } from './checker.js';
 import { CONCEPT_NOTES, OUTPUT_RULES, taskPresentation, taskSample } from './problem-presentation.js';
 import { initStreak, openStreak, recordCompletedBatch, setStreakSession, streakUserId } from './streak.js';
 import { shiftStudyDate, streakTier, summarizeStreak } from './streak-core.js';
+import { bundledPartUrls } from './task-parts.js';
 // Logic giao dien, chay code, cham diem va luu tien do.
-// Du lieu 150 bai duoc nap tu 4 file JSON trong thu muc data/.
+// VI: Lấy bài đã xuất bản từ Supabase; dùng bản đã đồng bộ hoặc JSON khi offline.
+// EN: Load published tasks from Supabase, then cached tasks or bundled JSON offline.
 // VI: AI hỗ trợ triển khai một số tính năng theo yêu cầu của chủ dự án. EN: AI assisted implementation of selected features under the project owner's direction.
 if ("serviceWorker" in navigator && location.protocol !== "file:") {
   navigator.serviceWorker
@@ -12,12 +14,8 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
     .catch((error) => console.warn("Không bật được cache offline:", error));
 }
 
-const TASK_DATA_FILES = [
-  "../data/part1.json",
-  "../data/part2.json",
-  "../data/part3.json",
-  "../data/part4.json",
-];
+const PUBLISHED_TASK_CACHE = "onluyencpp-published-tasks-v1";
+const PUBLISHED_TASK_CACHE_KEY = new URL("../data/.published-tasks.json", import.meta.url).href;
 // VI: Số test của mỗi bài linh hoạt; giới hạn này chỉ để chặn dữ liệu bất thường.
 // EN: Test counts may vary by task; this upper bound only rejects malformed data.
 const MAX_TESTS = 30;
@@ -47,8 +45,39 @@ function testSetVersion(task) {
   return `fnv1a-${(hash >>> 0).toString(16).padStart(8, "0")}`;
 }
 
+// VI: Bài đã xuất bản trong Supabase là nguồn chính; lưu bản mới nhất để chấm offline.
+// EN: Cache the latest published Supabase tasks for offline grading.
+async function readCachedPublishedTasks() {
+  if (!("caches" in window)) return null;
+  try {
+    const response = await (await caches.open(PUBLISHED_TASK_CACHE)).match(PUBLISHED_TASK_CACHE_KEY);
+    if (!response) return null;
+    const tasks = await response.json();
+    if (!Array.isArray(tasks) || !tasks.length) return null;
+    const ids = new Set();
+    if (!tasks.every((task) => {
+      if (!Number.isInteger(task.id) || ids.has(task.id) || !hasValidTestCount(task.tests)) return false;
+      ids.add(task.id);
+      return true;
+    })) return null;
+    return tasks;
+  } catch (_) {
+    return null;
+  }
+}
+async function cachePublishedTasks(tasks) {
+  if (!("caches" in window)) return;
+  try {
+    const cache = await caches.open(PUBLISHED_TASK_CACHE);
+    await cache.put(PUBLISHED_TASK_CACHE_KEY, new Response(JSON.stringify(tasks), {
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+    }));
+  } catch (error) {
+    console.warn("Không lưu được bộ bài tập để dùng offline:", error);
+  }
+}
+
 // [ADMIN] Ưu tiên nạp bài đã xuất bản từ Supabase (bảng problems + test_cases do Admin quản lý).
-// Nếu bảng trống hoặc lỗi mạng thì tự quay về 4 file JSON như cũ.
 async function loadTasksFromSupabase() {
   if (!navigator.onLine) return null;
   try {
@@ -81,7 +110,9 @@ async function loadTasksFromSupabase() {
           .map((t) => ({ no: t.no, input: t.input, output: t.output })),
       }))
       .filter((t) => hasValidTestCount(t.tests));
-    return tasks.length ? tasks : null;
+    if (!tasks.length) return null;
+    await cachePublishedTasks(tasks);
+    return tasks;
   } catch (_) {
     return null;
   }
@@ -90,15 +121,17 @@ async function loadTasksFromSupabase() {
 async function loadTaskData() {
   const dbTasks = await loadTasksFromSupabase();
   if (dbTasks) return dbTasks;
+  const cachedTasks = await readCachedPublishedTasks();
+  if (cachedTasks) return cachedTasks;
+  const dataFiles = await bundledPartUrls(import.meta.url);
   const parts = await Promise.all(
-    TASK_DATA_FILES.map(async (file) => {
-      const url = new URL(file, import.meta.url);
+    dataFiles.map(async (url) => {
       const response = await fetch(url, { cache: "no-cache" });
       if (!response.ok)
-        throw new Error(`Không tải được ${file} (HTTP ${response.status}).`);
+        throw new Error(`Không tải được ${url.pathname} (HTTP ${response.status}).`);
       const rows = await response.json();
       if (!Array.isArray(rows))
-        throw new Error(`${file} không chứa một danh sách bài tập hợp lệ.`);
+        throw new Error(`${url.pathname} không chứa một danh sách bài tập hợp lệ.`);
       return rows;
     }),
   );
@@ -120,17 +153,13 @@ async function loadTaskData() {
 let TASKS;
 try {
   TASKS = await loadTaskData();
-  if (TASKS.length !== 150) {
-    console.warn(
-      `Website đang tải ${TASKS.length} bài, thay vì 150 bài dự kiến.`,
-    );
-  }
+  if (!TASKS.length) console.warn("Website chưa tải được bài tập nào.");
 } catch (error) {
   console.error("Không thể khởi tạo website TLU C++:", error);
   document.body.innerHTML = `
     <main style="max-width:760px;margin:48px auto;padding:24px;font-family:Arial,sans-serif;line-height:1.6">
       <h1>Không tải được dữ liệu bài tập</h1>
-      <p>Hãy kiểm tra xem thư mục <b>data</b> có đủ 4 file JSON và bạn đã tải website qua máy chủ (GitHub Pages, Cloudflare Pages, Netlify hoặc Live Server) hay chưa.</p>
+      <p>Hãy kiểm tra <b>data/manifest.json</b>, các file phần bài tập và kết nối máy chủ của website.</p>
       <pre id="loadError" style="white-space:pre-wrap;color:#a33"></pre>
     </main>`;
   document.getElementById("loadError").textContent = error.message;
@@ -1462,6 +1491,29 @@ function updateScore() {
       ? "Điểm cao nhất: Chưa chấm"
       : `Điểm cao nhất: ${Number(best).toFixed(2)}/10`;
 }
+function renderPartFilters() {
+  const filters = $("filters");
+  const names = new Map();
+  const shortNames = new Map([[1, "Nhập xuất"], [2, "Rẽ nhánh"], [3, "Vòng lặp"], [4, "Tổng hợp"]]);
+  for (const task of TASKS) {
+    const match = /^Phần\s+(\d+)\s*-\s*(.+)$/u.exec(task.section || "");
+    if (match && !names.has(Number(match[1]))) names.set(Number(match[1]), match[2]);
+  }
+  filters.replaceChildren();
+  const add = (value, label, title) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.filter = String(value);
+    button.textContent = label;
+    button.title = title;
+    if (value === "all") button.classList.add("active");
+    filters.appendChild(button);
+  };
+  add("all", "Tất cả", "Tất cả bài tập");
+  for (const [number, name] of [...names].sort((a, b) => a[0] - b[0])) {
+    add(number, shortNames.get(number) || name, `Phần ${number} - ${name}`);
+  }
+}
 function renderList() {
   ensureStatusLegend();
   const q = $("search").value.trim().toLowerCase();
@@ -1559,7 +1611,9 @@ function renderFormatGuide(task) {
   const inputRule = presentation.prompts.length
     ? `Nhập theo thứ tự: ${presentation.prompts.map((prompt) => prompt.trim()).join(" → ")}`
     : "Nhập dữ liệu theo mẫu đề bài.";
-  const outputRule = `Kết quả: ${(presentation.lineLabels || [presentation.resultLabel.trimEnd()]).join(" · ")}`;
+  const outputRule = presentation.resultLabel || presentation.lineLabels
+    ? `Kết quả: ${(presentation.lineLabels || [presentation.resultLabel.trimEnd()]).join(" · ")}`
+    : "Kết quả: In đúng các dòng trong output mẫu theo thứ tự.";
   const taskRule = OUTPUT_RULES.get(task.id);
   details.textContent = [inputRule, outputRule, taskRule].filter(Boolean).join("\n");
   guide.append(title, details);
@@ -1827,6 +1881,7 @@ function exportCurrentTaskPdf() {
 $("downloadPdf").addEventListener("click", exportCurrentTaskPdf);
 
 $("search").addEventListener("input", renderList);
+renderPartFilters();
 document.querySelectorAll("#filters button").forEach((b) =>
   b.addEventListener("click", () => {
     filter = b.dataset.filter;
