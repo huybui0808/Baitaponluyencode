@@ -163,7 +163,7 @@ header {
   font-weight: 800;
   letter-spacing: 0.2px;
 }
-.brand span {
+.brand-full > span {
   color: var(--accent);
 }
 .sub {
@@ -1401,7 +1401,7 @@ header .top {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 14px;
   min-width: 0;
 }
 .theme-picker {
@@ -1912,6 +1912,15 @@ header .top {
   border-radius: inherit;
   background: linear-gradient(90deg, var(--accent), var(--accent2));
 }
+.profile-level-section {
+  margin-top: 24px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel-raised);
+}
+.profile-level-section .profile-level-track { height: 10px; margin: 12px 0; }
+.profile-level-section .profile-subtle { margin: 0; }
 .profile-message {
   min-height: 18px;
   margin: 7px 0 0;
@@ -2209,6 +2218,32 @@ header .top {
   color: var(--muted);
   font-size: 13px;
 }
+/* VI: Thẻ chuỗi gọn trong hồ sơ thành viên; chỉ hiện ngày học, không hiện mã bài.
+   EN: Compact member streak card exposes study days without submission details. */
+.profile-streak {
+  display: grid;
+  grid-template-columns: minmax(190px, 1fr) minmax(220px, 1.1fr);
+  align-items: center;
+  gap: 13px 22px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel-raised);
+}
+.profile-streak-main { display: flex; align-items: center; gap: 13px; min-width: 0; }
+.profile-streak-flame { display: grid; flex: none; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--panel2); }
+.profile-streak-flame .streak-flame { width: 29px; height: 34px; }
+.profile-section.profile-streak h3 { margin: 0 0 4px; font-size: 17px; }
+.profile-streak-main p { margin: 0; color: var(--text); font-size: 15px; line-height: 1.5; }
+.profile-streak-main p strong { color: var(--flame-outer); font-size: 25px; }
+.profile-streak-main p span { display: block; color: var(--muted); font-size: 13px; }
+.profile-streak-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+.profile-streak-day { display: grid; place-items: center; gap: 2px; min-height: 46px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel2); color: var(--muted); }
+.profile-streak-day small { font-size: 11px; }
+.profile-streak-day b { font-size: 14px; }
+.profile-streak-day.done { border-color: var(--good); background: var(--done-bg); color: var(--done-text); }
+.profile-streak-day.today { outline: 2px solid var(--flame-outer); outline-offset: 1px; }
+.profile-streak-note { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 13px; }
 .profile-section {
   margin-top: 18px;
 }
@@ -2376,6 +2411,7 @@ header .top {
   .profile-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .profile-streak { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 16px; }
   .profile-progress-list,
   .profile-settings {
     grid-template-columns: 1fr;
@@ -2426,7 +2462,7 @@ header .top {
     display: flex;
     flex: 0 0 auto;
     width: auto;
-    gap: 5px;
+    gap: 8px;
     justify-content: flex-end;
   }
 
@@ -2521,4 +2557,169 @@ header .top {
     width: min(320px, calc(100vw - 28px));
     max-height: min(72dvh, 560px);
   }
+}
+
+/* VI: Chuỗi học theo bố cục Figma, dùng màu nền của cả bốn giao diện.
+   EN: Figma-inspired streak layout uses the existing four-theme surface tokens. */
+.brand-mobile, .auth-mobile-label { display: none; }
+:is(.streak-nav, .streak-page, .profile-streak) {
+  --flame-outer: #9aa7a4;
+  --flame-core: #e7eeeb;
+  --flame-glow: transparent;
+}
+:is(.streak-nav, .streak-page, .profile-streak)[data-tier="1"] { --flame-outer: #c78024; --flame-core: #ffe4a3; --flame-glow: #e2a44145; }
+:is(.streak-nav, .streak-page, .profile-streak)[data-tier="2"] { --flame-outer: #e17c27; --flame-core: #ffe398; --flame-glow: #e992424d; }
+:is(.streak-nav, .streak-page, .profile-streak)[data-tier="3"] { --flame-outer: #e96c34; --flame-core: #ffdc8f; --flame-glow: #ec7b434d; }
+:is(.streak-nav, .streak-page, .profile-streak)[data-tier="4"] { --flame-outer: #de593d; --flame-core: #ffd27e; --flame-glow: #ec64474d; }
+:is(.streak-nav, .streak-page, .profile-streak)[data-tier="5"] { --flame-outer: #ed632f; --flame-core: #ffe27a; --flame-glow: #ed713850; }
+:is(.streak-nav, .streak-page, .profile-streak)[data-tier="6"] { --flame-outer: #de493b; --flame-core: #ffe878; --flame-glow: #ee6a4655; }
+:is(.streak-nav, .streak-page, .profile-streak)[data-tier="7"] { --flame-outer: #d83b43; --flame-core: #ffdd73; --flame-glow: #e459555c; }
+:is(.streak-nav, .streak-page, .profile-streak)[data-tier="8"] { --flame-outer: #d9364f; --flame-core: #ffe270; --flame-glow: #e6585c62; }
+:is(.streak-nav, .streak-page, .profile-streak)[data-tier="9"] { --flame-outer: #bd315c; --flame-core: #ffdf69; --flame-glow: #dc53686b; }
+:is(.streak-nav, .streak-page, .profile-streak)[data-tier="10"] { --flame-outer: #b73161; --flame-core: #fff087; --flame-glow: #d94d746d; }
+.streak-flame { display: block; flex: none; width: 25px; height: 29px; overflow: visible; filter: drop-shadow(0 2px 6px var(--flame-glow)); }
+.streak-flame-outer { fill: var(--flame-outer); }
+.streak-flame-core { fill: var(--flame-core); }
+.streak-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 58px;
+  min-height: 40px;
+  padding: 4px 8px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel2);
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.streak-nav:hover, .streak-nav:focus-visible { border-color: var(--accent); background: var(--active-bg); }
+.streak-nav[data-pending="true"] { border-style: dashed; }
+.streak-nav[data-tier="9"] { box-shadow: 0 0 15px var(--flame-glow); }
+.streak-overlay { z-index: 85; padding: 0; align-items: stretch; }
+.streak-page { width: 100%; height: 100%; overflow: auto; background: var(--bg); color: var(--text); }
+.streak-page-top {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+  padding: 9px max(20px, calc((100vw - 1328px) / 2));
+  border-bottom: 1px solid var(--line);
+  background: var(--header-bg);
+  backdrop-filter: blur(10px);
+}
+.streak-page-brand { color: var(--accent); font-size: 19px; font-weight: 800; }
+.streak-page-brand span { color: var(--accent2); }
+.streak-close { width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 11px; background: var(--panel2); color: var(--text); font-size: 28px; cursor: pointer; }
+.streak-close:hover { background: var(--hover-bg); }
+.streak-page-inner { width: min(1328px, 100%); margin: 0 auto; padding: 32px 20px 54px; }
+.streak-heading { margin: 0 0 24px; }
+.streak-heading h2 { margin: 0 0 4px; font-size: clamp(27px, 3vw, 35px); line-height: 1.2; }
+.streak-heading p { margin: 0; color: var(--muted); font-size: 15px; }
+.streak-grid { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(260px, 1fr); gap: 22px; align-items: stretch; }
+.streak-card { min-width: 0; padding: 26px 28px; border: 1px solid var(--line); border-radius: 18px; background: var(--panel-raised); box-shadow: 0 5px 22px #0000000b; }
+.streak-card h3, .streak-settings h3 { margin: 0 0 14px; font-size: 20px; line-height: 1.3; }
+.streak-hero { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 220px; }
+.streak-hero h3 { color: var(--muted); font-size: 17px; }
+.streak-number { display: flex; align-items: center; gap: 12px; line-height: 1; }
+.streak-number .streak-flame { width: 52px; height: 60px; }
+.streak-number strong { font-size: clamp(54px, 7vw, 76px); letter-spacing: -0.05em; color: var(--accent); }
+.streak-number span { padding-top: 28px; font-size: 21px; font-weight: 700; }
+.streak-longest { margin: 15px 0 0; color: var(--muted); font-size: 15px; }
+.streak-longest strong { color: var(--text); }
+.streak-today { display: grid; gap: 8px; width: min(245px, 40%); padding: 18px; border-radius: 15px; background: var(--panel2); }
+.streak-today span { font-size: 15px; font-weight: 700; }
+.streak-today strong { color: var(--accent); font-size: 22px; }
+.streak-today small { color: var(--muted); font-size: 13px; line-height: 1.45; }
+.streak-rules p { color: var(--muted); line-height: 1.6; font-size: 15px; }
+.streak-rules p strong { color: var(--text); }
+.streak-sync-note { margin: 17px 0 0; padding: 10px 12px; border-radius: 10px; background: var(--panel2); color: var(--text) !important; font-size: 13px !important; }
+.streak-card-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.streak-card-head h3 { margin: 0; }
+.streak-calendar-nav { display: flex; align-items: center; gap: 5px; color: var(--muted); font-size: 15px; font-weight: 700; }
+.streak-calendar-nav button { width: 35px; height: 35px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel2); color: var(--text); font: inherit; font-size: 22px; cursor: pointer; }
+.streak-calendar-nav button:disabled { opacity: .4; cursor: default; }
+.streak-weekdays, .streak-calendar { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 9px; }
+.streak-weekdays { margin: 12px 0 8px; color: var(--muted); text-align: center; font-size: 13px; font-weight: 700; }
+.streak-calendar { min-height: 245px; }
+.streak-day { display: grid; place-items: center; min-height: 42px; border-radius: 9px; background: var(--panel2); color: var(--muted); font-size: 14px; }
+.streak-day.done { background: var(--done-bg); color: var(--done-text); font-weight: 800; }
+.streak-day.pending { border: 1px dashed var(--gold); background: var(--notice-bg); color: var(--notice-text); font-weight: 700; }
+.streak-day.today { outline: 2px solid var(--accent); outline-offset: -2px; }
+.streak-day.future { opacity: .42; }
+.streak-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin: 16px 0 0; color: var(--muted); font-size: 13px; }
+.streak-legend-dot { display: inline-block; width: 12px; height: 12px; margin-left: 9px; border-radius: 3px; background: var(--done-bg); border: 1px solid var(--done-text); }
+.streak-legend-dot.pending { background: var(--notice-bg); border-style: dashed; border-color: var(--gold); }
+.streak-recent { display: flex; flex-direction: column; }
+.streak-recent-list { flex: 1; min-height: 140px; color: var(--muted); font-size: 15px; }
+.streak-recent-item { display: flex; gap: 9px; padding: 10px 0; border-bottom: 1px solid var(--line); line-height: 1.4; }
+.streak-recent-item > span { color: var(--good); font-weight: 800; }
+.streak-recent-item small { display: block; color: var(--muted); }
+.streak-continue, .streak-settings button { min-height: 43px; padding: 10px 18px; border: 1px solid var(--accent); border-radius: 10px; background: var(--accent); color: var(--on-accent); font: inherit; font-weight: 700; cursor: pointer; }
+.streak-continue:hover, .streak-settings button:hover { filter: brightness(1.08); }
+.streak-settings { margin-top: 22px; padding: 23px 28px; border: 1px solid var(--line); border-radius: 18px; background: var(--panel-raised); }
+.streak-settings p { margin: 0 0 14px; color: var(--muted); line-height: 1.5; }
+.streak-settings form { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.streak-settings label { font-weight: 700; }
+.streak-settings input { flex: 1 1 220px; max-width: 340px; min-height: 43px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--field-bg); color: var(--text); font: inherit; }
+.streak-settings #streakTimezoneMessage { min-height: 22px; margin: 11px 0 0; font-size: 13px; }
+.streak-celebration { position: fixed; top: 82px; left: 50%; z-index: 120; display: grid; gap: 3px; min-width: min(310px, 90vw); padding: 15px 22px; transform: translateX(-50%); border: 1px solid var(--gold); border-radius: 17px; background: var(--panel-raised); box-shadow: 0 15px 45px #0004; color: var(--text); text-align: center; animation: streak-pop 1.8s ease both; }
+.streak-celebration[hidden] { display: none; }
+.streak-celebration > span { font-size: 25px; }
+.streak-celebration strong { font-size: 17px; }
+.streak-celebration small { color: var(--muted); }
+@keyframes streak-pop { 0% { opacity: 0; transform: translate(-50%, -16px) scale(.92); } 16%, 82% { opacity: 1; transform: translate(-50%, 0) scale(1); } 100% { opacity: 0; transform: translate(-50%, -8px) scale(.98); } }
+@media (max-width: 760px) {
+  .streak-grid { grid-template-columns: minmax(0, 1fr); gap: 15px; }
+  .streak-page-inner { padding: 24px 16px 40px; }
+  .streak-card { padding: 20px; border-radius: 15px; }
+  .streak-hero { min-height: 160px; }
+  .streak-rules { order: 4; }
+  .streak-calendar-card { order: 2; }
+  .streak-recent { order: 3; }
+}
+@media (max-width: 600px) {
+  header .brand .brand-full { display: none; }
+  header .brand .brand-mobile { display: inline; }
+  header .brand { font-size: clamp(14px, 4vw, 17px); }
+  header .header-actions { gap: 8px; }
+  header .streak-nav { min-width: 51px; min-height: 36px; padding: 3px 5px; font-size: 14px; }
+  header .streak-nav .streak-flame { width: 20px; height: 24px; }
+  header .user-chip, header .menu-trigger { max-width: min(31vw, 106px); }
+  header .user-label { max-width: 64px; }
+  header .user-label.auth-label { max-width: 70px; font-size: 12px; }
+  header .user-label.auth-label::after { content: none; }
+  header .auth-full-label { display: none; }
+  header .auth-mobile-label { display: inline; }
+  .streak-page-top { min-height: 58px; padding: 7px 16px; }
+  .streak-page-brand { font-size: 16px; }
+  .streak-heading h2 { font-size: 27px; }
+  .streak-hero { align-items: stretch; flex-direction: column; gap: 15px; }
+  .streak-number .streak-flame { width: 40px; height: 46px; }
+  .streak-number strong { font-size: 52px; }
+  .streak-number span { padding-top: 18px; font-size: 19px; }
+  .streak-today { width: 100%; padding: 13px 15px; }
+  .streak-calendar { min-height: auto; }
+  .streak-calendar, .streak-weekdays { gap: 5px; }
+  .streak-day { min-height: 35px; font-size: 13px; }
+  .streak-settings { padding: 19px; }
+}
+@media (max-width: 350px) {
+  header .header-actions { gap: 6px; }
+  header .user-menu:not(.unauthenticated) .user-label { display: none; }
+  header .user-menu:not(.unauthenticated) .menu-trigger { max-width: 55px; }
+  header .user-menu.unauthenticated .menu-trigger-icon,
+  header .user-menu.unauthenticated .menu-chevron { display: none; }
+  header .user-menu.unauthenticated .menu-trigger { max-width: 77px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .streak-celebration { animation: none; }
 }

@@ -1,34 +1,15 @@
-// VI: Ca hoi quy cho quy tac phan biet dap an sai va loi trinh bay.
-// EN: Regression cases for wrong answers versus presentation-only errors.
-// Run with: node tools/checker-regression.test.js
-const fs = require("node:fs");
-const vm = require("node:vm");
-
-const source = fs.readFileSync("script.js", "utf8");
-const start = source.indexOf("function normalizeProgramOutput");
-const end = source.indexOf("function scoreStatusClass", start);
-if (start < 0 || end < 0) throw new Error("Could not locate checker functions in script.js");
-
-const context = { module: { exports: {} }, Number, String, Math, RegExp };
-context.taskPresentation = (task) => {
+const { classifyTestResult } = require("../checker.js");
+const { taskPresentation } = require("../problem-presentation.js");
+function fixture(task) {
   const prompt = task.prompt || "Nhap n = ";
   const label = task.label || "Ket qua la: ";
   return {
-    prompts: [prompt],
-    promptText: prompt,
-    resultLabel: label,
-    lineLabels: null,
-    expectedProgramOutput: (output) => prompt + label + output,
-    expected: (output) => prompt + label + output,
-    renderConsoleOutput: (output) => output,
+    prompts: [prompt], resultLabel: label,
+    expectedProgramOutput: output => prompt + label + output,
+    expected: output => prompt + label + output,
+    renderConsoleOutput: output => output,
   };
-};
-vm.runInNewContext(
-  source.slice(start, end) + "\nmodule.exports = { hasExpectedSemanticOutput, classifyTestResult };",
-  context,
-);
-
-const { hasExpectedSemanticOutput, classifyTestResult } = context.module.exports;
+}
 const cases = [
   ["15 must not pass as expected 5", "Nhap n = Ket qua la: 15", "5", {}, "FAIL"],
   ["extra output text is wrong", "Nhap n = Ket qua la: 5 done", "5", {}, "FAIL"],
@@ -59,38 +40,21 @@ for (const [name, output, expected, task, expectedStatus] of cases) {
   const result = classifyTestResult({ output, exitCode: "0", timeLimitExceeded: false }, task, {
     input: "1",
     output: expected,
-  });
+  }, fixture(task));
   const passed = result.status === expectedStatus;
   console.log(`${passed ? "PASS" : "FAIL"} ${name}: ${result.status}`);
   if (!passed) failed++;
 }
 
-if (!hasExpectedSemanticOutput("Nhap n = Ket qua la: 5", "5", {})) {
-  console.error("FAIL canonical semantic answer rejected");
-  failed++;
-}
-
-// Exercise the production terminal-transcript renderer for an arbitrary input.
-const rendererStart = source.indexOf("function taskPresentation");
-const rendererEnd = source.indexOf("function renderFormatGuide", rendererStart);
-const rendererContext = {
-  Number, String, Math, RegExp,
-  INPUT_LABELS: {},
-  SINGLE_RESULT_LABELS: { 7: "Hai so sau khi hoan doi = " },
-  RESULT_LABELS: {},
-  OUTPUT_RULES: new Map(),
-  taskSample: (task) => ({ input: task.tests[0].input }),
-};
-vm.runInNewContext(source.slice(rendererStart, rendererEnd), rendererContext);
 const swapTask = {
   id: 7,
   input: "Hai số nguyên a và b.",
   title: "Hoán đổi hai số",
   tests: [{ input: "-5 2", output: "2 -5" }],
 };
-const transcript = rendererContext.taskPresentation(swapTask, "-5 2")
-  .renderConsoleOutput("Nhap a = Nhap b = Hai so sau khi hoan doi = 2 -5", "-5 2");
-const expectedTranscript = "Nhap a = -5\nNhap b = 2\nHai so sau khi hoan doi = 2 -5";
+const transcript = taskPresentation(swapTask, "-5 2")
+  .renderConsoleOutput("Nhap a = Nhap b = Thu tu sau khi hoan doi = 2 -5", "-5 2");
+const expectedTranscript = "Nhap a = -5\nNhap b = 2\nThu tu sau khi hoan doi = 2 -5";
 if (transcript !== expectedTranscript) {
   console.error(`FAIL custom input transcript: ${JSON.stringify(transcript)}`);
   failed++;
@@ -98,3 +62,69 @@ if (transcript !== expectedTranscript) {
   console.log("PASS custom input is echoed after each prompt on its own line");
 }
 if (failed) process.exitCode = 1;
+
+// Exercise the actual school tasks, their per-input prompts and the same entry
+// point the single-test and batch buttons call. No hand-built labels here.
+const assert = require("node:assert/strict");
+const tasks = [1, 2, 3, 4].flatMap(n => require("../data/part" + n + ".json"));
+let checked = 0;
+function check(task, test, output, status, kwargs = {}) {
+  const result = classifyTestResult({ output, exitCode: "0", ...kwargs }, task, test);
+  assert.equal(result.status, status, "task " + task.id + ", test " + test.no + ": " + JSON.stringify(output).slice(0, 200));
+  assert.equal(result.penalty > 0, status === "PRESENTATION");
+  checked++;
+}
+for (const task of tasks) {
+  for (const test of task.tests) {
+    const p = taskPresentation(task, test.input);
+    const canonical = p.expectedProgramOutput(test.output);
+    check(task, test, canonical, "PASS");
+    check(task, test, test.output, "PRESENTATION");
+    check(task, test, "Kết quả: " + test.output, "PRESENTATION");
+    check(task, test, canonical + "  \n\n", "PRESENTATION");
+    check(task, test, canonical.replace(/Nhap/g, "Nhập") + " ", "PRESENTATION");
+    check(task, test, canonical + "\nkết thúc", "FAIL");
+    check(task, test, "", "FAIL");
+    check(task, test, "987654321\n" + canonical, "FAIL");
+    if (/^\d+$/.test(test.output)) {
+      check(task, test, (BigInt(test.output) + 1n).toString(), "FAIL");
+    }
+  }
+}
+const triangle = tasks[19];
+assert.equal(classifyTestResult({
+  exitCode: "0",
+  output: "Nhập a = Nhập b = Nhập c = Kết quả kiểm tra tam giác: VALID",
+}, triangle, triangle.tests[0]).penalty, 0.05);
+for (const test of triangle.tests) {
+  const p = taskPresentation(triangle, test.input);
+  const opposite = test.output === "VALID" ? "INVALID" : "VALID";
+  check(triangle, test, p.expectedProgramOutput(opposite), "FAIL");
+  const misspelled = test.output === "VALID" ? "VAILD" : "INVAILD";
+  check(triangle, test, p.expectedProgramOutput(misspelled), "FAIL");
+  check(triangle, test, "Nhập cạnh a = Nhập cạnh b = Nhập cạnh c = Kết luận: " + test.output, "PRESENTATION");
+  check(triangle, test, test.output.toLowerCase(), "PRESENTATION");
+  check(triangle, test, p.expectedProgramOutput(opposite + " " + test.output), "FAIL");
+}
+const checkValue = (id, expected, actual, status) =>
+  check(tasks[id - 1], { input: "", output: expected }, actual, status);
+checkValue(6, "01:02:03", "1:2:3", "PRESENTATION");
+checkValue(6, "01:02:03", "1:3:2", "FAIL");
+checkValue(22, "NOT RIGHT", " not   right ", "PRESENTATION");
+checkValue(22, "RIGHT", "NOT RIGHT", "FAIL");
+checkValue(28, "Q1", "Q11", "FAIL");
+checkValue(2, "3\n-4", "3 4", "FAIL");
+checkValue(2, "3\n-4", "3 -4", "PRESENTATION");
+checkValue(2, "3\n-4", "-4 3", "FAIL");
+checkValue(34, "2432902008176640000", "2432902008176640001", "FAIL");
+checkValue(5, "6.57", "6.567", "PRESENTATION");
+checkValue(5, "-6.57", "-6.565", "PRESENTATION");
+checkValue(5, "6.57", "6.56", "FAIL");
+checkValue(1, "5", "1+5", "FAIL");
+checkValue(1, "5", "--5", "FAIL");
+checkValue(148, "X .\n. X", "X . \n. X \n\n", "PRESENTATION");
+checkValue(148, "X .\n. X", " X .\n. X", "FAIL");
+checkValue(148, "X .\n. X", "X .\n\n. X", "FAIL");
+check(triangle, triangle.tests[0], "VALID", "TLE", { timeLimitExceeded: true });
+check(triangle, triangle.tests[0], "VALID", "RUNTIME", { exitCode: "1" });
+console.log(checked + " verdict checks on " + tasks.length + " production tasks");
