@@ -44,6 +44,8 @@ const RESULT_LABELS = {
   6: ["Thoi gian (HH:MM:SS) = "],
 };
 const SINGLE_RESULT_LABELS = {
+  44: "Kiem tra day tang nghiem ngat: ",
+  45: "Phan loai day: ",
   1: "Tong cua a va b = ",
   5: "Trung binh cong ba so = ",
   7: "Thu tu sau khi hoan doi = ",
@@ -83,8 +85,8 @@ const SINGLE_RESULT_LABELS = {
   41: "Boi chung nho nhat = ",
   42: "So luong boi cua K = ",
   43: "Tong cac boi cua K = ",
-  44: "Tong binh phuong den N = ",
-  45: "Tong lap phuong den N = ",
+  44: "",
+  45: "",
   46: "Tong dieu hoa = ",
   47: "So Fibonacci thu N = ",
   48: "Kiem tra so nguyen to: ",
@@ -195,6 +197,8 @@ const SINGLE_RESULT_LABELS = {
 // EN: Add an explicit input prompt when the statement names a value, not a variable.
 const INPUT_LABELS = {
   26: ["Nhap tuoi = "],
+  44: ["Nhap N = ", "Nhap cac so = "],
+  45: ["Nhap N = ", "Nhap cac so = "],
 };
 const OUTPUT_RULES = new Map([
   [2, "In hiệu ở dòng thứ nhất và tích ở dòng thứ hai, mỗi kết quả có nhãn riêng."],
@@ -255,10 +259,45 @@ function taskSample(task) {
   };
 }
 
+const NUMERIC_VALUE = "[+-]?(?:\\d+(?:[.,]\\d*)?|[.,]\\d+)(?:[eE][+-]?\\d+)?";
+const VALUE_LINE = new RegExp(`^${NUMERIC_VALUE}(?:\\s+${NUMERIC_VALUE})*$`);
+
+// VI: Dùng sample_output đầy đủ để suy ra nhãn cho mọi bài khi các giá trị
+// trong mẫu khớp sample_input và output của test đầu; nhãn JS là phương án cũ.
+// EN: Infer labels for any task when the full sample transcript matches sample
+// input and the first test output; retain legacy labels as a fallback.
+function sampleFormat(task) {
+  const lines = String(task.sample_output ?? "").replace(/\r\n?/g, "\n").replace(/\n+$/, "").split("\n");
+  const pattern = /^([\p{L}][^\n]*?[:=]\s*)(.*)$/u;
+  const parts = lines.map((line) => {
+    const match = pattern.exec(line);
+    return match ? { label: match[1], value: match[2].trim() } : null;
+  });
+  if (!parts.length || parts.some((part) => !part)) return { prompts: [], lineLabels: null };
+
+  const inputCandidates = [task.sample_input, task.tests?.[0]?.input]
+    .map((value) => String(value ?? "").replace(/\r\n?/g, "\n").trim().split(/\s+/).filter(Boolean));
+  for (let prefixCount = parts.length - 1; prefixCount >= 0; prefixCount--) {
+    const prefix = parts.slice(0, prefixCount);
+    const result = parts.slice(prefixCount);
+    const echoedValues = prefix.flatMap((part) => part.value.split(/\s+/).filter(Boolean));
+    if ((prefixCount === 0 || inputCandidates.some((inputValues) =>
+      echoedValues.length === inputValues.length && echoedValues.every((value, index) => value === inputValues[index]))) &&
+        result.length && result.every(Boolean)) {
+      return {
+        prompts: prefix.map((part) => part.label),
+        lineLabels: result.map((part) => part.label),
+      };
+    }
+  }
+  return { prompts: [], lineLabels: null };
+}
+
 function taskPresentation(task, input = taskSample(task).input) {
-  // VI: Bài mới dùng nguyên văn test.output; không tự áp nhãn của 150 bài cũ.
-  // EN: New tasks use literal expected output instead of invented legacy labels.
+  // VI: Ưu tiên nhãn chỉnh được từ mẫu; giữ map cũ cho bài chưa cập nhật mẫu.
+  // EN: Prefer labels editable through the sample; preserve legacy fallback maps.
   const legacy = Number(task.id) >= 1 && Number(task.id) <= 150;
+  const inferred = sampleFormat(task);
   const fieldNames = [];
   const inputDescription = String(task.input || "");
   const fieldPattern = /(^|[^\p{L}\p{N}])([A-Za-z])(?=$|[^\p{L}\p{N}])/gu;
@@ -267,17 +306,30 @@ function taskPresentation(task, input = taskSample(task).input) {
     if (!fieldNames.includes(name)) fieldNames.push(name);
   }
   const inputCount = String(input || "").trim().split(/\s+/).filter(Boolean).length;
-  const prompts = INPUT_LABELS[task.id] || (legacy ? fieldNames.slice(0, inputCount).map((name) => `Nhap ${name} = `) : []);
+  const hasSampleLabels = inferred.prompts.length > 0 || inferred.lineLabels !== null;
+  const prompts = hasSampleLabels ? inferred.prompts : INPUT_LABELS[task.id] || (legacy ? fieldNames.slice(0, inputCount).map((name) => `Nhap ${name} = `) : []);
 
   // Keep visible examples and strict output checking specific to each task.
   // The former title-based fallback made many unrelated tasks say the same thing.
-  const resultLabel = SINGLE_RESULT_LABELS[task.id] || (legacy ? "Ket qua: " : "");
-  const lineLabels = RESULT_LABELS[task.id] || null;
+  const resultLabel = hasSampleLabels && inferred.lineLabels.length === 1 ? inferred.lineLabels[0] : SINGLE_RESULT_LABELS[task.id] || (legacy ? "Ket qua: " : "");
+  const lineLabels = hasSampleLabels ? inferred.lineLabels : RESULT_LABELS[task.id] || null;
   const formattedOutput = (rawOutput) => {
-    const lines = String(rawOutput ?? "").split("\n");
-    if (lineLabels && lineLabels.length === lines.length)
+    const raw = String(rawOutput ?? "");
+    const lines = raw.split("\n");
+    if (prompts.length && lineLabels && lines.length === prompts.length + lineLabels.length &&
+        prompts.every((prompt, index) => lines[index].startsWith(prompt)) &&
+        lineLabels.every((label, index) => lines[prompts.length + index].startsWith(label)))
+      return lines.slice(prompts.length).join("\n");
+    if (legacy && lineLabels && lineLabels.length === lines.length)
       return lines.map((line, index) => lineLabels[index] + line).join("\n");
-    return resultLabel + String(rawOutput ?? "");
+    const suffix = raw.endsWith("\n") ? "\n" : "";
+    const values = (suffix ? raw.slice(0, -1) : raw).split("\n");
+    if (lineLabels && lineLabels.length === values.length &&
+        values.every((line, index) => line.startsWith(lineLabels[index]))) return raw;
+    if (resultLabel && raw.startsWith(resultLabel)) return raw;
+    if (lineLabels && lineLabels.length === values.length)
+      return values.map((line, index) => lineLabels[index] + line).join("\n") + suffix;
+    return resultLabel + raw;
   };
   // EN: The judge supplies stdin without terminal echo. Keep program stdout
   // faithful, then build a visible terminal transcript with echoed inputs.
@@ -321,7 +373,7 @@ function taskPresentation(task, input = taskSample(task).input) {
     expectedProgramOutput,
     renderConsoleOutput,
     guide: !legacy ? [
-      "Output chuẩn là toàn bộ văn bản trong test output, gồm đủ các dòng, nhãn và thứ tự.",
+      "In đúng các dòng, nhãn và thứ tự theo mục OUTPUT và màn hình mẫu.",
       "Chỉ ghi vào test output những gì chương trình tự in; dữ liệu nhập không tự xuất hiện trong stdout.",
     ].join("\n") : [
       "Mỗi lời nhắc nhập giữ trên cùng dòng với giá trị được nhập, đúng thứ tự sau:",

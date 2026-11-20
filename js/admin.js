@@ -607,6 +607,7 @@ async function openProblemEditor(id) {
       <label class="adm-field"><span>Ràng buộc</span><input class="adm-input" id="fCons" value="${esc(p.constraints)}"></label>
       <div class="adm-row2"><label class="adm-field"><span>Sample input</span><textarea class="adm-textarea" id="fSin">${esc(p.sample_input)}</textarea></label>
         <label class="adm-field"><span>Sample output</span><textarea class="adm-textarea" id="fSout">${esc(p.sample_output)}</textarea></label></div>
+      <p class="mut" style="margin:0 0 12px;color:var(--muted);font-size:13px">Để đổi nhãn một lần cho các test, ghi màn hình mẫu đầy đủ vào Sample output: mỗi lời nhắc nhập kèm giá trị từ Sample input, sau đó là nhãn và kết quả mẫu. Ví dụ: Nhap a = 3, Nhap b = 4, Tong = 7.</p>
       <div style="display:flex;align-items:center;gap:10px"><button class="adm-switch ${p.is_published ? "on" : ""}" data-x="pub" aria-label="Xuất bản"></button>
         <span style="font-size:13px">Xuất bản cho học viên <span style="color:var(--muted)">(cần ${MIN_TESTS}–${MAX_TESTS} test)</span></span></div>`;
     const testsHtml = () => `

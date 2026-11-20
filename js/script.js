@@ -16,6 +16,7 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 
 const PUBLISHED_TASK_CACHE = "onluyencpp-published-tasks-v1";
 const PUBLISHED_TASK_CACHE_KEY = new URL("../data/.published-tasks.json", import.meta.url).href;
+let catalogSyncWarning = "";
 // VI: Số test của mỗi bài linh hoạt; giới hạn này chỉ để chặn dữ liệu bất thường.
 // EN: Test counts may vary by task; this upper bound only rejects malformed data.
 const MAX_TESTS = 30;
@@ -89,9 +90,17 @@ async function loadTasksFromSupabase() {
       headers: { apikey: key },
       cache: "no-cache",
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      const details = await res.json().catch(() => ({}));
+      console.warn("Không tải được danh sách bài từ Supabase:", res.status, details.message || "");
+      catalogSyncWarning = "Chưa đồng bộ được bài online; đang dùng dữ liệu đã lưu.";
+      return null;
+    }
     const rows = await res.json();
-    if (!Array.isArray(rows)) return null;
+    if (!Array.isArray(rows)) {
+      catalogSyncWarning = "Dữ liệu bài online không hợp lệ; đang dùng dữ liệu đã lưu.";
+      return null;
+    }
     const tasks = rows
       .map((r) => ({
         id: r.id,
@@ -110,10 +119,15 @@ async function loadTasksFromSupabase() {
           .map((t) => ({ no: t.no, input: t.input, output: t.output })),
       }))
       .filter((t) => hasValidTestCount(t.tests));
-    if (!tasks.length) return null;
+    if (!tasks.length) {
+      if (rows.length) catalogSyncWarning = "Bài online chưa đủ test hợp lệ; đang dùng dữ liệu đã lưu.";
+      return null;
+    }
     await cachePublishedTasks(tasks);
     return tasks;
-  } catch (_) {
+  } catch (error) {
+    console.warn("Không đồng bộ được danh sách bài online:", error);
+    catalogSyncWarning = "Chưa đồng bộ được bài online; đang dùng dữ liệu đã lưu.";
     return null;
   }
 }
@@ -122,6 +136,9 @@ async function loadTaskData() {
   const dbTasks = await loadTasksFromSupabase();
   if (dbTasks) return dbTasks;
   const cachedTasks = await readCachedPublishedTasks();
+  // VI: Bản đã đồng bộ là ảnh chụp của Supabase, gồm cả các bài đã xóa.
+  // Không ghép thêm JSON đóng gói vì như vậy bài đã xóa sẽ xuất hiện lại offline.
+  // EN: Keep the cached server snapshot authoritative over bundled fallback.
   if (cachedTasks) return cachedTasks;
   const dataFiles = await bundledPartUrls(import.meta.url);
   const parts = await Promise.all(
@@ -153,6 +170,14 @@ async function loadTaskData() {
 let TASKS;
 try {
   TASKS = await loadTaskData();
+  document.title = `${TASKS.length} bài luyện thi C++ | Nhập môn lập trình`;
+  document.getElementById("siteTaskSummary").textContent =
+    `${TASKS.length} bài luyện tập nhập môn lập trình · Từ cơ bản đến nâng cao`;
+  if (catalogSyncWarning) {
+    const syncStatus = document.getElementById("taskSyncStatus");
+    syncStatus.textContent = catalogSyncWarning;
+    syncStatus.hidden = false;
+  }
   if (!TASKS.length) console.warn("Website chưa tải được bài tập nào.");
 } catch (error) {
   console.error("Không thể khởi tạo website TLU C++:", error);
@@ -1628,6 +1653,9 @@ function renderFormatGuide(task) {
 
 function sampleTranscript(task) {
   const sample = taskSample(task);
+  // VI: Bài mới đã lưu toàn bộ màn hình mẫu, kể cả input được echo.
+  // EN: New tasks store the complete sample screen, including echoed input.
+  if (Number(task.id) > 150) return sample.output;
   const presentation = taskPresentation(task, sample.input);
   return presentation.expected(sample.output, sample.input);
 }

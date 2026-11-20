@@ -835,6 +835,9 @@ textarea#stdin {
   font-size: 12px;
   color: var(--muted);
 }
+#taskSyncStatus {
+  color: var(--error-text);
+}
 
 /* Nút hủy phiên chấm và chỉ báo bài đang được chấm */
 .btn.cancel-run {
@@ -2578,8 +2581,13 @@ header .top {
 :is(.streak-nav, .streak-page, .profile-streak)[data-tier="9"] { --flame-outer: #bd315c; --flame-core: #ffdf69; --flame-glow: #dc53686b; }
 :is(.streak-nav, .streak-page, .profile-streak)[data-tier="10"] { --flame-outer: #b73161; --flame-core: #fff087; --flame-glow: #d94d746d; }
 .streak-flame { display: block; flex: none; width: 25px; height: 29px; overflow: visible; filter: drop-shadow(0 2px 6px var(--flame-glow)); }
+.streak-flame { transition: filter .35s ease, transform .35s ease; }
+.streak-nav:hover .streak-flame, .streak-nav:focus-visible .streak-flame { transform: translateY(-2px) scale(1.08); }
 .streak-flame-outer { fill: var(--flame-outer); }
 .streak-flame-core { fill: var(--flame-core); }
+.streak-nav[data-tier="0"] { background: var(--panel); }
+.streak-nav[data-tier="3"], .streak-nav[data-tier="6"], .streak-nav[data-tier="8"] { box-shadow: 0 0 0 2px var(--flame-glow), 0 4px 14px var(--flame-glow); }
+.streak-nav[data-tier="10"] { border-color: var(--flame-outer); box-shadow: 0 0 0 2px var(--flame-glow), 0 0 22px var(--flame-glow); }
 .streak-nav {
   display: inline-flex;
   align-items: center;
