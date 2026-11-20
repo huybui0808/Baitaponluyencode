@@ -1494,7 +1494,14 @@ function updateScore() {
 function renderPartFilters() {
   const filters = $("filters");
   const names = new Map();
-  const shortNames = new Map([[1, "Nhập xuất"], [2, "Rẽ nhánh"], [3, "Vòng lặp"], [4, "Tổng hợp"]]);
+  // VI: Giữ tên ngắn cho bốn phần cũ; khi tên phần đổi trong dữ liệu, nút dùng tên mới.
+  // EN: Preserve familiar legacy labels, but let renamed sections supply their own label.
+  const legacyShortNames = new Map([
+    ["Nhập xuất và phép tính cơ bản", "Nhập xuất"],
+    ["Câu lệnh rẽ nhánh", "Rẽ nhánh"],
+    ["Vòng lặp cơ bản và số học", "Vòng lặp"],
+    ["Vòng lặp lồng nhau và bài toán tổng hợp", "For tổng hợp"],
+  ]);
   for (const task of TASKS) {
     const match = /^Phần\s+(\d+)\s*-\s*(.+)$/u.exec(task.section || "");
     if (match && !names.has(Number(match[1]))) names.set(Number(match[1]), match[2]);
@@ -1511,7 +1518,7 @@ function renderPartFilters() {
   };
   add("all", "Tất cả", "Tất cả bài tập");
   for (const [number, name] of [...names].sort((a, b) => a[0] - b[0])) {
-    add(number, shortNames.get(number) || name, `Phần ${number} - ${name}`);
+    add(number, legacyShortNames.get(name) || name, `Phần ${number} - ${name}`);
   }
 }
 function renderList() {
