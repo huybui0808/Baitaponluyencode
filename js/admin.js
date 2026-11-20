@@ -3,12 +3,12 @@
 // việc ẩn nút ở giao diện chỉ để tiện dùng, KHÔNG phải lớp bảo mật.
 // VI: Công cụ quản trị được bổ sung theo yêu cầu của chủ dự án; AI có hỗ trợ viết và chỉnh sửa mã. EN: Admin tools follow the project owner's requirements; AI assisted with writing and editing code.
 
-const CSS_URL = new URL("./admin.css", import.meta.url).href;
+const CSS_URL = new URL("../css/admin.css", import.meta.url).href;
 const DATA_FILES = [
-  "./data/part1.json",
-  "./data/part2.json",
-  "./data/part3.json",
-  "./data/part4.json",
+  "../data/part1.json",
+  "../data/part2.json",
+  "../data/part3.json",
+  "../data/part4.json",
 ].map((f) => new URL(f, import.meta.url));
 const MIN_TESTS = 8;
 const MAX_TESTS = 30;

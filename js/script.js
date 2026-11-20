@@ -13,10 +13,10 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 }
 
 const TASK_DATA_FILES = [
-  "./data/part1.json",
-  "./data/part2.json",
-  "./data/part3.json",
-  "./data/part4.json",
+  "../data/part1.json",
+  "../data/part2.json",
+  "../data/part3.json",
+  "../data/part4.json",
 ];
 // VI: Số test của mỗi bài linh hoạt; giới hạn này chỉ để chặn dữ liệu bất thường.
 // EN: Test counts may vary by task; this upper bound only rejects malformed data.
@@ -1957,7 +1957,7 @@ async function compileCode(code, signal) {
   if (!code.trim()) throw new Error("Bạn chưa dán mã nguồn C++.");
   await waitForOfflineCache(signal);
   const result = await workerRequest(
-    new URL("./workers/cpp-compiler-worker.js", import.meta.url),
+    new URL("../workers/cpp-compiler-worker.js", import.meta.url),
     { type: "compile", source: code },
     { signal },
   );
@@ -1973,7 +1973,7 @@ async function compileCode(code, signal) {
 
 async function runCompiled(module, stdin, signal) {
   const result = await workerRequest(
-    new URL("./workers/cpp-runner-worker.js", import.meta.url),
+    new URL("../workers/cpp-runner-worker.js", import.meta.url),
     { type: "run", module, input: stdin },
     {
       signal,
@@ -1999,7 +1999,7 @@ async function runCompiled(module, stdin, signal) {
 
 function createRunnerSession(module, signal) {
   const worker = new Worker(
-    new URL("./workers/cpp-runner-worker.js", import.meta.url),
+    new URL("../workers/cpp-runner-worker.js", import.meta.url),
     { type: "module" },
   );
   let pending = null;

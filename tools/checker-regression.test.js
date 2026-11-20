@@ -1,5 +1,5 @@
-const { classifyTestResult } = require("../checker.js");
-const { taskPresentation } = require("../problem-presentation.js");
+const { classifyTestResult } = require("../js/checker.js");
+const { taskPresentation } = require("../js/problem-presentation.js");
 function fixture(task) {
   const prompt = task.prompt || "Nhap n = ";
   const label = task.label || "Ket qua la: ";
