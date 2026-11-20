@@ -62,13 +62,6 @@ export function summarizeStreak(rawDays, today) {
   };
 }
 
-export function summarizeVisibleStreak(confirmedDays, pendingDays, today) {
-  return summarizeStreak([
-    ...confirmedDays,
-    ...pendingDays.map((entry) => typeof entry === "string" ? entry : entry.studyDate),
-  ], today);
-}
-
 export function calendarCells(year, month) {
   if (!Number.isInteger(year) || !Number.isInteger(month) || month < 1 || month > 12)
     throw new RangeError("Invalid calendar month");

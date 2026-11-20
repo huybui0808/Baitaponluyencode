@@ -1,6 +1,6 @@
 import {
   DEFAULT_STREAK_TIME_ZONE, STREAK_MILESTONES, calendarCells,
-  streakTier, studyDateAt, summarizeStreak, summarizeVisibleStreak,
+  streakTier, studyDateAt, summarizeStreak,
 } from "./streak-core.js";
 import { pendingStreakDays } from "./streak-sync.js";
 
@@ -19,6 +19,25 @@ let refreshToken = 0;
 let celebrationTimer = 0;
 const flushingUsers = new Set();
 const retryAfterFlush = new Set();
+const RPC_TIMEOUT_MS = 10000;
+
+async function streakRpc(client, name, args) {
+  const controller = new AbortController();
+  const request = client.rpc(name, args);
+  if (typeof request.abortSignal === "function") request.abortSignal(controller.signal);
+  let timer;
+  try {
+    return await Promise.race([
+      request,
+      new Promise((_, reject) => {
+        timer = setTimeout(() => {
+          controller.abort();
+          reject(new Error("timeout"));
+        }, RPC_TIMEOUT_MS);
+      }),
+    ]);
+  } finally { clearTimeout(timer); }
+}
 
 function activeUserId() {
   const signedIn = options?.getUser()?.id;
@@ -110,16 +129,16 @@ function paint() {
   if (!options) return;
   const today = currentStudyDate();
   if (!state.calendarYear) setMonthFromToday();
-  // VI: Hiện ngay ngày đã lưu cục bộ; dấu mốc chờ đồng bộ luôn được ghi rõ.
-  // EN: Reflect locally queued days immediately, while clearly marking them as pending.
-  const summary = summarizeVisibleStreak(state.days, state.pending, today);
+  // VI: Chỉ hiển thị số ngày Supabase đã xác nhận; lượt cục bộ có trạng thái riêng.
+  // EN: Count only server-confirmed days; keep local pending marks separate.
+  const summary = summarizeStreak(state.days, today);
   const confirmedToday = state.days.some((entry) => entry.study_date === today);
   const pendingToday = state.pending.some((entry) => entry.studyDate === today);
   const count = state.userId ? summary.current : 0;
   const badge = byId("streakNav");
   badge.dataset.tier = String(streakTier(count));
   badge.dataset.pending = state.pending.length ? "true" : "false";
-  badge.title = state.pending.length ? "Ngày học đã lưu trên thiết bị, đang chờ đồng bộ" : "Mở chuỗi ngày học";
+  badge.title = state.pending.length ? "Chuỗi đã xác nhận; có lượt học đang chờ đồng bộ" : "Mở chuỗi ngày học";
   badge.setAttribute("aria-label", state.userId ? `Chuỗi ngày học: ${count} ngày${state.pending.length ? ", đang chờ đồng bộ" : ""}. Mở chi tiết` : "Đăng nhập để xem chuỗi ngày học");
   byId("streakNavCount").textContent = state.userId ? String(count) : "—";
   byId("streakOverlay").querySelector(".streak-page").dataset.tier = String(streakTier(count));
@@ -135,6 +154,8 @@ function paint() {
   byId("streakSyncStatus").textContent = !state.userId ? "Đăng nhập để đồng bộ trên các thiết bị."
     : state.error || (state.pending.length ? `${state.pending.length} ngày học đang chờ đồng bộ.`
       : navigator.onLine ? "Đã đồng bộ với tài khoản." : "Đang offline; hiển thị dữ liệu đã lưu trên thiết bị.");
+  byId("streakRetry").hidden = !state.pending.length;
+  byId("streakRetry").disabled = !navigator.onLine || !options.getUser();
   byId("streakTimezone").value = state.pendingTimezone || state.timezone;
   byId("streakTimezone").disabled = !options.getUser() || !navigator.onLine;
   byId("streakTimezoneForm").querySelector("button").disabled = !options.getUser() || !navigator.onLine;
@@ -162,7 +183,7 @@ async function checkCelebration(day, userId) {
   if (!entry || entry.celebrated_at) return;
   let data;
   let error;
-  try { ({ data, error } = await options.getSupabase().rpc("take_streak_celebration", { p_study_date: day })); }
+  try { ({ data, error } = await streakRpc(options.getSupabase(), "take_streak_celebration", { p_study_date: day })); }
   catch (_) { return; }
   if (error || !data || activeUserId() !== userId) return;
   entry.celebrated_at = new Date().toISOString();
@@ -186,12 +207,12 @@ async function flushPending(userId) {
     let data;
     let error;
     try {
-      ({ data, error } = await client.rpc("claim_streak_day", {
+      ({ data, error } = await streakRpc(client, "claim_streak_day", {
         p_event_id: entry.eventId, p_problem_id: entry.problemId,
         p_completed_at: entry.completedAt, p_offline: entry.offline,
       }));
     } catch (_) {
-      error = { message: "Network unavailable" };
+      error = { message: "timeout" };
     }
     if (activeUserId() !== userId) return;
     if (error) {
@@ -206,13 +227,27 @@ async function flushPending(userId) {
             ? "Bài này chưa được xuất bản trong Supabase nên chưa thể lưu chuỗi."
             : /Suspended accounts/i.test(error.message || "")
               ? "Tài khoản đang bị đình chỉ nên lượt này không được tính vào chuỗi."
-          : "Chưa đồng bộ được ngày học; sẽ thử lại khi có mạng.";
+          : /timeout/i.test(error.message || "")
+            ? "Supabase chưa phản hồi trong 10 giây. Lượt học vẫn nằm trên thiết bị và sẽ được gửi lại."
+            : `Supabase chưa lưu ngày học: ${String(error.message || error.code || "lỗi kết nối").slice(0, 180)}`;
       paint();
       return;
     }
+    if (!/^(recorded|already_counted)$/.test(data?.status || "")
+        || !/^\d{4}-\d{2}-\d{2}$/.test(data?.study_date || "")) {
+      state.error = "Supabase trả dữ liệu chuỗi không hợp lệ; lượt học vẫn được giữ để thử lại.";
+      paint();
+      return;
+    }
+    if (!state.days.some((day) => day.study_date === data.study_date)) {
+      state.days.push({ study_date: data.study_date, problem_id: entry.problemId, celebrated_at: null });
+      saveSnapshot();
+    }
     try { await pendingStreakDays.delete(entry.key); } catch (_) { /* The server still deduplicates by event ID. */ }
     state.pending = state.pending.filter((item) => item.key !== entry.key);
-    if (data?.study_date) await loadRemote(userId, false);
+    state.error = "";
+    paint();
+    await loadRemote(userId, false);
     if (data?.status === "recorded") await checkCelebration(data.study_date, userId);
    }
   } finally {
@@ -227,19 +262,26 @@ async function loadRemote(userId, flush = true) {
   if (!client || !navigator.onLine || options.getUser()?.id !== userId) return;
   let data;
   let error;
-  try { ({ data, error } = await client.rpc("get_my_streak")); }
-  catch (_) { error = { message: "Network unavailable" }; }
+  try { ({ data, error } = await streakRpc(client, "get_my_streak")); }
+  catch (_) { error = { message: "timeout" }; }
   if (activeUserId() !== userId) return;
   if (error) {
     state.error = error.code === "PGRST202"
       ? "Chức năng chuỗi cần áp dụng SQL 20261205 trên Supabase."
-      : "Chưa tải được chuỗi từ Supabase; đang hiển thị bản đã lưu trên thiết bị.";
+      : "Chưa tải được chuỗi từ Supabase. Đang hiển thị các ngày đã xác nhận trước đó trên thiết bị này.";
+    paint();
+    return;
+  }
+  if (!Array.isArray(data?.days) || !data?.timezone) {
+    state.error = "Supabase trả dữ liệu chuỗi không hợp lệ; giữ các ngày đã xác nhận trước đó.";
     paint();
     return;
   }
   state.error = "";
-  state.days = Array.isArray(data?.days) ? data.days : [];
-  state.timezone = data?.timezone || DEFAULT_STREAK_TIME_ZONE;
+  // VI: Một phản hồi đọc bắt đầu trước lượt ghi không được xóa ngày vừa xác nhận.
+  // EN: A read started before a confirmed write must not hide that new day.
+  state.days = [...new Map([...state.days, ...data.days].map((day) => [day.study_date, day])).values()];
+  state.timezone = data.timezone;
   state.pendingTimezone = data?.pending_timezone || null;
   state.pendingEffectiveAt = data?.pending_effective_at || null;
   state.serverOffset = data?.server_time ? new Date(data.server_time).getTime() - Date.now() : 0;
@@ -340,6 +382,7 @@ export function initStreak(config) {
     list.append(option);
   }
   byId("streakNav").addEventListener("click", openStreak);
+  byId("streakRetry").addEventListener("click", () => { void refreshStreak(); });
   byId("streakContinue").addEventListener("click", () => {
     byId("streakOverlay").hidden = true;
     if (!document.querySelector(".auth-overlay:not([hidden])")) document.body.classList.remove("no-scroll");
