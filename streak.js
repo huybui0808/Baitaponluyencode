@@ -202,6 +202,10 @@ async function flushPending(userId) {
       state.error = /Offline study time/i.test(error.message || "")
         ? "Ngày học offline cần xác minh thời điểm; dấu mốc vẫn được giữ trên thiết bị."
         : error.code === "PGRST202" ? "Chức năng chuỗi cần áp dụng SQL 20261205 trên Supabase."
+          : /This problem is unavailable/i.test(error.message || "")
+            ? "Bài này chưa được xuất bản trong Supabase nên chưa thể lưu chuỗi."
+            : /Suspended accounts/i.test(error.message || "")
+              ? "Tài khoản đang bị đình chỉ nên lượt này không được tính vào chuỗi."
           : "Chưa đồng bộ được ngày học; sẽ thử lại khi có mạng.";
       paint();
       return;
@@ -372,10 +376,13 @@ export function initStreak(config) {
     await refreshStreak();
   });
   window.addEventListener("online", () => { void refreshStreak(); });
+  window.addEventListener("focus", () => { void refreshStreak(); });
   document.addEventListener("visibilitychange", () => { if (!document.hidden) void refreshStreak(); });
   setInterval(() => {
     if (document.hidden) return;
-    if (state.pendingEffectiveAt && new Date(state.pendingEffectiveAt).getTime() <= currentInstant())
+    // VI: Tab đang mở cũng cần thấy ngày học từ thiết bị khác và thử lại lượt đang chờ.
+    // EN: Poll visible tabs for cross-device marks and retry queued submissions.
+    if (navigator.onLine && options.getUser())
       void refreshStreak();
     else paint();
   }, 60_000);
