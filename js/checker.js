@@ -28,7 +28,12 @@ function removeHeadings(text, pattern, task) {
       rest = rest.slice(heading[0].length);
     }
     // Recognizable I/O labels can also be missing their final colon.
-    return rest.replace(/^(?:nhap (?:canh |bien )?[a-z]|ket luan|(?:tong|hieu|tich|ket qua) (?:[\p{L} ]+ )?la)(?=\s*[+-]?\d|\s*$)/u, "").trim();
+    let prompt;
+    while ((prompt = /^(?:nhap(?: vao)?|cho)\s+[\p{L}\p{N}_ ]{1,80}?(?=\s+(?:(?:nhap|cho)\b|(?:tong|hieu|tich|ket qua|gia tri|max|min|so luong)\b)|[:=]|$)/u.exec(rest))) {
+      rest = rest.slice(prompt[0].length).trimStart();
+    }
+    rest = rest.replace(/^(?:nhap (?:vao )?(?:canh |bien )?[\p{L}][\p{L}\p{N}_ ]*|cho [\p{L}][\p{L}\p{N}_ ]*)(?:[:=]\s*|\s+(?=[+-]?(?:\d|[.,]\d)))/u, "");
+    return rest.replace(/^(?:ket luan|(?:tong|hieu|tich|ket qua) (?:[\p{L} ]+ )?la)(?=\s*[+-]?\d|\s*$)/u, "").trim();
   }).join("\n");
 }
 
@@ -86,7 +91,7 @@ function semanticMatch(actual, expected, task, presentation) {
     // Input prompts are arbitrary task text (for example "Cho A =" or
     // "Nhap cac so ="). Strip prompt labels before comparing answer values;
     // different wording is a presentation error, not a wrong answer.
-    const promptPattern = /(?:nh[aậ]p|cho)\s+[^:=\n]{0,100}[:=：＝]\s*/giu;
+    const promptPattern = /(?:nhap(?: vao)?|cho)\s+[\p{L}\p{N}_ ]{1,100}?(?:[:=]\s*|\s+(?=[+-]?(?:\d|[.,]\d)))/giu;
     const numericPattern = /(?<![\p{L}\p{N}_])[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:e[+-]?\d+)?(?![\p{L}\p{N}_])/giu;
     const tokens = removeHeadings(actual, pattern, task)
       .replace(promptPattern, " ")
@@ -107,7 +112,7 @@ function semanticMatch(actual, expected, task, presentation) {
   const phrase = expectedTokens.map(token => token.replace(/[.*+?^$\x7b\x7d()|[\]\\]/g, "\\$&")).join("\\s+");
   const answer = new RegExp("(?<![\\p{L}\\p{N}_])(?:" + phrase + ")\\s*$", "iu").exec(actual);
   if (!answer) return false;
-  const promptPattern = /(?:nh[aậ]p|cho)\s+[^:=\n]{0,100}[:=：＝]\s*/giu;
+    const promptPattern = /(?:nhap(?: vao)?|cho)\s+[\p{L}\p{N}_ ]{1,100}?(?:[:=]\s*|\s+(?=[+-]?(?:\d|[.,]\d)))/giu;
   const prefix = removeHeadings(actual.slice(0, answer.index), pattern, task).replace(promptPattern, " ");
   return !prefix.trim();
 }

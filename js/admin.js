@@ -4,7 +4,8 @@
 // VI: Công cụ quản trị được bổ sung theo yêu cầu của chủ dự án; AI có hỗ trợ viết và chỉnh sửa mã. EN: Admin tools follow the project owner's requirements; AI assisted with writing and editing code.
 import { buildExportParts, buildJsonZip } from "./admin-export.js";
 import { bundledPartUrls } from "./task-parts.js";
-import { CONCEPT_NOTES, sampleFormat } from "./problem-presentation.js";
+import { CONCEPT_NOTES, parsePresentationRules, taskPresentation } from "./problem-presentation.js";
+import { renderCppHighlight } from "./code-highlight.js";
 
 const CSS_URL = new URL("../css/admin.css", import.meta.url).href;
 const MIN_TESTS = 8;
@@ -462,7 +463,7 @@ async function exportToJson() {
   if (!published.length) throw new Error("Chưa có bài đã xuất bản để xuất JSON.");
   const rows = await q(
     sb.from("problems")
-      .select("id,section,title,level,statement,input,output,constraints,knowledge_note,sample_input,sample_output,test_cases(no,input,output)")
+      .select("id,section,title,level,statement,input,output,constraints,knowledge_note,presentation_rules,sample_input,sample_output,test_cases(no,input,output)")
       .eq("is_published", true)
       .order("sort_order")
       .order("id")
@@ -532,6 +533,7 @@ async function openProblemEditor(id) {
       knowledge_note: "",
       sample_input: "",
       sample_output: "",
+      presentation_rules: "",
       sort_order:
         state.problems.reduce((m, x) => Math.max(m, x.sort_order), 0) + 10,
       is_published: false,
@@ -551,6 +553,7 @@ async function openProblemEditor(id) {
     }
     // Preserve the old built-in reminder until an admin saves an editable value.
     p.knowledge_note ??= CONCEPT_NOTES.get(Number(p.id)) || "";
+    p.presentation_rules ??= "";
     const ed = {
       p,
       tests,
@@ -589,6 +592,7 @@ async function openProblemEditor(id) {
       ed.p.knowledge_note = g("fKnowledge");
       ed.p.sample_input = g("fSin");
       ed.p.sample_output = g("fSout");
+      ed.p.presentation_rules = g("fPresentationRules");
     };
     const draw = () => {
       panel.innerHTML = `<div class="head"><div><h2>${isNew ? "Thêm bài tập mới" : `Sửa bài ${pad3(p.id)}`}</h2>
@@ -603,7 +607,7 @@ async function openProblemEditor(id) {
       if (ed.tab === "info") {
         refreshPresentationPreview();
         eb.addEventListener("input", (event) => {
-          if (event.target.matches("#fSin, #fSout")) {
+          if (event.target.matches("#fSin, #fSout, #fPresentationRules")) {
             collect();
             refreshPresentationPreview();
           }
@@ -627,7 +631,8 @@ async function openProblemEditor(id) {
       <label class="adm-field"><span>Ràng buộc</span><input class="adm-input" id="fCons" value="${esc(p.constraints)}"></label>
       <div class="adm-row2"><label class="adm-field"><span>Sample input</span><textarea class="adm-textarea" id="fSin">${esc(p.sample_input)}</textarea></label>
         <label class="adm-field"><span>Sample output</span><textarea class="adm-textarea" id="fSout">${esc(p.sample_output)}</textarea></label></div>
-      <div class="adm-card" style="margin:0 0 12px;padding:12px 14px"><b>Yêu cầu trình bày tự sinh</b><pre id="presentationPreview" style="white-space:pre-wrap;margin:8px 0 0;font:inherit;color:var(--text)"></pre><small id="presentationPreviewHint" style="display:block;margin-top:8px;color:var(--muted)"></small></div>
+      <label class="adm-field"><span>Yêu cầu trình bày (dùng chung cho hướng dẫn và chấm)</span><textarea class="adm-textarea" id="fPresentationRules" placeholder="[INPUT]\nNhap a \nNhap b \n\n[OUTPUT]\nTong a+b = ">${esc(p.presentation_rules ?? "")}</textarea></label>
+      <div class="adm-card" style="margin:0 0 12px;padding:12px 14px"><b>Xem trước yêu cầu trình bày</b><pre id="presentationPreview" style="white-space:pre-wrap;margin:8px 0 0;font:inherit;color:var(--text)"></pre><small id="presentationPreviewHint" style="display:block;margin-top:8px;color:var(--muted)"></small></div>
       ${!isNew ? `<label class="adm-field" style="display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--danger,#b84b58);border-radius:10px"><input id="fResetLearning" type="checkbox" ${ed.resetLearning ? "checked" : ""} style="margin-top:3px"><span><b>Xóa dữ liệu học viên của bài này</b><br><span class="mut">Chỉ bật khi nội dung bài đã đổi thành bài khác. Sẽ xóa điểm, lịch sử nộp và thống kê của riêng bài này.</span></span></label>` : ""}
       <div style="display:flex;align-items:center;gap:10px"><button class="adm-switch ${p.is_published ? "on" : ""}" data-x="pub" aria-label="Xuất bản"></button>
         <span style="font-size:13px">Xuất bản cho học viên <span style="color:var(--muted)">(cần ${MIN_TESTS}–${MAX_TESTS} test)</span></span></div>`;
@@ -639,19 +644,26 @@ async function openProblemEditor(id) {
         ...ed.p,
         sample_input: panel.querySelector("#fSin")?.value ?? ed.p.sample_input ?? "",
         sample_output: panel.querySelector("#fSout")?.value ?? ed.p.sample_output ?? "",
+        presentation_rules: panel.querySelector("#fPresentationRules")?.value ?? ed.p.presentation_rules ?? "",
         tests: ed.tests,
       };
-      const format = sampleFormat(draft);
+      const rulesText = String(draft.presentation_rules ?? "");
+      if (rulesText.trim() && !parsePresentationRules(rulesText)) {
+        preview.textContent = "Cấu hình chưa hợp lệ.";
+        hint.textContent = "Thêm tiêu đề [INPUT] hoặc [OUTPUT], rồi ghi mỗi nhãn trên một dòng. Ví dụ: [INPUT] / Nhap a / [OUTPUT] / Tong = .";
+        return;
+      }
+      const format = taskPresentation(draft);
       if (!format.prompts.length && !format.lineLabels) {
         preview.textContent = "Chưa nhận diện được nhãn từ mẫu.";
-        hint.textContent = "Muốn gắn nhãn nhập/kết quả, ghi toàn bộ màn hình mẫu vào Sample output theo dạng ‘Nhãn = giá trị’ hoặc ‘Nhãn: giá trị’. Phần này được dùng chung để tạo hướng dẫn và chấm trình bày; không có ô yêu cầu riêng dễ bị lệch.";
+        hint.textContent = "Nhập nhãn ở ô Yêu cầu trình bày hoặc ghi nhãn kèm giá trị trong Sample output để tự nhận diện.";
         return;
       }
       preview.textContent = [
         ...(format.prompts.length ? ["Lời nhắc nhập:", ...format.prompts.map((label) => `  ${label}[giá trị được nhập]`)] : []),
         ...(format.lineLabels?.length ? ["Nhãn kết quả:", ...format.lineLabels.map((label) => `  ${label}[kết quả]`)] : []),
       ].join("\n");
-      hint.textContent = "Sửa Sample output để cập nhật đồng thời hướng dẫn cho học viên và nhận diện nhãn khi chấm. Mẫu phải khớp dữ liệu nhập mẫu; không cần sửa JavaScript hay chạy SQL.";
+      hint.textContent = "Dùng [INPUT] và [OUTPUT], mỗi nhãn một dòng. Nội dung này đồng thời tạo hướng dẫn và làm căn cứ nhận diện lỗi trình bày. Để trống thì hệ thống tự suy ra từ Sample output.";
     };
     const testsHtml = () => `
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
@@ -752,6 +764,8 @@ async function openProblemEditor(id) {
       if (!Number.isInteger(Number(ed.partNo)) || Number(ed.partNo) < 1 || Number(ed.partNo) > 99)
         return toast("Số phần phải là số nguyên từ 1 đến 99.", "err");
       if (!ed.p.title) return toast("Hãy nhập tên bài.", "err");
+      if (ed.p.presentation_rules.trim() && !parsePresentationRules(ed.p.presentation_rules))
+        return toast("Yêu cầu trình bày cần có [INPUT] hoặc [OUTPUT], sau đó ghi mỗi nhãn trên một dòng.", "err");
       if (ed.p.is_published && !hasValidTestCount(ed.tests.length))
         return toast(
           `Cần từ ${MIN_TESTS} đến ${MAX_TESTS} test để xuất bản (hiện ${ed.tests.length}).`,
@@ -779,6 +793,7 @@ async function openProblemEditor(id) {
           output: ed.p.output,
           constraints: ed.p.constraints,
           knowledge_note: ed.p.knowledge_note,
+          presentation_rules: ed.p.presentation_rules,
           sample_input: ed.p.sample_input,
           sample_output: ed.p.sample_output,
           sort_order: ed.p.sort_order,
@@ -896,6 +911,7 @@ async function importFromJson(selectedFiles = null) {
           output: task.output ?? "",
           constraints: task.constraints ?? "",
           knowledge_note: task.knowledge_note ?? CONCEPT_NOTES.get(task.id) ?? "",
+          presentation_rules: task.presentation_rules ?? "",
           sample_input: task.sample_input ?? "",
           sample_output: task.sample_output ?? "",
           sort_order: existing?.sort_order ?? nextOrder,
@@ -1020,7 +1036,8 @@ async function openUserDrawer(u) {
           p_user_id: u.user_id,
           p_limit: 100,
         })).filter((row) => row.outcome !== "accepted");
-        target.innerHTML = `<h2 style="font-size:15px">Lịch sử code chưa đạt (${codes.length})</h2>${codes.length ? codes.map((row) => { const total = Number(row.tests_total || ctx.tasks?.find((task) => Number(task.id) === Number(row.problem_id))?.tests.length || 0); return `<details class="adm-tc"><summary><b>Bài ${pad3(row.problem_id)}</b> · ${row.tests_passed == null ? (row.test_no ? `Test ${row.test_no}` : "Đã chạy") : `${row.tests_passed}/${total} test đúng`} · ${fmt(row.created_at)}</summary><textarea class="adm-textarea" readonly style="min-height:240px">${esc(row.source_code)}</textarea></details>`; }).join("") : '<div class="adm-empty">Chưa có bản code sai hoặc chưa đạt để hiển thị.</div>'}`;
+        target.innerHTML = `<h2 style="font-size:15px">Lịch sử code chưa đạt (${codes.length})</h2>${codes.length ? codes.map((row) => { const total = Number(row.tests_total || ctx.tasks?.find((task) => Number(task.id) === Number(row.problem_id))?.tests.length || 0); return `<details class="adm-tc"><summary><b>Bài ${pad3(row.problem_id)}</b> · ${row.tests_passed == null ? (row.test_no ? `Test ${row.test_no}` : "Đã chạy") : `${row.tests_passed}/${total} test đúng`} · ${fmt(row.created_at)}</summary><pre class="adm-code-view"><code data-cpp-source>${esc(row.source_code)}</code></pre></details>`; }).join("") : '<div class="adm-empty">Chưa có bản code sai hoặc chưa đạt để hiển thị.</div>'}`;
+        target.querySelectorAll("[data-cpp-source]").forEach((code) => renderCppHighlight(code.textContent || "", code));
         return;
       } else if (x === "lock") {
         if (

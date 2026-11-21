@@ -57,9 +57,9 @@
               aria-expanded="false"
               aria-controls="themeOptions"
             >
-              <span class="theme-trigger-icon" aria-hidden="true">◐</span
+              <span class="theme-trigger-icon" aria-hidden="true"></span
               ><span class="theme-trigger-label">Sage</span
-              ><span class="menu-chevron" aria-hidden="true">▾</span>
+              ><span class="menu-chevron" aria-hidden="true"></span>
             </button>
             <div
               class="theme-options"
@@ -83,7 +83,7 @@
                   ><i></i><b></b><em></em></span
                 ><span class="theme-choice-copy"
                   ><b>A · Kem ấm</b><small>Nền dịu, nhấn xanh teal</small></span
-                ><span class="theme-choice-check" aria-hidden="true">✓</span>
+                ><span class="theme-choice-check" aria-hidden="true"></span>
               </button>
               <button
                 class="theme-choice"
@@ -97,7 +97,7 @@
                   ><i></i><b></b><em></em></span
                 ><span class="theme-choice-copy"
                   ><b>B · Sage</b><small>Nền xanh nhạt, nhấn rừng</small></span
-                ><span class="theme-choice-check" aria-hidden="true">✓</span>
+                ><span class="theme-choice-check" aria-hidden="true"></span>
               </button>
               <button
                 class="theme-choice"
@@ -112,7 +112,7 @@
                 ><span class="theme-choice-copy"
                   ><b>C · Xanh xám</b
                   ><small>Nền mát, nhấn xanh lam</small></span
-                ><span class="theme-choice-check" aria-hidden="true">✓</span>
+                ><span class="theme-choice-check" aria-hidden="true"></span>
               </button>
               <button
                 class="theme-choice"
@@ -127,7 +127,7 @@
                 ><span class="theme-choice-copy"
                   ><b>D · Tối dịu</b
                   ><small>Nền tối than, nhấn bạc hà</small></span
-                ><span class="theme-choice-check" aria-hidden="true">✓</span>
+                ><span class="theme-choice-check" aria-hidden="true"></span>
               </button>
             </div>
           </div>
@@ -235,11 +235,11 @@
           autocomplete="off"
         />
         <div class="filter" id="filters">
-          <button class="active" data-filter="all">Tất cả</button
-          ><button data-filter="1">Nhập xuất</button
+          <button class="active" data-filter="all">Táº¥t cáº£</button
+          ><button data-filter="1">Nháº­p xuáº¥t</button
           ><button data-filter="2">Rẽ nhánh</button
           ><button data-filter="3">Vòng lặp</button
-          ><button data-filter="4">For tổng hợp</button>
+          ><button data-filter="4">For tá»•ng há»£p</button>
         </div>
         <div id="tasklist" class="tasklist"></div>
       </aside>
@@ -296,7 +296,7 @@
             aria-controls="tests"
             aria-expanded="false"
           >
-            Xem test mẫu
+            Xem test máº«u
           </button>
           <span class="hint" id="testVisibilityNote"></span>
         </div>
@@ -320,11 +320,14 @@
             Có thể dán code hoặc nạp file .cpp; nội dung sẽ mở trong khung để
             xem lại trước khi chạy.
           </p>
+          <div class="code-editor">
+            <pre id="codeHighlight" aria-hidden="true"><code></code></pre>
           <textarea
             id="code"
             spellcheck="false"
             aria-label="Dán mã nguồn C++ vào đây"
           ></textarea>
+          </div>
           <div class="runrow">
             <div>
               <label for="stdin" class="sub">INPUT ĐANG CHỌN</label
@@ -340,7 +343,7 @@
                 type="button"
                 hidden
               >
-                Hủy chấm
+                Há»§y cháº¥m
               </button>
             </div>
           </div>
@@ -415,7 +418,7 @@
           </div>
           <label for="authEmail">Email</label>
           <input id="authEmail" type="email" autocomplete="email" />
-          <label for="authPassword" id="authPasswordLabel">Mật khẩu</label>
+          <label for="authPassword" id="authPasswordLabel">Máº­t kháº©u</label>
           <input
             id="authPassword"
             type="password"
@@ -482,7 +485,7 @@
           <div class="rename-confirm" id="renameConfirm" hidden>
             <p id="renameConfirmText"></p>
             <div>
-              <button class="btn" id="renameBack" type="button">Quay lại</button
+              <button class="btn" id="renameBack" type="button">Quay láº¡i</button
               ><button
                 class="btn primary"
                 id="renameConfirmButton"
@@ -497,7 +500,7 @@
             id="renameContinue"
             type="submit"
           >
-            Tiếp tục
+            Tiáº¿p tá»¥c
           </button>
         </form>
       </section>
@@ -524,7 +527,7 @@
         >
           &times;
         </button>
-        <h2 id="lbTitle">Bảng xếp hạng</h2>
+        <h2 id="lbTitle">Báº£ng xáº¿p háº¡ng</h2>
         <p class="auth-sub" id="lbNote"></p>
         <div class="lb-wrap">
           <table class="lb-table">
@@ -597,7 +600,7 @@
             aria-label="Phạm vi bài nộp"
           >
             <button class="active" type="button" data-submission-scope="all">
-              Tất cả
+              Táº¥t cáº£
             </button>
             <button type="button" data-submission-scope="mine">
               Bài nộp của tôi
@@ -609,7 +612,7 @@
             <option value="partial">Chưa đạt hết</option>
             <option value="wrong">Sai</option>
             <option value="compile_error">Lỗi biên dịch</option>
-            <option value="runtime_error">Lỗi chạy</option>
+            <option value="runtime_error">Lá»—i cháº¡y</option>
             <option value="cancelled">Đã hủy</option>
           </select>
         </div>
@@ -710,7 +713,7 @@
               </p>
               <p>
                 Ngày học mới bắt đầu lúc <strong>03:00</strong> theo múi giờ tài
-                khoản.
+                khoáº£n.
               </p>
               <p class="streak-sync-note" id="streakSyncStatus" role="status">
                 Đang tải dữ liệu chuỗi…

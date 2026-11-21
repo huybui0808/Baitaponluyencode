@@ -1,0 +1,136 @@
+@charset "UTF-8";
+
+/* VI: Navbar mobile gọn theo một hàng, vẫn giữ ảnh đại diện và menu đầy đủ.
+   EN: Keep the mobile navbar compact on one row while preserving the avatar and full menu. */
+@media (max-width: 600px) {
+  header {
+    position: sticky;
+    top: 0;
+    padding: 10px 14px;
+    z-index: 30;
+  }
+
+  header .top {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  header .top > div:first-child {
+    min-width: 0;
+    flex: 1 1 0;
+  }
+
+  header .brand {
+    overflow: hidden;
+    font-size: clamp(13px, 3.7vw, 15px);
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  header .sub {
+    display: none;
+  }
+
+  header .header-actions {
+    display: flex;
+    flex: 0 0 auto;
+    width: auto;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  header .theme-trigger {
+    width: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    justify-content: center;
+    padding: 4px;
+  }
+
+  header .theme-trigger > span:first-child {
+    width: 22px;
+    height: 22px;
+  }
+
+  header .theme-trigger-label,
+  header .theme-trigger .menu-chevron {
+    display: none;
+  }
+
+  header .theme-menu-head,
+  header .theme-choice-copy small {
+    display: none;
+  }
+
+  header .theme-options {
+    width: min(184px, calc(100vw - 24px));
+    padding: 6px;
+  }
+
+  header .theme-options .theme-choice {
+    min-height: 34px;
+    gap: 6px;
+    padding: 4px;
+  }
+
+  header .theme-card-preview {
+    flex-basis: 30px;
+    width: 30px;
+    height: 22px;
+  }
+
+  header .auth-box {
+    display: flex;
+    flex: 0 0 auto;
+    width: auto;
+    margin: 0;
+    justify-content: flex-end;
+    gap: 0;
+  }
+
+  header .auth-box > .user-menu {
+    width: auto;
+  }
+
+  header .user-chip,
+  header .menu-trigger {
+    width: auto;
+    max-width: min(44vw, 170px);
+    min-height: 34px;
+    justify-content: center;
+    gap: 5px;
+    padding: 4px 7px;
+  }
+
+  header .user-label {
+    min-width: 0;
+    max-width: min(28vw, 105px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+
+  header .user-label.auth-label {
+    max-width: min(30vw, 112px);
+  }
+
+  header .user-label.auth-label {
+    font-size: 0;
+  }
+
+  header .user-label.auth-label::after {
+    content: "\000110\000103ng nh\001EADp";
+    font-size: 12px;
+  }
+
+  header .user-dropdown {
+    right: 0;
+    left: auto;
+    width: min(320px, calc(100vw - 28px));
+    max-height: min(72dvh, 560px);
+  }
+}

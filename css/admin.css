@@ -750,3 +750,18 @@ a {
     font-size: 24px;
   }
 }
+
+.adm-code-view {
+  max-height: 380px;
+  overflow: auto;
+  margin: 8px 0 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--syntax-bg);
+  color: var(--syntax-fg);
+  white-space: pre;
+  tab-size: 4;
+  font: 15px/1.65 var(--mono);
+}
+.adm-code-view code { font: inherit; }

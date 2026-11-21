@@ -1,0 +1,260 @@
+@charset "UTF-8";
+
+/* ===== Đăng nhập, tài khoản, bảng xếp hạng (phần thêm mới) ===== */
+.auth-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.auth-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+.user-chip {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+}
+.user-chip:hover {
+  border-color: var(--accent);
+}
+body.no-scroll {
+  overflow: hidden;
+}
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(4px);
+}
+.auth-overlay[hidden] {
+  display: none;
+}
+.auth-card {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--panel-raised), var(--panel));
+  box-shadow: 0 20px 60px #0008;
+}
+.auth-card h2 {
+  margin: 0 0 10px;
+  font-size: 19px;
+}
+.auth-sub {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.auth-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+.auth-close:hover {
+  color: var(--text);
+  background: var(--hover-bg);
+}
+.auth-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.auth-tabs button {
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--control-bg);
+  color: var(--muted);
+  cursor: pointer;
+}
+.auth-tabs button.active {
+  border-color: var(--accent);
+  background: var(--active-bg);
+  color: var(--active-text);
+}
+#authForm label,
+.lb-select-row label {
+  display: block;
+  margin: 10px 0 4px;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+#authForm input,
+#lbProblem {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--field-bg);
+  color: var(--text);
+  outline: none;
+}
+#authForm input:focus,
+#lbProblem:focus {
+  border-color: var(--accent);
+}
+.lb-select-row {
+  margin-bottom: 10px;
+}
+.lb-select-row label {
+  margin-top: 0;
+}
+.auth-submit {
+  width: 100%;
+  margin-top: 16px;
+  padding: 11px;
+  font-size: 13px;
+}
+.resend-confirmation {
+  width: 100%;
+  margin-top: 10px;
+}
+.resend-confirmation[hidden] {
+  display: none;
+}
+.resend-confirmation:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.suspension-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  max-width: 1240px;
+  margin: 14px auto 0;
+  padding: 12px 16px;
+  border: 1px solid #bf7d43;
+  border-radius: 12px;
+  background: color-mix(in srgb, #bf7d43 13%, var(--panel));
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.suspension-notice[hidden] {
+  display: none;
+}
+.suspension-notice strong {
+  color: var(--gold);
+}
+.suspension-notice button {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 23px;
+  cursor: pointer;
+}
+.suspension-notice button:hover {
+  background: var(--panel2);
+  color: var(--text);
+}
+.auth-msg {
+  min-height: 18px;
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.auth-msg.err {
+  color: var(--bad);
+}
+.auth-msg.ok {
+  color: var(--good);
+}
+.auth-card.lb-card {
+  max-width: 900px;
+}
+.lb-wrap {
+  max-height: 50vh;
+  overflow: auto;
+  margin-bottom: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.lb-table th {
+  position: sticky;
+  top: 0;
+  padding: 9px 10px;
+  background: var(--panel2);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+}
+.lb-table td {
+  padding: 9px 10px;
+  border-top: 1px solid var(--line);
+  color: var(--text);
+}
+.lb-table .lb-rank {
+  width: 52px;
+  font-weight: 700;
+  color: var(--accent2);
+}
+.lb-table .lb-score {
+  font-weight: 700;
+  color: var(--gold);
+}
+.lb-table tr.rank-1 .lb-rank {
+  color: var(--gold);
+}
+.lb-table tr.rank-2 .lb-rank {
+  color: var(--muted);
+}
+.lb-table tr.rank-3 .lb-rank {
+  color: var(--gold);
+}
+.lb-table tr.me td {
+  background: var(--active-bg);
+}
+.lb-table small {
+  color: var(--accent);
+}
+.lb-empty {
+  padding: 20px 10px;
+  text-align: center;
+  color: var(--muted);
+}
+@media (max-width: 600px) {
+  .auth-box {
+    width: 100%;
+  }
+}

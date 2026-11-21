@@ -267,14 +267,8 @@ const VALUE_LINE = new RegExp(`^${NUMERIC_VALUE}(?:\\s+${NUMERIC_VALUE})*$`);
 // EN: Infer prompts, stdin grouping, and result labels from the sample screen.
 // Echoed prompt values must match the sample input or first test input.
 function sampleFormat(task) {
-  const lines = String(task.sample_output ?? "").replace(/\r\n?/g, "\n").replace(/\n+$/, "").split("\n");
+  const lines = String(task.sample_output ?? "").replace(/\r\n?/g, "\n").replace(/\n+$/, "").split("\n").filter((line) => line.trim());
   const pattern = /^([\p{L}][^\n]*?[:=]\s*)(.*)$/u;
-  const parts = lines.map((line) => {
-    const match = pattern.exec(line);
-    return match ? { label: match[1], value: match[2].trim() } : null;
-  });
-  if (!parts.length || parts.some((part) => !part)) return { prompts: [], inputGroups: [], lineLabels: null };
-
   const inputCandidates = [task.sample_input, task.tests?.[0]?.input].map((value) => {
     const normalized = String(value ?? "").replace(/\r\n?/g, "\n").trim();
     const values = normalized.split("\n").map((line) => {
@@ -282,19 +276,51 @@ function sampleFormat(task) {
       return prompt ? line.slice(prompt[0].length) : line;
     }).join(" ");
     return values.split(/\s+/).filter(Boolean);
+  }).filter((values) => values.length);
+  const parts = lines.map((line) => {
+    const match = pattern.exec(line);
+    if (match) return { label: match[1], value: match[2].trim() };
+
+    const withoutTrailingSpace = line.trimEnd();
+    const trailingSpace = line.slice(withoutTrailingSpace.length);
+    const foldedLine = withoutTrailingSpace.normalize("NFD").replace(/\p{M}/gu, "").replace(/đ/g, "d").toLowerCase();
+    if (/^(?:nhap|cho)\b[\p{L}_ \t]*$/u.test(foldedLine)) {
+      return { label: withoutTrailingSpace + trailingSpace, value: "", promptOnly: true };
+    }
+
+    // Accept a console prompt separated from its echoed input by whitespace
+    // only, e.g. "Nhap a 6". This is safe to infer because the suffix must
+    // match values from the sample input or first test case.
+    const folded = (value) => value.normalize("NFD").replace(/\p{M}/gu, "").replace(/đ/g, "d").toLowerCase();
+    if (!/^\s*(?:nhap|cho)\b/iu.test(folded(line))) return null;
+    for (let boundary = line.indexOf(" "); boundary >= 0; boundary = line.indexOf(" ", boundary + 1)) {
+      const label = line.slice(0, boundary + 1);
+      const suffix = line.slice(boundary + 1).trim();
+      const values = suffix.split(/\s+/).filter(Boolean);
+      if (!values.length || !/^\s*(?:nhap|cho)\b/iu.test(folded(label))) continue;
+      const matchesSampleValue = inputCandidates.some((candidate) =>
+        candidate.some((_, start) => values.every((value, index) => candidate[start + index] === value)));
+      if (matchesSampleValue) return { label, value: suffix };
+    }
+    return null;
   });
+  if (!parts.length || parts.some((part) => !part)) return { prompts: [], inputGroups: [], lineLabels: null };
+
   for (let prefixCount = parts.length - 1; prefixCount >= 0; prefixCount--) {
     const prefix = parts.slice(0, prefixCount);
     const result = parts.slice(prefixCount);
     const echoedValues = prefix.flatMap((part) => part.value.split(/\s+/).filter(Boolean));
-    if ((prefixCount === 0 || inputCandidates.some((inputValues) =>
-      echoedValues.length === inputValues.length && echoedValues.every((value, index) => value === inputValues[index]))) &&
+    const hasPromptOnlyLine = prefix.some((part) => part.promptOnly);
+    const matchesInput = inputCandidates.some((inputValues) => hasPromptOnlyLine
+      ? inputValues.length >= prefixCount && (!echoedValues.length || echoedValues.every((value, index) => value === inputValues[index]))
+      : echoedValues.length === inputValues.length && echoedValues.every((value, index) => value === inputValues[index]));
+    if ((prefixCount === 0 || matchesInput) &&
         result.length && result.every(Boolean)) {
       return {
         prompts: prefix.map((part) => part.label),
         // The last prompt receives remaining values when later tests have a
         // longer list (e.g. N followed by N array elements).
-        inputGroups: prefix.map((part) => part.value.split(/\s+/).filter(Boolean).length),
+        inputGroups: prefix.map((part) => Math.max(1, part.value.split(/\s+/).filter(Boolean).length)),
         lineLabels: result.map((part) => part.label),
       };
     }
@@ -302,11 +328,32 @@ function sampleFormat(task) {
   return { prompts: [], inputGroups: [], lineLabels: null };
 }
 
+function parsePresentationRules(value) {
+  const text = String(value ?? "").replace(/\r\n?/g, "\n");
+  if (!text.trim()) return null;
+  let section = "";
+  const prompts = [];
+  const lineLabels = [];
+  for (const line of text.split("\n")) {
+    const heading = /^\s*\[(INPUT|OUTPUT)\]\s*$/i.exec(line);
+    if (heading) {
+      section = heading[1].toUpperCase();
+      continue;
+    }
+    if (!line.trim()) continue;
+    if (!section) return null;
+    if (section === "INPUT") prompts.push(line);
+    else lineLabels.push(line);
+  }
+  return prompts.length || lineLabels.length ? { prompts, lineLabels } : null;
+}
+
 function taskPresentation(task, input = taskSample(task).input) {
   // VI: Ưu tiên nhãn chỉnh được từ mẫu; giữ map cũ cho bài chưa cập nhật mẫu.
   // EN: Prefer labels editable through the sample; preserve legacy fallback maps.
   const legacy = Number(task.id) >= 1 && Number(task.id) <= 150;
   const inferred = sampleFormat(task);
+  const configured = parsePresentationRules(task.presentation_rules);
   const fieldNames = [];
   const inputDescription = String(task.input || "");
   const fieldPattern = /(^|[^\p{L}\p{N}])([A-Za-z])(?=$|[^\p{L}\p{N}])/gu;
@@ -315,13 +362,14 @@ function taskPresentation(task, input = taskSample(task).input) {
     if (!fieldNames.includes(name)) fieldNames.push(name);
   }
   const inputCount = String(input || "").trim().split(/\s+/).filter(Boolean).length;
-  const hasSampleLabels = inferred.prompts.length > 0 || inferred.lineLabels !== null;
-  const prompts = hasSampleLabels ? inferred.prompts : INPUT_LABELS[task.id] || (legacy ? fieldNames.slice(0, inputCount).map((name) => `Nhap ${name} = `) : []);
+  const hasSampleLabels = configured !== null || inferred.prompts.length > 0 || inferred.lineLabels !== null;
+  const prompts = configured?.prompts ?? (hasSampleLabels ? inferred.prompts : INPUT_LABELS[task.id] || (legacy ? fieldNames.slice(0, inputCount).map((name) => `Nhap ${name} = `) : []));
 
   // Keep visible examples and strict output checking specific to each task.
   // The former title-based fallback made many unrelated tasks say the same thing.
-  const resultLabel = hasSampleLabels && inferred.lineLabels.length === 1 ? inferred.lineLabels[0] : SINGLE_RESULT_LABELS[task.id] || (legacy ? "Ket qua: " : "");
-  const lineLabels = hasSampleLabels ? inferred.lineLabels : RESULT_LABELS[task.id] || null;
+  const effectiveLabels = configured?.lineLabels ?? inferred.lineLabels;
+  const resultLabel = hasSampleLabels && effectiveLabels?.length === 1 ? effectiveLabels[0] : SINGLE_RESULT_LABELS[task.id] || (legacy ? "Ket qua: " : "");
+  const lineLabels = effectiveLabels ?? (hasSampleLabels ? inferred.lineLabels : RESULT_LABELS[task.id] || null);
   const formattedOutput = (rawOutput) => {
     const raw = String(rawOutput ?? "");
     const lines = raw.split("\n");
@@ -365,6 +413,11 @@ function taskPresentation(task, input = taskSample(task).input) {
       }
       if (cursor === tokens.length) return groups;
     }
+    if (prompts.length && tokens.length >= prompts.length) {
+      return prompts.map((_, index) => index === prompts.length - 1
+        ? tokens.slice(index).join(" ")
+        : tokens[index]);
+    }
     return null;
   };
   const expectedProgramOutput = (rawOutput) => promptText + formattedOutput(rawOutput);
@@ -406,7 +459,7 @@ function taskPresentation(task, input = taskSample(task).input) {
     expectedProgramOutput,
     renderConsoleOutput,
     guide: hasSampleLabels ? [
-      "Yêu cầu trình bày được lấy trực tiếp từ Sample output bên trên.",
+      configured ? "Nhãn được lấy từ mục Yêu cầu trình bày đã cấu hình." : "Yêu cầu trình bày được lấy trực tiếp từ Sample output bên trên.",
       ...(prompts.length ? ["Giữ nguyên các lời nhắc nhập theo đúng thứ tự:", ...prompts] : []),
       "In các nhãn kết quả theo đúng thứ tự:",
       ...(lineLabels || []),
@@ -425,4 +478,4 @@ function taskPresentation(task, input = taskSample(task).input) {
   };
 }
 
-export { CONCEPT_NOTES, OUTPUT_RULES, sampleFormat, taskPresentation, taskSample };
+export { CONCEPT_NOTES, OUTPUT_RULES, parsePresentationRules, sampleFormat, taskPresentation, taskSample };

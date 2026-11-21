@@ -31,6 +31,7 @@ export function buildExportParts(rows, originalParts) {
       output: row.output ?? "",
       constraints: row.constraints ?? "",
       knowledge_note: row.knowledge_note ?? originalById.get(row.id)?.knowledge_note ?? CONCEPT_NOTES.get(row.id) ?? "",
+      presentation_rules: row.presentation_rules ?? originalById.get(row.id)?.presentation_rules ?? "",
       sample_input: row.sample_input ?? "",
       sample_output: row.sample_output ?? "",
       tests: tests.map((test) => ({

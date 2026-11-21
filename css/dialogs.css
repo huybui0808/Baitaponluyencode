@@ -1,0 +1,280 @@
+@charset "UTF-8";
+
+/* VI: Điều hướng gọn và hộp thoại đổi tên theo tông dịu hơn. EN: Compact navigation and a softer in-app rename dialog. */
+.auth-box {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.user-menu {
+  position: relative;
+}
+.menu-trigger {
+  max-width: min(260px, 48vw);
+  padding: 8px 12px;
+  border-radius: 11px;
+}
+.auth-label {
+  max-width: 170px;
+}
+.menu-trigger-icon {
+  color: var(--accent2);
+  font-size: 15px;
+}
+.user-dropdown {
+  min-width: 260px;
+  max-height: min(76vh, 620px);
+  overflow: auto;
+  background: var(--panel);
+  border-color: var(--line);
+}
+.menu-section-label {
+  padding: 8px 12px 4px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.user-dropdown button:hover {
+  background: var(--hover-bg);
+}
+.user-dropdown .menu-login {
+  color: var(--accent2);
+  font-weight: 700;
+}
+.menu-separator {
+  height: 1px;
+  margin: 6px 8px;
+  background: var(--line);
+}
+.rename-overlay {
+  z-index: 90;
+}
+.rename-card {
+  width: min(460px, 100%);
+}
+.rename-card label {
+  display: block;
+  margin: 12px 0 5px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.rename-card input {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  outline: none;
+  background: var(--field-bg);
+  color: var(--text);
+  font: inherit;
+}
+.rename-card input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgb(167 154 200 / 12%);
+}
+.rename-continue {
+  width: 100%;
+  margin-top: 10px;
+}
+.rename-confirm {
+  margin-top: 12px;
+  padding: 13px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel2);
+}
+.rename-confirm p {
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: 13px;
+}
+.rename-confirm > div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.rename-confirm button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+.app-toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 120;
+  width: min(430px, calc(100vw - 32px));
+  padding: 14px 17px;
+  border: 1px solid var(--good);
+  border-radius: 13px;
+  background: var(--success-bg);
+  color: var(--success-text);
+  box-shadow: 0 14px 38px #0002;
+  font-size: 13px;
+  animation: toast-in 0.18s ease-out;
+}
+.app-toast[data-kind="error"] {
+  border-color: #795356;
+  background: var(--error-bg);
+  color: var(--error-text);
+}
+.app-toast[hidden] {
+  display: none;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.auth-loading {
+  padding: 24px 8px;
+  color: var(--muted);
+  text-align: center;
+}
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-right: 34px;
+  margin-bottom: 16px;
+}
+.profile-avatar {
+  flex: 0 0 52px;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--on-accent);
+  font-size: 20px;
+  font-weight: 800;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-avatar .avatar-photo {
+  position: absolute;
+  inset: 0;
+}
+.avatar-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+.avatar-fallback[hidden] {
+  display: none;
+}
+.avatar-upload-control {
+  position: relative;
+  display: inline-flex;
+  min-height: 27px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-top: 6px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-raised);
+  color: var(--muted);
+  font-size: 10px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.avatar-upload-control:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+.avatar-upload-control input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.avatar-upload-message {
+  min-height: 16px;
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+.avatar-upload-message:empty {
+  display: none;
+}
+.user-avatar {
+  position: relative;
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--active-bg);
+}
+.user-avatar .avatar-photo {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.user-avatar .avatar-fallback {
+  z-index: 1;
+  font-size: 11px;
+}
+.directory-member .profile-avatar .avatar-photo {
+  position: absolute;
+  inset: 0;
+}
+.profile-avatar-wrap {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  flex-direction: column;
+  gap: 2px;
+}
+.profile-avatar-wrap .profile-avatar {
+  margin: 0;
+}
+.profile-meta,
+.profile-subtle {
+  color: var(--muted);
+  font-size: 13.5px;
+}
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0 20px;
+}
+.profile-stat {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel);
+}
+.profile-stat b,
+.profile-stat span {
+  display: block;
+}
+.profile-stat b {
+  font-size: 18px;
+}
+.profile-stat span {
+  color: var(--muted);
+  font-size: 13px;
+}

@@ -3,6 +3,8 @@ import { CONCEPT_NOTES, OUTPUT_RULES, taskPresentation, taskSample } from './pro
 import { initStreak, openStreak, recordCompletedBatch, setStreakSession, streakUserId } from './streak.js';
 import { shiftStudyDate, streakTier, summarizeStreak } from './streak-core.js';
 import { bundledPartUrls } from './task-parts.js';
+import { renderCppHighlight } from './code-highlight.js';
+import { buildTaskPdfHtml } from './task-pdf.js';
 // Logic giao dien, chay code, cham diem va luu tien do.
 // VI: Lấy bài đã xuất bản từ Supabase; dùng bản đã đồng bộ hoặc JSON khi offline.
 // EN: Load published tasks from Supabase, then cached tasks or bundled JSON offline.
@@ -112,6 +114,7 @@ async function loadTasksFromSupabase() {
         output: r.output,
         constraints: r.constraints,
         knowledge_note: r.knowledge_note ?? null,
+        presentation_rules: r.presentation_rules ?? "",
         sample_input: r.sample_input,
         sample_output: r.sample_output,
         test_set_version: r.test_set_version ?? null,
@@ -227,6 +230,15 @@ function currentBestScore(taskId) {
 }
 const starter =
   "#include <iostream>\nusing namespace std;\n\nint main() {\n    // Viet code cua ban o day\n    return 0;\n}\n";
+
+function renderCodeHighlight() {
+  renderCppHighlight($("code").value, $("codeHighlight")?.querySelector("code"));
+}
+function renderCppSourceViews(root = document) {
+  root.querySelectorAll("[data-cpp-source]").forEach((code) => {
+    renderCppHighlight(code.textContent || "", code);
+  });
+}
 let current = TASKS[0],
   filter = "all",
   visible = TASKS;
@@ -901,7 +913,7 @@ async function loadSubmissions(reset = true) {
     const outcomeNames = {accepted:"Đúng", partial:"Chưa đạt hết", wrong:"Sai", compile_error:"Lỗi biên dịch", runtime_error:"Lỗi chạy", cancelled:"Đã hủy"};
     const codeAccessMessage = '<p class="profile-subtle">Bạn có thể xem mã nguồn của người khác sau khi đạt 10/10 ở bài này.</p>';
     const codeDetails = row.source_code != null
-      ? `<details class="profile-history-item"><summary>Xem mã nguồn đã lưu</summary><pre>${escapeHTML(row.source_code)}</pre></details>`
+      ? `<details class="profile-history-item"><summary>Xem mã nguồn đã lưu</summary><pre><code data-cpp-source>${escapeHTML(row.source_code)}</code></pre></details>`
       : codeAccessMessage;
     const deleteAction = canDeleteSubmissions ? `<div class="submission-delete-actions"><button class="submission-delete" type="button" data-start-delete aria-label="Xóa bài nộp">Xóa</button><div class="submission-delete-confirm" hidden><span>Xóa mục bài nộp này?</span><button class="submission-delete-confirm-btn" type="button" data-confirm-delete="${Number(row.submission_id)}">Xác nhận xóa</button><button class="submission-delete-cancel" type="button" data-cancel-delete>Hủy</button></div></div>` : "";
     const submittedTask = TASKS.find((task) => Number(task.id) === Number(row.problem_id));
@@ -910,6 +922,7 @@ async function loadSubmissions(reset = true) {
   }).join("");
   if (reset) list.innerHTML = markup || '<p class="profile-subtle">Chưa có bài nộp trong phạm vi này.</p>';
   else if (markup) list.insertAdjacentHTML("beforeend", markup);
+  renderCppSourceViews(list);
   submissionOffset += (data || []).length;
   $("submissionMore").hidden = !data || data.length < SUBMISSION_PAGE_SIZE;
 }
@@ -1707,7 +1720,7 @@ function sampleTranscript(task) {
   const sample = taskSample(task);
   // VI: Bài mới đã lưu toàn bộ màn hình mẫu, kể cả input được echo.
   // EN: New tasks store the complete sample screen, including echoed input.
-  if (Number(task.id) > 150) return sample.output;
+  if (Number(task.id) > 150 && !String(task.presentation_rules ?? "").trim()) return sample.output;
   const presentation = taskPresentation(task, sample.input);
   return presentation.expected(sample.output, sample.input);
 }
@@ -1789,6 +1802,7 @@ function selectTask(id) {
   renderRunViewForCurrentTask();
   const saved = loadSavedCode(current);
   $("code").value = saved === null ? starter : saved;
+  renderCodeHighlight();
 }
 function setStatus(msg, cls) {
   $("runstatus").className = "status " + (cls || "");
@@ -1869,70 +1883,6 @@ function wait(ms, signal) {
   });
 }
 
-function buildTaskPdfHtml(task) {
-  const practiceTests = visibleTests(task);
-  const testsHtml = practiceTests
-    .map(
-      (test) => `
-    <article class="test-case">
-      <h3>TEST ${String(test.no).padStart(2, "0")}</h3>
-      <div class="io-grid">
-        <section><h4>INPUT</h4><pre>${escapeHTML(test.input)}</pre></section>
-        <section><h4>OUTPUT MONG ĐỢI</h4><pre>${escapeHTML(test.output)}</pre></section>
-      </div>
-    </article>`,
-    )
-    .join("");
-
-  return `<!doctype html>
-<html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bài ${String(task.id).padStart(3, "0")} - ${escapeHTML(task.title)}</title>
-<style>
-  @page { size: A4; margin: 15mm 14mm; }
-  * { box-sizing: border-box; }
-  body { margin: 0; color: #172033; font: 11pt/1.55 Arial, Helvetica, sans-serif; }
-  .toolbar { position: sticky; top: 0; padding: 12px; background: #eef2f8; text-align: center; border-bottom: 1px solid #ccd4e1; }
-  .toolbar button { border: 0; border-radius: 7px; padding: 9px 18px; background: #344a80; color: #fff; font-weight: 700; cursor: pointer; }
-  .document { max-width: 190mm; margin: 0 auto; padding: 8mm 0; }
-  .brand { color: #415a91; font-size: 10pt; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
-  h1 { margin: 5px 0 4px; font-size: 21pt; line-height: 1.25; }
-  .meta { color: #596579; font-size: 9.5pt; margin-bottom: 14px; }
-  h2 { margin: 16px 0 7px; padding-bottom: 4px; border-bottom: 1px solid #d7deea; font-size: 13pt; }
-  h3 { margin: 0 0 7px; font-size: 10.5pt; color: #334a7d; }
-  h4 { margin: 0 0 4px; color: #53627a; font-size: 8.5pt; text-transform: uppercase; }
-  p { margin: 5px 0 9px; }
-  .info-grid, .io-grid, .sample-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
-  .info, .sample, .test-case { border: 1px solid #d6dce7; border-radius: 6px; padding: 9px; }
-  .constraints { border-left: 3px solid #b28b36; padding: 7px 10px; margin: 10px 0; background: #faf7ef; }
-  pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 9pt/1.45 Consolas, monospace; }
-  .test-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .test-case { break-inside: avoid; page-break-inside: avoid; }
-  .footer { margin-top: 16px; padding-top: 7px; border-top: 1px solid #d7deea; color: #697487; font-size: 8pt; }
-  @media print { .toolbar { display: none; } .document { padding: 0; max-width: none; } }
-  @media screen { body { background: #f4f6fa; } .document { background: #fff; min-height: 100vh; padding: 14mm; box-shadow: 0 2px 20px #24314a18; } }
-</style></head><body>
-<div class="toolbar"><button onclick="window.print()">In / Lưu thành PDF</button> <span>Chọn “Save as PDF / Lưu dưới dạng PDF” trong hộp thoại in.</span></div>
-<main class="document">
-  <div class="brand">TLU · C++ MIDTERM LAB</div>
-  <h1>Bài ${String(task.id).padStart(3, "0")}. ${escapeHTML(task.title)}</h1>
-  <div class="meta">${escapeHTML(task.section)} · Mức độ: ${escapeHTML(task.level)} · C++20</div>
-  <h2>Đề bài</h2><p>${escapeHTML(task.statement)}</p>
-  <div class="info-grid">
-    <section class="info"><h3>INPUT</h3><p>${escapeHTML(task.input)}</p></section>
-    <section class="info"><h3>OUTPUT</h3><p>${escapeHTML(task.output)}</p></section>
-  </div>
-  <div class="constraints"><strong>Ràng buộc:</strong> ${escapeHTML(task.constraints)}</div>
-  <h2>Ví dụ</h2>
-  <div class="sample-grid">
-    <section class="sample"><h4>Sample input</h4><pre>${escapeHTML(task.sample_input ?? "")}</pre></section>
-    <section class="sample"><h4>Sample output</h4><pre>${escapeHTML(task.sample_output ?? "")}</pre></section>
-  </div>
-  <h2>${practiceTests.length} test mẫu</h2>
-  <div class="test-list">${testsHtml}</div>
-  <div class="footer">Tài liệu luyện tập được tạo tự động từ dữ liệu của website TLU C++. Các test trong tài liệu này là test luyện tập công khai.</div>
-</main></body></html>`;
-}
-
 function exportCurrentTaskPdf() {
   const printWindow = window.open("", "_blank");
   if (!printWindow) {
@@ -1943,7 +1893,7 @@ function exportCurrentTaskPdf() {
     return;
   }
   printWindow.document.open();
-  printWindow.document.write(buildTaskPdfHtml(current));
+  printWindow.document.write(buildTaskPdfHtml(current, visibleTests(current), escapeHTML));
   printWindow.document.close();
   setStatus(
     "Đã mở bản in của bài hiện tại. Chọn “Lưu dưới dạng PDF” để tải file.",
@@ -2013,18 +1963,26 @@ $("cppFileInput").addEventListener("change", async (event) => {
   }
 });
 $("code").addEventListener("input", () => {
+  renderCodeHighlight();
   try {
     localStorage.setItem("cppcode_" + storageId(current), $("code").value);
   } catch (_) {}
 });
+$("code").addEventListener("scroll", () => {
+  const overlay = $("codeHighlight");
+  overlay.scrollTop = $("code").scrollTop;
+  overlay.scrollLeft = $("code").scrollLeft;
+});
 $("resetcode").onclick = () => {
   $("code").value = starter;
+  renderCodeHighlight();
   try {
     localStorage.setItem("cppcode_" + storageId(current), starter);
   } catch (_) {}
 };
 $("clearcode").onclick = () => {
   $("code").value = "";
+  renderCodeHighlight();
   try {
     localStorage.setItem("cppcode_" + storageId(current), "");
   } catch (_) {}
