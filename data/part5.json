@@ -6895,7 +6895,7 @@
     "kind": "array_minSwaps"
   },
   {
-    "id": 232,
+    "id": 221,
     "section": "Phần 5 - Mảng và vector",
     "title": "Tổng các phần tử ma trận",
     "level": "Cơ bản",
@@ -6993,7 +6993,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 233,
+    "id": 222,
     "section": "Phần 5 - Mảng và vector",
     "title": "Giá trị lớn nhất trong ma trận",
     "level": "Cơ bản",
@@ -7086,7 +7086,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 234,
+    "id": 223,
     "section": "Phần 5 - Mảng và vector",
     "title": "Giá trị nhỏ nhất trong ma trận",
     "level": "Cơ bản",
@@ -7179,7 +7179,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 235,
+    "id": 224,
     "section": "Phần 5 - Mảng và vector",
     "title": "Đếm phần tử dương trong ma trận",
     "level": "Cơ bản",
@@ -7272,7 +7272,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 236,
+    "id": 225,
     "section": "Phần 5 - Mảng và vector",
     "title": "Đếm số 0 trong ma trận",
     "level": "Cơ bản",
@@ -7365,7 +7365,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 237,
+    "id": 226,
     "section": "Phần 5 - Mảng và vector",
     "title": "Tổng từng hàng",
     "level": "Trung bình",
@@ -7458,7 +7458,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 238,
+    "id": 227,
     "section": "Phần 5 - Mảng và vector",
     "title": "Tổng từng cột",
     "level": "Trung bình",
@@ -7551,7 +7551,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 239,
+    "id": 228,
     "section": "Phần 5 - Mảng và vector",
     "title": "Lớn nhất trên từng hàng",
     "level": "Trung bình",
@@ -7644,7 +7644,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 240,
+    "id": 229,
     "section": "Phần 5 - Mảng và vector",
     "title": "Nhỏ nhất trên từng cột",
     "level": "Trung bình",
@@ -7737,7 +7737,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 241,
+    "id": 230,
     "section": "Phần 5 - Mảng và vector",
     "title": "Vị trí đầu tiên của phần tử lớn nhất",
     "level": "Trung bình",
@@ -7830,7 +7830,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 242,
+    "id": 231,
     "section": "Phần 5 - Mảng và vector",
     "title": "Tổng đường chéo chính",
     "level": "Trung bình",
@@ -7923,7 +7923,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 243,
+    "id": 232,
     "section": "Phần 5 - Mảng và vector",
     "title": "Tổng đường chéo phụ",
     "level": "Trung bình",
@@ -8016,7 +8016,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 244,
+    "id": 233,
     "section": "Phần 5 - Mảng và vector",
     "title": "Chênh lệch hai đường chéo",
     "level": "Trung bình",
@@ -8109,7 +8109,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 245,
+    "id": 234,
     "section": "Phần 5 - Mảng và vector",
     "title": "Tổng các ô trên biên",
     "level": "Trung bình",
@@ -8202,7 +8202,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 246,
+    "id": 235,
     "section": "Phần 5 - Mảng và vector",
     "title": "Chuyển vị ma trận",
     "level": "Trung bình",
@@ -8295,7 +8295,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 247,
+    "id": 236,
     "section": "Phần 5 - Mảng và vector",
     "title": "Đảo chiều từng hàng",
     "level": "Trung bình",
@@ -8388,7 +8388,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 248,
+    "id": 237,
     "section": "Phần 5 - Mảng và vector",
     "title": "Xoay ma trận vuông 90 độ",
     "level": "Khó",
@@ -8481,7 +8481,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 249,
+    "id": 238,
     "section": "Phần 5 - Mảng và vector",
     "title": "Sắp xếp từng hàng",
     "level": "Khó",
@@ -8574,7 +8574,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 250,
+    "id": 239,
     "section": "Phần 5 - Mảng và vector",
     "title": "Sắp xếp từng cột",
     "level": "Khó",
@@ -8667,7 +8667,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 251,
+    "id": 240,
     "section": "Phần 5 - Mảng và vector",
     "title": "Hàng có tổng lớn nhất",
     "level": "Khó",
@@ -8760,7 +8760,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 252,
+    "id": 241,
     "section": "Phần 5 - Mảng và vector",
     "title": "Cột có tổng nhỏ nhất",
     "level": "Khó",
@@ -8853,7 +8853,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 253,
+    "id": 242,
     "section": "Phần 5 - Mảng và vector",
     "title": "Kiểm tra ma trận đối xứng",
     "level": "Khó",
@@ -8946,7 +8946,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 254,
+    "id": 243,
     "section": "Phần 5 - Mảng và vector",
     "title": "Kiểm tra ma trận đơn vị",
     "level": "Khó",
@@ -9039,7 +9039,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 255,
+    "id": 244,
     "section": "Phần 5 - Mảng và vector",
     "title": "Kiểm tra ma trận tam giác trên",
     "level": "Khó",
@@ -9132,7 +9132,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 256,
+    "id": 245,
     "section": "Phần 5 - Mảng và vector",
     "title": "Đọc ma trận theo đường rắn",
     "level": "Khó",
@@ -9225,7 +9225,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 257,
+    "id": 246,
     "section": "Phần 5 - Mảng và vector",
     "title": "Đọc ma trận theo đường xoắn ốc",
     "level": "Nâng cao",
@@ -9318,7 +9318,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 258,
+    "id": 247,
     "section": "Phần 5 - Mảng và vector",
     "title": "Bảng tổng tiền tố hai chiều",
     "level": "Nâng cao",
@@ -9416,7 +9416,7 @@
     "knowledge_note": "Tổng tiền tố hai chiều tại ô (i, j) là tổng các ô từ góc trái trên đến ô đó."
   },
   {
-    "id": 259,
+    "id": 248,
     "section": "Phần 5 - Mảng và vector",
     "title": "Tổng hình chữ nhật lớn nhất",
     "level": "Nâng cao",
@@ -9514,7 +9514,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 260,
+    "id": 249,
     "section": "Phần 5 - Mảng và vector",
     "title": "Đường đi có tổng lớn nhất",
     "level": "Nâng cao",
@@ -9607,7 +9607,7 @@
     "knowledge_note": ""
   },
   {
-    "id": 261,
+    "id": 250,
     "section": "Phần 5 - Mảng và vector",
     "title": "Hình vuông số 1 lớn nhất",
     "level": "Nâng cao",
