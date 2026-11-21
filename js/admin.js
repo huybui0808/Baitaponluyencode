@@ -381,7 +381,7 @@ function renderProblemList() {
   const list = filteredProblems();
   const box = $("#pList");
   if (!state.problems.length) {
-    box.innerHTML = `<div class="adm-card adm-empty">Chưa có bài nào trong cơ sở dữ liệu.<br><br>Bấm <b>“Nhập từ file JSON”</b> để chuyển 150 bài hiện có sang Supabase, hoặc <b>“Thêm bài”</b> để tạo bài mới.</div>`;
+    box.innerHTML = `<div class="adm-card adm-empty">Chưa có bài nào trong cơ sở dữ liệu.<br><br>Bấm <b>“Nhập từ file JSON”</b> để chuyển các bài trong bộ dữ liệu hiện có sang Supabase, hoặc <b>“Thêm bài”</b> để tạo bài mới.</div>`;
     return;
   }
   box.innerHTML = `<div class="adm-tablewrap"><table class="adm-table"><thead><tr><th>#</th><th>Bài</th><th>Phần</th><th>Mức độ</th><th>Test</th><th>Xuất bản</th><th></th></tr></thead><tbody>

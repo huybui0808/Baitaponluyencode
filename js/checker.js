@@ -77,7 +77,8 @@ function layoutMatches(actual, expected, pattern, task) {
 function semanticMatch(actual, expected, task, presentation) {
   if (!actual.trim() || !expected.trim()) return false;
   const pattern = labelPattern(presentation);
-  if (strictLayout.has(Number(task.id)) || /^[\s*#.]+$/.test(expected)) {
+  if (strictLayout.has(Number(task.id)) || String(task.kind || "").startsWith("matrix_shape_") ||
+      /in hàng đầu của ma trận/iu.test(String(task.output || "")) || /^[\s*#.]+$/.test(expected)) {
     return layoutMatches(actual, expected, pattern, task);
   }
   // VI: Nhãn ở từng dòng output là phần trình bày; so giá trị sau nhãn theo đúng thứ tự.

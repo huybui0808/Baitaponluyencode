@@ -174,9 +174,9 @@ async function loadTaskData() {
 let TASKS;
 try {
   TASKS = await loadTaskData();
-  document.title = `${TASKS.length} bài luyện thi C++ | Nhập môn lập trình`;
+  document.title = `Ôn luyện C++ | Bài tập từ cơ bản đến nâng cao`;
   document.getElementById("siteTaskSummary").textContent =
-    `${TASKS.length} bài luyện tập nhập môn lập trình · Từ cơ bản đến nâng cao`;
+    `${TASKS.length} bài luyện tập C++ · Từ cơ bản đến nâng cao`;
   if (catalogSyncWarning) {
     const syncStatus = document.getElementById("taskSyncStatus");
     syncStatus.textContent = catalogSyncWarning;
@@ -1257,6 +1257,29 @@ function showAppToast(message, kind = "success") {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { toast.hidden = true; }, 5200);
 }
+// VI: Sao chép được cả khi Clipboard API bị chặn; EN: Fall back when Clipboard API is unavailable.
+async function copyTextToClipboard(text) {
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
+    await navigator.clipboard.writeText(text);
+    return;
+  } catch {
+    const field = document.createElement("textarea");
+    field.value = text;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.opacity = "0";
+    document.body.append(field);
+    let copied = false;
+    try {
+      field.select();
+      copied = document.execCommand("copy");
+    } finally {
+      field.remove();
+    }
+    if (!copied) throw new Error("Clipboard copy failed");
+  }
+}
 function renameUser() {
   $("renameInput").value = userDisplayName();
   $("renameMessage").textContent = "";
@@ -1771,31 +1794,39 @@ function selectTask(id) {
   $("tests").innerHTML = practiceTests
     .map(
       (x, i) =>
-        `<div class="case ${i === 0 ? "selected" : ""}" data-index="${i}"><div class="casehead"><b>TEST ${String(x.no).padStart(2, "0")}</b><button data-copy="${i}" type="button">Chép input</button></div><div class="casegrid"><div><label>Input</label><pre>${escapeHTML(x.input)}</pre></div><div><label>Expected output</label><pre>${escapeHTML(taskPresentation(current, x.input).expected(x.output))}</pre></div></div></div>`,
+        `<div class="case ${i === 0 ? "selected" : ""}" data-index="${i}" role="button" tabindex="0" aria-label="B\u1ea5m \u0111\u1ec3 ch\u00e9p input TEST ${String(x.no).padStart(2, "0")} v\u00e0 n\u1ea1p v\u00e0o \u00f4 ch\u1ea1y th\u1eed"><div class="casehead"><b>TEST ${String(x.no).padStart(2, "0")}</b><span class="case-copy-hint">B\u1ea5m \u0111\u1ec3 ch\u00e9p input</span></div><div class="casegrid"><div><label>Input</label><pre>${escapeHTML(x.input)}</pre></div><div><label>Expected output</label><pre>${escapeHTML(taskPresentation(current, x.input).expected(x.output))}</pre></div></div></div>`,
     )
     .join("");
   $("toggleTests").hidden = practiceTests.length <= 4;
   setTestListExpanded(false);
-  $("tests").querySelectorAll(".case").forEach((c) =>
-    c.addEventListener("click", (e) => {
-      if (e.target.dataset.copy !== undefined) {
-        e.stopPropagation();
-        navigator.clipboard?.writeText(
-          practiceTests[+e.target.dataset.copy].input,
-        );
-        return;
-      }
+  $("tests").querySelectorAll(".case").forEach((c) => {
+    // VI: Bấm thẻ vừa nạp input vừa sao chép; EN: Selecting a card loads and copies its input.
+    const selectAndCopy = async () => {
+      const index = +c.dataset.index;
+      const test = practiceTests[index];
       $("tests")
         .querySelectorAll(".case")
         .forEach((x) => x.classList.remove("selected"));
       c.classList.add("selected");
-      $("stdin").value = practiceTests[+c.dataset.index].input;
-      setStatus(
-        "Đã nạp TEST " + String(+c.dataset.index + 1).padStart(2, "0") + ".",
-        "",
-      );
-    }),
-  );
+      $("stdin").value = test.input;
+      const testLabel = "TEST " + String(index + 1).padStart(2, "0");
+      try {
+        await copyTextToClipboard(test.input);
+        setStatus("Đã sao chép input " + testLabel + " và nạp vào ô chạy thử.", "ok");
+      } catch {
+        setStatus("Đã nạp input " + testLabel + "; trình duyệt không cho phép sao chép tự động.", "err");
+      }
+    };
+    c.addEventListener("click", (e) => {
+      if (e.target.closest("button, a, input, textarea, select")) return;
+      void selectAndCopy();
+    });
+    c.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      e.preventDefault();
+      void selectAndCopy();
+    });
+  });
   $("stdin").value = practiceTests[0].input;
   updateProgress();
   updateScore();
