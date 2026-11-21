@@ -4,6 +4,7 @@
 // VI: Công cụ quản trị được bổ sung theo yêu cầu của chủ dự án; AI có hỗ trợ viết và chỉnh sửa mã. EN: Admin tools follow the project owner's requirements; AI assisted with writing and editing code.
 import { buildExportParts, buildJsonZip } from "./admin-export.js";
 import { bundledPartUrls } from "./task-parts.js";
+import { CONCEPT_NOTES, sampleFormat } from "./problem-presentation.js";
 
 const CSS_URL = new URL("../css/admin.css", import.meta.url).href;
 const MIN_TESTS = 8;
@@ -461,7 +462,7 @@ async function exportToJson() {
   if (!published.length) throw new Error("Chưa có bài đã xuất bản để xuất JSON.");
   const rows = await q(
     sb.from("problems")
-      .select("id,section,title,level,statement,input,output,constraints,sample_input,sample_output,test_cases(no,input,output)")
+      .select("id,section,title,level,statement,input,output,constraints,knowledge_note,sample_input,sample_output,test_cases(no,input,output)")
       .eq("is_published", true)
       .order("sort_order")
       .order("id")
@@ -528,6 +529,7 @@ async function openProblemEditor(id) {
       input: "",
       output: "",
       constraints: "",
+      knowledge_note: "",
       sample_input: "",
       sample_output: "",
       sort_order:
@@ -547,6 +549,8 @@ async function openProblemEditor(id) {
         )
       ).map((t) => ({ input: t.input, output: t.output }));
     }
+    // Preserve the old built-in reminder until an admin saves an editable value.
+    p.knowledge_note ??= CONCEPT_NOTES.get(Number(p.id)) || "";
     const ed = {
       p,
       tests,
@@ -582,6 +586,7 @@ async function openProblemEditor(id) {
       ed.p.input = g("fInput");
       ed.p.output = g("fOutput");
       ed.p.constraints = g("fCons");
+      ed.p.knowledge_note = g("fKnowledge");
       ed.p.sample_input = g("fSin");
       ed.p.sample_output = g("fSout");
     };
@@ -595,6 +600,15 @@ async function openProblemEditor(id) {
         <div class="adm-foot"><button class="adm-btn" data-x="close">Hủy</button><button class="adm-btn primary" data-x="save">Lưu thay đổi</button></div>`;
       const eb = panel.querySelector("#edBody");
       eb.innerHTML = ed.tab === "info" ? infoHtml() : testsHtml();
+      if (ed.tab === "info") {
+        refreshPresentationPreview();
+        eb.addEventListener("input", (event) => {
+          if (event.target.matches("#fSin, #fSout")) {
+            collect();
+            refreshPresentationPreview();
+          }
+        });
+      }
       panel.querySelector("#fResetLearning")?.addEventListener("change", (event) => {
         ed.resetLearning = event.target.checked;
       });
@@ -607,15 +621,38 @@ async function openProblemEditor(id) {
       <div class="adm-row2"><label class="adm-field"><span>Phần</span><input class="adm-input" id="fPartNo" type="number" min="1" max="99" step="1" value="${esc(ed.partNo)}"></label>
         <label class="adm-field"><span>Tên phần (nhóm bài)</span><input class="adm-input" id="fPartName" value="${esc(ed.partName)}" placeholder="VD: Vòng lặp cơ bản"></label></div>
       <label class="adm-field"><span>Đề bài</span><textarea class="adm-textarea" id="fStatement" style="min-height:120px">${esc(p.statement)}</textarea></label>
+      <label class="adm-field"><span>Kiến thức cần nhớ (không bắt buộc)</span><textarea class="adm-textarea" id="fKnowledge" placeholder="Ví dụ: Số nguyên tố là số nguyên lớn hơn 1, chỉ có hai ước dương...">${esc(p.knowledge_note ?? "")}</textarea></label>
       <div class="adm-row2"><label class="adm-field"><span>Mô tả INPUT</span><textarea class="adm-textarea" id="fInput">${esc(p.input)}</textarea></label>
         <label class="adm-field"><span>Mô tả OUTPUT</span><textarea class="adm-textarea" id="fOutput">${esc(p.output)}</textarea></label></div>
       <label class="adm-field"><span>Ràng buộc</span><input class="adm-input" id="fCons" value="${esc(p.constraints)}"></label>
       <div class="adm-row2"><label class="adm-field"><span>Sample input</span><textarea class="adm-textarea" id="fSin">${esc(p.sample_input)}</textarea></label>
         <label class="adm-field"><span>Sample output</span><textarea class="adm-textarea" id="fSout">${esc(p.sample_output)}</textarea></label></div>
-      <p class="mut" style="margin:0 0 12px;color:var(--muted);font-size:13px">Để đổi nhãn một lần cho các test, ghi màn hình mẫu đầy đủ vào Sample output: mỗi lời nhắc nhập kèm giá trị từ Sample input, sau đó là nhãn và kết quả mẫu. Ví dụ: Nhap a = 3, Nhap b = 4, Tong = 7.</p>
+      <div class="adm-card" style="margin:0 0 12px;padding:12px 14px"><b>Yêu cầu trình bày tự sinh</b><pre id="presentationPreview" style="white-space:pre-wrap;margin:8px 0 0;font:inherit;color:var(--text)"></pre><small id="presentationPreviewHint" style="display:block;margin-top:8px;color:var(--muted)"></small></div>
       ${!isNew ? `<label class="adm-field" style="display:flex;align-items:flex-start;gap:10px;padding:12px;border:1px solid var(--danger,#b84b58);border-radius:10px"><input id="fResetLearning" type="checkbox" ${ed.resetLearning ? "checked" : ""} style="margin-top:3px"><span><b>Xóa dữ liệu học viên của bài này</b><br><span class="mut">Chỉ bật khi nội dung bài đã đổi thành bài khác. Sẽ xóa điểm, lịch sử nộp và thống kê của riêng bài này.</span></span></label>` : ""}
       <div style="display:flex;align-items:center;gap:10px"><button class="adm-switch ${p.is_published ? "on" : ""}" data-x="pub" aria-label="Xuất bản"></button>
         <span style="font-size:13px">Xuất bản cho học viên <span style="color:var(--muted)">(cần ${MIN_TESTS}–${MAX_TESTS} test)</span></span></div>`;
+    const refreshPresentationPreview = () => {
+      const preview = panel.querySelector("#presentationPreview");
+      const hint = panel.querySelector("#presentationPreviewHint");
+      if (!preview || !hint) return;
+      const draft = {
+        ...ed.p,
+        sample_input: panel.querySelector("#fSin")?.value ?? ed.p.sample_input ?? "",
+        sample_output: panel.querySelector("#fSout")?.value ?? ed.p.sample_output ?? "",
+        tests: ed.tests,
+      };
+      const format = sampleFormat(draft);
+      if (!format.prompts.length && !format.lineLabels) {
+        preview.textContent = "Chưa nhận diện được nhãn từ mẫu.";
+        hint.textContent = "Muốn gắn nhãn nhập/kết quả, ghi toàn bộ màn hình mẫu vào Sample output theo dạng ‘Nhãn = giá trị’ hoặc ‘Nhãn: giá trị’. Phần này được dùng chung để tạo hướng dẫn và chấm trình bày; không có ô yêu cầu riêng dễ bị lệch.";
+        return;
+      }
+      preview.textContent = [
+        ...(format.prompts.length ? ["Lời nhắc nhập:", ...format.prompts.map((label) => `  ${label}[giá trị được nhập]`)] : []),
+        ...(format.lineLabels?.length ? ["Nhãn kết quả:", ...format.lineLabels.map((label) => `  ${label}[kết quả]`)] : []),
+      ].join("\n");
+      hint.textContent = "Sửa Sample output để cập nhật đồng thời hướng dẫn cho học viên và nhận diện nhãn khi chấm. Mẫu phải khớp dữ liệu nhập mẫu; không cần sửa JavaScript hay chạy SQL.";
+    };
     const testsHtml = () => `
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
         <button class="adm-btn sm" data-t="add" ${ed.tests.length >= MAX_TESTS ? "disabled" : ""}>＋ Thêm test</button>
@@ -741,6 +778,7 @@ async function openProblemEditor(id) {
           input: ed.p.input,
           output: ed.p.output,
           constraints: ed.p.constraints,
+          knowledge_note: ed.p.knowledge_note,
           sample_input: ed.p.sample_input,
           sample_output: ed.p.sample_output,
           sort_order: ed.p.sort_order,
@@ -857,6 +895,7 @@ async function importFromJson(selectedFiles = null) {
           input: task.input ?? "",
           output: task.output ?? "",
           constraints: task.constraints ?? "",
+          knowledge_note: task.knowledge_note ?? CONCEPT_NOTES.get(task.id) ?? "",
           sample_input: task.sample_input ?? "",
           sample_output: task.sample_output ?? "",
           sort_order: existing?.sort_order ?? nextOrder,

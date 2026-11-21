@@ -80,8 +80,18 @@ function semanticMatch(actual, expected, task, presentation) {
   const expectedTokens = removeHeadings(expected, pattern, task).trim().split(/\s+/);
   const isNumeric = expectedTokens.every(token => decimalToken.test(token));
   if (isNumeric) {
-    if (!/[\d.,]\s*$/.test(actual)) return false;
-    const tokens = removeHeadings(actual, pattern, task).trim().split(/\s+/);
+    // A correct value followed by prose is extra output, not a formatting-only
+    // label change. Allow terminal punctuation, but require the answer at EOF.
+    if (!/[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:e[+-]?\d+)?[ \t\r\n.!?]*$/i.test(actual)) return false;
+    // Input prompts are arbitrary task text (for example "Cho A =" or
+    // "Nhap cac so ="). Strip prompt labels before comparing answer values;
+    // different wording is a presentation error, not a wrong answer.
+    const promptPattern = /(?:nh[aậ]p|cho)\s+[^:=\n]{0,100}[:=：＝]\s*/giu;
+    const numericPattern = /(?<![\p{L}\p{N}_])[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:e[+-]?\d+)?(?![\p{L}\p{N}_])/giu;
+    const tokens = removeHeadings(actual, pattern, task)
+      .replace(promptPattern, " ")
+      .match(numericPattern) || [];
+    if (tokens.length !== expectedTokens.length) return false;
     const places = String(task.output || "").match(/(\d+)\s+chữ số sau/i);
     const precision = places ? Number(places[1]) : undefined;
     return tokens.length === expectedTokens.length && expectedTokens.every((token, i) =>
@@ -96,7 +106,10 @@ function semanticMatch(actual, expected, task, presentation) {
   // Preserve whole answer words and their order (VALID is a suffix of INVALID).
   const phrase = expectedTokens.map(token => token.replace(/[.*+?^$\x7b\x7d()|[\]\\]/g, "\\$&")).join("\\s+");
   const answer = new RegExp("(?<![\\p{L}\\p{N}_])(?:" + phrase + ")\\s*$", "iu").exec(actual);
-  return !!answer && !removeHeadings(actual.slice(0, answer.index), pattern, task).trim();
+  if (!answer) return false;
+  const promptPattern = /(?:nh[aậ]p|cho)\s+[^:=\n]{0,100}[:=：＝]\s*/giu;
+  const prefix = removeHeadings(actual.slice(0, answer.index), pattern, task).replace(promptPattern, " ");
+  return !prefix.trim();
 }
 
 function presentationSeverity(actual, expected, presentation) {

@@ -111,6 +111,7 @@ async function loadTasksFromSupabase() {
         input: r.input,
         output: r.output,
         constraints: r.constraints,
+        knowledge_note: r.knowledge_note ?? null,
         sample_input: r.sample_input,
         sample_output: r.sample_output,
         test_set_version: r.test_set_version ?? null,
@@ -1729,7 +1730,7 @@ function selectTask(id) {
     String(current.id).padStart(3, "0") + ". " + current.title;
   $("level").textContent = current.level;
   $("statement").textContent = current.statement;
-  const note = CONCEPT_NOTES.get(current.id) || "";
+  const note = current.knowledge_note ?? CONCEPT_NOTES.get(current.id) ?? "";
   $("conceptNote").replaceChildren();
   $("conceptNote").hidden = !note;
   if (note) {

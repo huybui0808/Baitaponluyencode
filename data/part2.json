@@ -1,1382 +1,1402 @@
 [
-    {
-        "id":  11,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Chẵn hay lẻ",
-        "level":  "Cơ bản",
-        "statement":  "Nhập số nguyên n. Xác định n là số chẵn hay số lẻ.",
-        "input":  "Một số nguyên n cần xác định tính chẵn lẻ.",
-        "output":  "In EVEN nếu n chẵn, ngược lại in ODD.",
-        "constraints":  "-10⁹ \u003c= n \u003c= 10⁹.",
-        "kind":  "evenodd",
-        "gen":  "one_signed",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "-10",
-                          "output":  "EVEN"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "-5",
-                          "output":  "ODD"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "-1",
-                          "output":  "ODD"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "0",
-                          "output":  "EVEN"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "1",
-                          "output":  "ODD"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "2",
-                          "output":  "EVEN"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "3",
-                          "output":  "ODD"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "100",
-                          "output":  "EVEN"
-                      }
-                  ],
-        "sample_input":  "-10",
-        "sample_output":  "EVEN",
-        "difficulty_rank":  1,
-        "legacyId":  16
-    },
-    {
-        "id":  12,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Số âm, dương hay bằng không",
-        "level":  "Cơ bản",
-        "statement":  "Nhập số nguyên n và phân loại dấu của n.",
-        "input":  "Một số nguyên n cần xác định dấu.",
-        "output":  "In POSITIVE nếu n dương, NEGATIVE nếu n âm hoặc ZERO nếu n bằng 0.",
-        "constraints":  "-10⁹ \u003c= n \u003c= 10⁹.",
-        "kind":  "sign",
-        "gen":  "one_signed",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "-10",
-                          "output":  "NEGATIVE"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "-5",
-                          "output":  "NEGATIVE"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "-1",
-                          "output":  "NEGATIVE"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "0",
-                          "output":  "ZERO"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "1",
-                          "output":  "POSITIVE"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "2",
-                          "output":  "POSITIVE"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "3",
-                          "output":  "POSITIVE"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "100",
-                          "output":  "POSITIVE"
-                      }
-                  ],
-        "sample_input":  "-10",
-        "sample_output":  "NEGATIVE",
-        "difficulty_rank":  1,
-        "legacyId":  17
-    },
-    {
-        "id":  13,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Số lớn hơn trong hai số",
-        "level":  "Cơ bản",
-        "statement":  "Nhập hai số nguyên a, b. Tìm và in ra giá trị lớn hơn.",
-        "input":  "Một dòng gồm hai số nguyên a và b để so sánh.",
-        "output":  "In số lớn hơn. Nếu hai số bằng nhau, in giá trị chung một lần.",
-        "constraints":  "-10⁹ \u003c= a, b \u003c= 10⁹.",
-        "kind":  "max2",
-        "gen":  "pair_signed",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "-5 3",
-                          "output":  "3"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "0 0",
-                          "output":  "0"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "1 1",
-                          "output":  "1"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "1 2",
-                          "output":  "2"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "-4 -3",
-                          "output":  "-3"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "7 7",
-                          "output":  "7"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "100 -25",
-                          "output":  "100"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "-100 120",
-                          "output":  "120"
-                      }
-                  ],
-        "sample_input":  "-5 3",
-        "sample_output":  "3",
-        "difficulty_rank":  1,
-        "legacyId":  18
-    },
-    {
-        "id":  14,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Số lớn nhất trong ba số",
-        "level":  "Cơ bản",
-        "statement":  "Nhập ba số nguyên a, b, c. Tìm số lớn nhất.",
-        "input":  "Một dòng gồm ba số nguyên a, b và c để tìm giá trị lớn nhất.",
-        "output":  "In một số nguyên là giá trị lớn nhất trong ba số.",
-        "constraints":  "-10⁹ \u003c= a, b, c \u003c= 10⁹.",
-        "kind":  "max3",
-        "gen":  "three_any",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "0 0 0",
-                          "output":  "0"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "1 2 3",
-                          "output":  "3"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "-1 0 1",
-                          "output":  "1"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "9 8 7",
-                          "output":  "9"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "99 99 100",
-                          "output":  "100"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "4 4 4",
-                          "output":  "4"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "12 25 18",
-                          "output":  "25"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "-20 15 0",
-                          "output":  "15"
-                      }
-                  ],
-        "sample_input":  "12 -3 8",
-        "sample_output":  "12",
-        "difficulty_rank":  1,
-        "legacyId":  19
-    },
-    {
-        "id":  15,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Số nhỏ nhất trong ba số",
-        "level":  "Cơ bản",
-        "statement":  "Nhập ba số nguyên a, b, c. Tìm số nhỏ nhất.",
-        "input":  "Một dòng gồm ba số nguyên a, b và c để tìm giá trị nhỏ nhất.",
-        "output":  "In một số nguyên là giá trị nhỏ nhất trong ba số.",
-        "constraints":  "-10⁹ \u003c= a, b, c \u003c= 10⁹.",
-        "kind":  "min3",
-        "gen":  "three_any",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "0 0 0",
-                          "output":  "0"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "1 2 3",
-                          "output":  "1"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "-1 0 1",
-                          "output":  "-1"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "9 8 7",
-                          "output":  "7"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "99 99 100",
-                          "output":  "99"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "4 4 4",
-                          "output":  "4"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "12 25 18",
-                          "output":  "12"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "-20 15 0",
-                          "output":  "-20"
-                      }
-                  ],
-        "sample_input":  "12 -3 8",
-        "sample_output":  "-3",
-        "difficulty_rank":  1,
-        "legacyId":  20
-    },
-    {
-        "id":  16,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Kiểm tra năm nhuận",
-        "level":  "Cơ bản",
-        "statement":  "Một năm nhuận là năm chia hết cho 400, hoặc chia hết cho 4 nhưng không chia hết cho 100. Hãy kiểm tra năm y.",
-        "input":  "Một số nguyên dương y là năm cần kiểm tra.",
-        "output":  "In LEAP nếu năm đó là năm nhuận, ngược lại in COMMON.",
-        "constraints":  "1 \u003c= y \u003c= 9999.",
-        "kind":  "leap",
-        "gen":  "years",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "1",
-                          "output":  "COMMON"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "4",
-                          "output":  "LEAP"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "100",
-                          "output":  "COMMON"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "400",
-                          "output":  "LEAP"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "1700",
-                          "output":  "COMMON"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "1996",
-                          "output":  "LEAP"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "2000",
-                          "output":  "LEAP"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "2200",
-                          "output":  "COMMON"
-                      }
-                  ],
-        "sample_input":  "2000",
-        "sample_output":  "LEAP",
-        "difficulty_rank":  1,
-        "legacyId":  21
-    },
-    {
-        "id":  17,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Chia hết cho cả 3 và 5",
-        "level":  "Cơ bản",
-        "statement":  "Nhập số nguyên n. Kiểm tra n có đồng thời chia hết cho 3 và chia hết cho 5 hay không.",
-        "input":  "Một số nguyên n cần kiểm tra tính chia hết cho hai ước.",
-        "output":  "In YES nếu n chia hết cho cả 3 và 5. Các trường hợp còn lại in NO.",
-        "constraints":  "-10⁹ \u003c= n \u003c= 10⁹.",
-        "kind":  "div35",
-        "gen":  "div35",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "-15",
-                          "output":  "YES"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "-3",
-                          "output":  "NO"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "0",
-                          "output":  "YES"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "1",
-                          "output":  "NO"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "3",
-                          "output":  "NO"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "5",
-                          "output":  "NO"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "15",
-                          "output":  "YES"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "100",
-                          "output":  "NO"
-                      }
-                  ],
-        "sample_input":  "-15",
-        "sample_output":  "YES",
-        "difficulty_rank":  1,
-        "legacyId":  22
-    },
-    {
-        "id":  18,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Chia hết cho 3 hoặc 5",
-        "level":  "Cơ bản",
-        "statement":  "Nhập số nguyên n. Kiểm tra n chia hết cho 3 hoặc chia hết cho 5 (hoặc cả hai).",
-        "input":  "Một số nguyên n cần kiểm tra với các ước 3 và 5.",
-        "output":  "In YES nếu n chia hết cho ít nhất một trong hai số 3 hoặc 5. Nếu không, in NO.",
-        "constraints":  "-10⁹ \u003c= n \u003c= 10⁹.",
-        "kind":  "div3or5",
-        "gen":  "div35",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "-15",
-                          "output":  "YES"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "-3",
-                          "output":  "YES"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "0",
-                          "output":  "YES"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "1",
-                          "output":  "NO"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "3",
-                          "output":  "YES"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "5",
-                          "output":  "YES"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "15",
-                          "output":  "YES"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "100",
-                          "output":  "YES"
-                      }
-                  ],
-        "sample_input":  "-15",
-        "sample_output":  "YES",
-        "difficulty_rank":  1,
-        "legacyId":  23
-    },
-    {
-        "id":  19,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "So sánh hai số",
-        "level":  "Cơ bản",
-        "statement":  "Nhập hai số nguyên a, b và xác định quan hệ giữa chúng.",
-        "input":  "Một dòng gồm hai số nguyên a và b, so sánh số đầu với số thứ hai.",
-        "output":  "In LESS nếu a nhỏ hơn b, EQUAL nếu bằng nhau hoặc GREATER nếu a lớn hơn b.",
-        "constraints":  "-10⁹ \u003c= a, b \u003c= 10⁹.",
-        "kind":  "compare",
-        "gen":  "pair_signed",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "-5 3",
-                          "output":  "LESS"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "0 0",
-                          "output":  "EQUAL"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "1 1",
-                          "output":  "EQUAL"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "1 2",
-                          "output":  "LESS"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "-4 -3",
-                          "output":  "LESS"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "7 7",
-                          "output":  "EQUAL"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "100 -25",
-                          "output":  "GREATER"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "-100 120",
-                          "output":  "LESS"
-                      }
-                  ],
-        "sample_input":  "-5 3",
-        "sample_output":  "LESS",
-        "difficulty_rank":  1,
-        "legacyId":  24
-    },
-    {
-        "id":  20,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Kiểm tra ba cạnh có tạo thành tam giác",
-        "level":  "Cơ bản",
-        "statement":  "Cho ba độ dài dương a, b, c. Một tam giác hợp lệ khi tổng hai cạnh bất kỳ lớn hơn cạnh còn lại.",
-        "input":  "Một dòng gồm ba số nguyên dương a, b và c là độ dài ba cạnh dự kiến.",
-        "output":  "In VALID nếu ba độ dài tạo được tam giác, ngược lại in INVALID.",
-        "constraints":  "1 \u003c= a, b, c \u003c= 10⁹.",
-        "kind":  "triangle_valid",
-        "gen":  "triangle",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "1 1 1",
-                          "output":  "VALID"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "1 2 3",
-                          "output":  "INVALID"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "1 2 2",
-                          "output":  "VALID"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "2 3 4",
-                          "output":  "VALID"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "2 3 5",
-                          "output":  "INVALID"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "3 4 5",
-                          "output":  "VALID"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "5 5 9",
-                          "output":  "VALID"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "7 10 12",
-                          "output":  "VALID"
-                      },
-                      {
-                          "no":  9,
-                          "input":  "9 9 1",
-                          "output":  "VALID"
-                      },
-                      {
-                          "no":  10,
-                          "input":  "12 13 14",
-                          "output":  "VALID"
-                      },
-                      {
-                          "no":  11,
-                          "input":  "20 21 40",
-                          "output":  "VALID"
-                      },
-                      {
-                          "no":  12,
-                          "input":  "25 26 30",
-                          "output":  "VALID"
-                      }
-                  ],
-        "sample_input":  "1 1 1",
-        "sample_output":  "VALID",
-        "difficulty_rank":  1,
-        "legacyId":  25
-    },
-    {
-        "id":  21,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Phân loại tam giác",
-        "level":  "Trung bình",
-        "statement":  "Cho ba độ dài a, b, c. Nếu không tạo thành tam giác, in INVALID. Nếu hợp lệ, phân loại thành EQUILATERAL, ISOSCELES hoặc SCALENE.",
-        "input":  "Một dòng gồm ba số nguyên dương a, b và c là độ dài cần phân loại.",
-        "output":  "In INVALID nếu ba cạnh không tạo thành tam giác. Với tam giác hợp lệ, in EQUILATERAL cho tam giác đều, ISOSCELES cho tam giác cân không đều hoặc SCALENE cho tam giác có ba cạnh khác nhau.",
-        "constraints":  "1 \u003c= a, b, c \u003c= 10⁹.",
-        "kind":  "triangle_type",
-        "gen":  "triangle",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "1 1 1",
-                          "output":  "EQUILATERAL"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "1 2 2",
-                          "output":  "ISOSCELES"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "2 2 3",
-                          "output":  "ISOSCELES"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "3 4 5",
-                          "output":  "SCALENE"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "4 5 6",
-                          "output":  "SCALENE"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "2 3 4",
-                          "output":  "SCALENE"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "5 5 9",
-                          "output":  "ISOSCELES"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "6 7 8",
-                          "output":  "SCALENE"
-                      },
-                      {
-                          "no":  9,
-                          "input":  "9 9 1",
-                          "output":  "ISOSCELES"
-                      },
-                      {
-                          "no":  10,
-                          "input":  "12 12 12",
-                          "output":  "EQUILATERAL"
-                      },
-                      {
-                          "no":  11,
-                          "input":  "7 10 12",
-                          "output":  "SCALENE"
-                      },
-                      {
-                          "no":  12,
-                          "input":  "25 26 30",
-                          "output":  "SCALENE"
-                      }
-                  ],
-        "sample_input":  "1 1 1",
-        "sample_output":  "EQUILATERAL",
-        "difficulty_rank":  2,
-        "legacyId":  26
-    },
-    {
-        "id":  22,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Kiểm tra tam giác vuông",
-        "level":  "Trung bình",
-        "statement":  "Cho ba cạnh nguyên dương a, b, c. Kiểm tra chúng có tạo thành tam giác vuông hay không. Phải kiểm tra điều kiện tam giác trước.",
-        "input":  "Một dòng gồm ba số nguyên dương a, b và c là độ dài ba cạnh cần kiểm tra.",
-        "output":  "In INVALID nếu ba cạnh không tạo thành tam giác. Nếu hợp lệ, in RIGHT cho tam giác vuông hoặc NOT RIGHT cho tam giác không vuông.",
-        "constraints":  "1 \u003c= a, b, c \u003c= 10⁹.",
-        "kind":  "right_triangle",
-        "gen":  "triangle",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "3 4 5",
-                          "output":  "RIGHT"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "5 12 13",
-                          "output":  "RIGHT"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "8 15 17",
-                          "output":  "RIGHT"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "6 8 10",
-                          "output":  "RIGHT"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "1 1 1",
-                          "output":  "NOT RIGHT"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "2 3 4",
-                          "output":  "NOT RIGHT"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "4 5 6",
-                          "output":  "NOT RIGHT"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "7 24 25",
-                          "output":  "RIGHT"
-                      },
-                      {
-                          "no":  9,
-                          "input":  "9 40 41",
-                          "output":  "RIGHT"
-                      },
-                      {
-                          "no":  10,
-                          "input":  "5 5 8",
-                          "output":  "NOT RIGHT"
-                      },
-                      {
-                          "no":  11,
-                          "input":  "12 13 14",
-                          "output":  "NOT RIGHT"
-                      },
-                      {
-                          "no":  12,
-                          "input":  "20 21 28",
-                          "output":  "NOT RIGHT"
-                      }
-                  ],
-        "sample_input":  "3 4 5",
-        "sample_output":  "RIGHT",
-        "difficulty_rank":  2,
-        "legacyId":  27
-    },
-    {
-        "id":  23,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Xếp loại điểm",
-        "level":  "Cơ bản",
-        "statement":  "Điểm kiểm tra x nằm trong [0,100]. Xếp loại: A nếu x\u003e=90; B nếu x\u003e=80; C nếu x\u003e=70; D nếu x\u003e=50; còn lại F.",
-        "input":  "Một số nguyên x là điểm kiểm tra trên thang 100.",
-        "output":  "In một chữ cái xếp loại: A từ 90, B từ 80 đến 89, C từ 70 đến 79, D từ 50 đến 69, F dưới 50.",
-        "constraints":  "0 \u003c= x \u003c= 100.",
-        "kind":  "grade",
-        "gen":  "scores",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "0",
-                          "output":  "F"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "1",
-                          "output":  "F"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "49",
-                          "output":  "F"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "50",
-                          "output":  "D"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "59",
-                          "output":  "D"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "60",
-                          "output":  "D"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "69",
-                          "output":  "D"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "70",
-                          "output":  "C"
-                      },
-                      {
-                          "no":  9,
-                          "input":  "79",
-                          "output":  "C"
-                      },
-                      {
-                          "no":  10,
-                          "input":  "80",
-                          "output":  "B"
-                      },
-                      {
-                          "no":  11,
-                          "input":  "90",
-                          "output":  "A"
-                      },
-                      {
-                          "no":  12,
-                          "input":  "100",
-                          "output":  "A"
-                      }
-                  ],
-        "sample_input":  "85",
-        "sample_output":  "B",
-        "difficulty_rank":  1,
-        "legacyId":  28
-    },
-    {
-        "id":  24,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Giải phương trình bậc nhất",
-        "level":  "Trung bình",
-        "statement":  "Giải phương trình ax + b = 0. Xét riêng trường hợp a=0: nếu b=0 thì vô số nghiệm, nếu b khác 0 thì vô nghiệm.",
-        "input":  "Một dòng gồm hệ số a của ẩn và hằng số b, đều là số nguyên.",
-        "output":  "In INFINITE nếu phương trình có vô số nghiệm, NO SOLUTION nếu vô nghiệm. Nếu có một nghiệm, in nghiệm với đúng 2 chữ số sau dấu chấm. Kết quả bằng 0 ghi 0.00.",
-        "constraints":  "-10⁹ \u003c= a, b \u003c= 10⁹.",
-        "kind":  "linear",
-        "gen":  "linear",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "0 0",
-                          "output":  "INFINITE"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "0 5",
-                          "output":  "NO SOLUTION"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "0 -7",
-                          "output":  "NO SOLUTION"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "1 0",
-                          "output":  "0.00"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "1 5",
-                          "output":  "-5.00"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "-1 5",
-                          "output":  "5.00"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "2 -4",
-                          "output":  "2.00"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "-3 -9",
-                          "output":  "-3.00"
-                      },
-                      {
-                          "no":  9,
-                          "input":  "5 10",
-                          "output":  "-2.00"
-                      },
-                      {
-                          "no":  10,
-                          "input":  "-7 14",
-                          "output":  "2.00"
-                      },
-                      {
-                          "no":  11,
-                          "input":  "9 -27",
-                          "output":  "3.00"
-                      },
-                      {
-                          "no":  12,
-                          "input":  "12 36",
-                          "output":  "-3.00"
-                      }
-                  ],
-        "sample_input":  "2 -6",
-        "sample_output":  "3.00",
-        "difficulty_rank":  2,
-        "legacyId":  29
-    },
-    {
-        "id":  25,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Tính tiền điện theo bậc",
-        "level":  "Trung bình",
-        "statement":  "Tính tiền điện theo số kWh n: 50 kWh đầu giá 1000 đồng/kWh; 50 kWh tiếp theo giá 1200 đồng/kWh; phần vượt 100 kWh giá 1500 đồng/kWh.",
-        "input":  "Một số nguyên không âm n là số kWh điện đã dùng.",
-        "output":  "In tổng tiền điện bằng đồng, tính riêng lượng điện nằm trong mỗi bậc giá.",
-        "constraints":  "0 \u003c= n \u003c= 10⁹.",
-        "kind":  "electric",
-        "gen":  "sumN",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "0",
-                          "output":  "0"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "1",
-                          "output":  "1000"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "49",
-                          "output":  "49000"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "50",
-                          "output":  "50000"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "51",
-                          "output":  "51200"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "99",
-                          "output":  "108800"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "100",
-                          "output":  "110000"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "101",
-                          "output":  "111500"
-                      },
-                      {
-                          "no":  9,
-                          "input":  "120",
-                          "output":  "140000"
-                      },
-                      {
-                          "no":  10,
-                          "input":  "150",
-                          "output":  "185000"
-                      },
-                      {
-                          "no":  11,
-                          "input":  "250",
-                          "output":  "335000"
-                      },
-                      {
-                          "no":  12,
-                          "input":  "500",
-                          "output":  "710000"
-                      }
-                  ],
-        "sample_input":  "51",
-        "sample_output":  "51200",
-        "difficulty_rank":  2,
-        "legacyId":  30
-    },
-    {
-        "id":  26,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Giá vé theo độ tuổi",
-        "level":  "Trung bình",
-        "statement":  "Giá vé được tính như sau: từ 0 đến 5 tuổi miễn phí; 6 đến 17 tuổi giá 30000 đồng; 18 đến 59 tuổi giá 50000 đồng; từ 60 tuổi trở lên giá 40000 đồng.",
-        "input":  "Một số nguyên không âm là tuổi tính theo số năm tròn.",
-        "output":  "In giá vé bằng đồng theo nhóm tuổi. Nếu được miễn phí, in 0.",
-        "constraints":  "0 \u003c= tuổi \u003c= 120.",
-        "kind":  "ticket",
-        "gen":  "ages",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "0",
-                          "output":  "0"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "5",
-                          "output":  "0"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "6",
-                          "output":  "30000"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "10",
-                          "output":  "30000"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "17",
-                          "output":  "30000"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "18",
-                          "output":  "50000"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "30",
-                          "output":  "50000"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "59",
-                          "output":  "50000"
-                      },
-                      {
-                          "no":  9,
-                          "input":  "60",
-                          "output":  "40000"
-                      },
-                      {
-                          "no":  10,
-                          "input":  "61",
-                          "output":  "40000"
-                      },
-                      {
-                          "no":  11,
-                          "input":  "100",
-                          "output":  "40000"
-                      },
-                      {
-                          "no":  12,
-                          "input":  "120",
-                          "output":  "40000"
-                      }
-                  ],
-        "sample_input":  "18",
-        "sample_output":  "50000",
-        "difficulty_rank":  2,
-        "legacyId":  31
-    },
-    {
-        "id":  27,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Tính phí vận chuyển",
-        "level":  "Trung bình",
-        "statement":  "Khối lượng hàng w tính bằng gram. Phí: không quá 1000g là 15000 đồng; trên 1000g đến 5000g là 25000 đồng; trên 5000g, phí là 25000 đồng cộng 4000 đồng cho mỗi 1000g tăng thêm (làm tròn lên).",
-        "input":  "Một số nguyên dương w là khối lượng kiện hàng tính bằng gram.",
-        "output":  "In phí vận chuyển bằng đồng. Với phần vượt 5000 gram, tính phí theo từng khối 1000 gram làm tròn lên.",
-        "constraints":  "1 \u003c= w \u003c= 10⁹.",
-        "kind":  "shipping",
-        "gen":  "weights",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "1",
-                          "output":  "15000"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "999",
-                          "output":  "15000"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "1000",
-                          "output":  "15000"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "1001",
-                          "output":  "25000"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "2000",
-                          "output":  "25000"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "4999",
-                          "output":  "25000"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "5000",
-                          "output":  "25000"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "5001",
-                          "output":  "29000"
-                      },
-                      {
-                          "no":  9,
-                          "input":  "6000",
-                          "output":  "29000"
-                      },
-                      {
-                          "no":  10,
-                          "input":  "7500",
-                          "output":  "37000"
-                      },
-                      {
-                          "no":  11,
-                          "input":  "9999",
-                          "output":  "45000"
-                      },
-                      {
-                          "no":  12,
-                          "input":  "10000",
-                          "output":  "45000"
-                      }
-                  ],
-        "sample_input":  "1",
-        "sample_output":  "15000",
-        "difficulty_rank":  2,
-        "legacyId":  32
-    },
-    {
-        "id":  28,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Xác định góc phần tư",
-        "level":  "Trung bình",
-        "statement":  "Cho tọa độ điểm (x,y). Hãy xác định điểm nằm ở gốc tọa độ, trên trục Ox, trên trục Oy hoặc ở góc phần tư nào.",
-        "input":  "Một dòng gồm hai số thực x và y là hoành độ và tung độ.",
-        "output":  "In ORIGIN tại gốc tọa độ, X_AXIS hoặc Y_AXIS nếu điểm nằm trên trục tương ứng. Các trường hợp còn lại in Q1, Q2, Q3 hoặc Q4 theo góc phần tư.",
-        "constraints":  "-10⁹ \u003c= x, y \u003c= 10⁹.",
-        "kind":  "quadrant",
-        "gen":  "quadrant",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "0 0",
-                          "output":  "ORIGIN"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "0 2",
-                          "output":  "Y_AXIS"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "0 -3",
-                          "output":  "Y_AXIS"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "4 0",
-                          "output":  "X_AXIS"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "-5 0",
-                          "output":  "X_AXIS"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "1 1",
-                          "output":  "Q1"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "-1 1",
-                          "output":  "Q2"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "-2 -3",
-                          "output":  "Q3"
-                      },
-                      {
-                          "no":  9,
-                          "input":  "3 -4",
-                          "output":  "Q4"
-                      },
-                      {
-                          "no":  10,
-                          "input":  "5 7",
-                          "output":  "Q1"
-                      },
-                      {
-                          "no":  11,
-                          "input":  "-6 8",
-                          "output":  "Q2"
-                      },
-                      {
-                          "no":  12,
-                          "input":  "9 -10",
-                          "output":  "Q4"
-                      }
-                  ],
-        "sample_input":  "3 -4",
-        "sample_output":  "Q4",
-        "difficulty_rank":  2,
-        "legacyId":  33
-    },
-    {
-        "id":  29,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Số nào xa 0 hơn?",
-        "level":  "Trung bình",
-        "statement":  "Nhập hai số nguyên a, b. So sánh khoảng cách từ mỗi số đến 0, tức là so sánh |a| và |b|.",
-        "input":  "Một dòng gồm hai số nguyên a và b cần so khoảng cách đến 0.",
-        "output":  "In A nếu trị tuyệt đối của a lớn hơn, B nếu trị tuyệt đối của b lớn hơn hoặc EQUAL nếu hai khoảng cách bằng nhau.",
-        "constraints":  "-10⁹ \u003c= a, b \u003c= 10⁹.",
-        "kind":  "farther_zero",
-        "gen":  "pair_signed",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "0 0",
-                          "output":  "EQUAL"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "0 5",
-                          "output":  "B"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "-5 5",
-                          "output":  "EQUAL"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "3 -8",
-                          "output":  "B"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "-9 2",
-                          "output":  "A"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "10 -10",
-                          "output":  "EQUAL"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "-12 -4",
-                          "output":  "A"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "17 6",
-                          "output":  "A"
-                      },
-                      {
-                          "no":  9,
-                          "input":  "-25 24",
-                          "output":  "A"
-                      },
-                      {
-                          "no":  10,
-                          "input":  "99 -100",
-                          "output":  "B"
-                      },
-                      {
-                          "no":  11,
-                          "input":  "-120 30",
-                          "output":  "A"
-                      },
-                      {
-                          "no":  12,
-                          "input":  "47 -48",
-                          "output":  "B"
-                      }
-                  ],
-        "sample_input":  "-9 6",
-        "sample_output":  "A",
-        "difficulty_rank":  2,
-        "legacyId":  34
-    },
-    {
-        "id":  30,
-        "section":  "Phần 2 - Câu lệnh rẽ nhánh",
-        "title":  "Phân loại phương trình bậc hai",
-        "level":  "Trung bình",
-        "statement":  "Cho ba hệ số a, b, c. Nếu a=0 thì đây không phải phương trình bậc hai. Ngược lại, xét delta=b*b-4*a*c để phân loại số nghiệm thực.",
-        "input":  "Một dòng gồm ba hệ số nguyên a, b và c theo thứ tự của phương trình bậc hai.",
-        "output":  "In NOT QUADRATIC nếu hệ số bậc hai bằng 0. Nếu khác 0, in NO REAL ROOT, ONE ROOT hoặc TWO ROOTS tương ứng với 0, 1 hoặc 2 nghiệm thực phân biệt.",
-        "constraints":  "-10⁹ \u003c= a, b, c \u003c= 10⁹.",
-        "kind":  "quadratic_type",
-        "gen":  "quadratic",
-        "tests":  [
-                      {
-                          "no":  1,
-                          "input":  "1 0 0",
-                          "output":  "ONE ROOT"
-                      },
-                      {
-                          "no":  2,
-                          "input":  "0 1 1",
-                          "output":  "NOT QUADRATIC"
-                      },
-                      {
-                          "no":  3,
-                          "input":  "0 0 0",
-                          "output":  "NOT QUADRATIC"
-                      },
-                      {
-                          "no":  4,
-                          "input":  "1 2 1",
-                          "output":  "ONE ROOT"
-                      },
-                      {
-                          "no":  5,
-                          "input":  "1 0 1",
-                          "output":  "NO REAL ROOT"
-                      },
-                      {
-                          "no":  6,
-                          "input":  "1 2 0",
-                          "output":  "TWO ROOTS"
-                      },
-                      {
-                          "no":  7,
-                          "input":  "1 5 6",
-                          "output":  "TWO ROOTS"
-                      },
-                      {
-                          "no":  8,
-                          "input":  "2 4 2",
-                          "output":  "ONE ROOT"
-                      },
-                      {
-                          "no":  9,
-                          "input":  "3 0 -12",
-                          "output":  "TWO ROOTS"
-                      },
-                      {
-                          "no":  10,
-                          "input":  "-1 2 3",
-                          "output":  "TWO ROOTS"
-                      },
-                      {
-                          "no":  11,
-                          "input":  "4 4 1",
-                          "output":  "ONE ROOT"
-                      },
-                      {
-                          "no":  12,
-                          "input":  "2 -5 2",
-                          "output":  "TWO ROOTS"
-                      }
-                  ],
-        "sample_input":  "1 0 0",
-        "sample_output":  "ONE ROOT",
-        "difficulty_rank":  2,
-        "legacyId":  35
-    }
+  {
+    "id": 11,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Chẵn hay lẻ",
+    "level": "Cơ bản",
+    "statement": "Nhập số nguyên n. Xác định n là số chẵn hay số lẻ.",
+    "input": "Một số nguyên n cần xác định tính chẵn lẻ.",
+    "output": "In EVEN nếu n chẵn, ngược lại in ODD.",
+    "constraints": "-10⁹ <= n <= 10⁹.",
+    "kind": "evenodd",
+    "gen": "one_signed",
+    "tests": [
+      {
+        "no": 1,
+        "input": "-10",
+        "output": "EVEN"
+      },
+      {
+        "no": 2,
+        "input": "-5",
+        "output": "ODD"
+      },
+      {
+        "no": 3,
+        "input": "-1",
+        "output": "ODD"
+      },
+      {
+        "no": 4,
+        "input": "0",
+        "output": "EVEN"
+      },
+      {
+        "no": 5,
+        "input": "1",
+        "output": "ODD"
+      },
+      {
+        "no": 6,
+        "input": "2",
+        "output": "EVEN"
+      },
+      {
+        "no": 7,
+        "input": "3",
+        "output": "ODD"
+      },
+      {
+        "no": 8,
+        "input": "100",
+        "output": "EVEN"
+      }
+    ],
+    "sample_input": "-10",
+    "sample_output": "EVEN",
+    "difficulty_rank": 1,
+    "legacyId": 16,
+    "knowledge_note": ""
+  },
+  {
+    "id": 12,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Số âm, dương hay bằng không",
+    "level": "Cơ bản",
+    "statement": "Nhập số nguyên n và phân loại dấu của n.",
+    "input": "Một số nguyên n cần xác định dấu.",
+    "output": "In POSITIVE nếu n dương, NEGATIVE nếu n âm hoặc ZERO nếu n bằng 0.",
+    "constraints": "-10⁹ <= n <= 10⁹.",
+    "kind": "sign",
+    "gen": "one_signed",
+    "tests": [
+      {
+        "no": 1,
+        "input": "-10",
+        "output": "NEGATIVE"
+      },
+      {
+        "no": 2,
+        "input": "-5",
+        "output": "NEGATIVE"
+      },
+      {
+        "no": 3,
+        "input": "-1",
+        "output": "NEGATIVE"
+      },
+      {
+        "no": 4,
+        "input": "0",
+        "output": "ZERO"
+      },
+      {
+        "no": 5,
+        "input": "1",
+        "output": "POSITIVE"
+      },
+      {
+        "no": 6,
+        "input": "2",
+        "output": "POSITIVE"
+      },
+      {
+        "no": 7,
+        "input": "3",
+        "output": "POSITIVE"
+      },
+      {
+        "no": 8,
+        "input": "100",
+        "output": "POSITIVE"
+      }
+    ],
+    "sample_input": "-10",
+    "sample_output": "NEGATIVE",
+    "difficulty_rank": 1,
+    "legacyId": 17,
+    "knowledge_note": ""
+  },
+  {
+    "id": 13,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Số lớn hơn trong hai số",
+    "level": "Cơ bản",
+    "statement": "Nhập hai số nguyên a, b. Tìm và in ra giá trị lớn hơn.",
+    "input": "Một dòng gồm hai số nguyên a và b để so sánh.",
+    "output": "In số lớn hơn. Nếu hai số bằng nhau, in giá trị chung một lần.",
+    "constraints": "-10⁹ <= a, b <= 10⁹.",
+    "kind": "max2",
+    "gen": "pair_signed",
+    "tests": [
+      {
+        "no": 1,
+        "input": "-5 3",
+        "output": "3"
+      },
+      {
+        "no": 2,
+        "input": "0 0",
+        "output": "0"
+      },
+      {
+        "no": 3,
+        "input": "1 1",
+        "output": "1"
+      },
+      {
+        "no": 4,
+        "input": "1 2",
+        "output": "2"
+      },
+      {
+        "no": 5,
+        "input": "-4 -3",
+        "output": "-3"
+      },
+      {
+        "no": 6,
+        "input": "7 7",
+        "output": "7"
+      },
+      {
+        "no": 7,
+        "input": "100 -25",
+        "output": "100"
+      },
+      {
+        "no": 8,
+        "input": "-100 120",
+        "output": "120"
+      }
+    ],
+    "sample_input": "-5 3",
+    "sample_output": "3",
+    "difficulty_rank": 1,
+    "legacyId": 18,
+    "knowledge_note": ""
+  },
+  {
+    "id": 14,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Số lớn nhất trong ba số",
+    "level": "Cơ bản",
+    "statement": "Nhập ba số nguyên a, b, c. Tìm số lớn nhất.",
+    "input": "Một dòng gồm ba số nguyên a, b và c để tìm giá trị lớn nhất.",
+    "output": "In một số nguyên là giá trị lớn nhất trong ba số.",
+    "constraints": "-10⁹ <= a, b, c <= 10⁹.",
+    "kind": "max3",
+    "gen": "three_any",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0 0 0",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1 2 3",
+        "output": "3"
+      },
+      {
+        "no": 3,
+        "input": "-1 0 1",
+        "output": "1"
+      },
+      {
+        "no": 4,
+        "input": "9 8 7",
+        "output": "9"
+      },
+      {
+        "no": 5,
+        "input": "99 99 100",
+        "output": "100"
+      },
+      {
+        "no": 6,
+        "input": "4 4 4",
+        "output": "4"
+      },
+      {
+        "no": 7,
+        "input": "12 25 18",
+        "output": "25"
+      },
+      {
+        "no": 8,
+        "input": "-20 15 0",
+        "output": "15"
+      }
+    ],
+    "sample_input": "12 -3 8",
+    "sample_output": "12",
+    "difficulty_rank": 1,
+    "legacyId": 19,
+    "knowledge_note": ""
+  },
+  {
+    "id": 15,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Số nhỏ nhất trong ba số",
+    "level": "Cơ bản",
+    "statement": "Nhập ba số nguyên a, b, c. Tìm số nhỏ nhất.",
+    "input": "Một dòng gồm ba số nguyên a, b và c để tìm giá trị nhỏ nhất.",
+    "output": "In một số nguyên là giá trị nhỏ nhất trong ba số.",
+    "constraints": "-10⁹ <= a, b, c <= 10⁹.",
+    "kind": "min3",
+    "gen": "three_any",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0 0 0",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1 2 3",
+        "output": "1"
+      },
+      {
+        "no": 3,
+        "input": "-1 0 1",
+        "output": "-1"
+      },
+      {
+        "no": 4,
+        "input": "9 8 7",
+        "output": "7"
+      },
+      {
+        "no": 5,
+        "input": "99 99 100",
+        "output": "99"
+      },
+      {
+        "no": 6,
+        "input": "4 4 4",
+        "output": "4"
+      },
+      {
+        "no": 7,
+        "input": "12 25 18",
+        "output": "12"
+      },
+      {
+        "no": 8,
+        "input": "-20 15 0",
+        "output": "-20"
+      }
+    ],
+    "sample_input": "12 -3 8",
+    "sample_output": "-3",
+    "difficulty_rank": 1,
+    "legacyId": 20,
+    "knowledge_note": ""
+  },
+  {
+    "id": 16,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Kiểm tra năm nhuận",
+    "level": "Cơ bản",
+    "statement": "Một năm nhuận là năm chia hết cho 400, hoặc chia hết cho 4 nhưng không chia hết cho 100. Hãy kiểm tra năm y.",
+    "input": "Một số nguyên dương y là năm cần kiểm tra.",
+    "output": "In LEAP nếu năm đó là năm nhuận, ngược lại in COMMON.",
+    "constraints": "1 <= y <= 9999.",
+    "kind": "leap",
+    "gen": "years",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "COMMON"
+      },
+      {
+        "no": 2,
+        "input": "4",
+        "output": "LEAP"
+      },
+      {
+        "no": 3,
+        "input": "100",
+        "output": "COMMON"
+      },
+      {
+        "no": 4,
+        "input": "400",
+        "output": "LEAP"
+      },
+      {
+        "no": 5,
+        "input": "1700",
+        "output": "COMMON"
+      },
+      {
+        "no": 6,
+        "input": "1996",
+        "output": "LEAP"
+      },
+      {
+        "no": 7,
+        "input": "2000",
+        "output": "LEAP"
+      },
+      {
+        "no": 8,
+        "input": "2200",
+        "output": "COMMON"
+      }
+    ],
+    "sample_input": "2000",
+    "sample_output": "LEAP",
+    "difficulty_rank": 1,
+    "legacyId": 21,
+    "knowledge_note": "Kiến thức cần nhớ: Năm nhuận là năm chia hết cho 400, hoặc chia hết cho 4 nhưng không chia hết cho 100."
+  },
+  {
+    "id": 17,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Chia hết cho cả 3 và 5",
+    "level": "Cơ bản",
+    "statement": "Nhập số nguyên n. Kiểm tra n có đồng thời chia hết cho 3 và chia hết cho 5 hay không.",
+    "input": "Một số nguyên n cần kiểm tra tính chia hết cho hai ước.",
+    "output": "In YES nếu n chia hết cho cả 3 và 5. Các trường hợp còn lại in NO.",
+    "constraints": "-10⁹ <= n <= 10⁹.",
+    "kind": "div35",
+    "gen": "div35",
+    "tests": [
+      {
+        "no": 1,
+        "input": "-15",
+        "output": "YES"
+      },
+      {
+        "no": 2,
+        "input": "-3",
+        "output": "NO"
+      },
+      {
+        "no": 3,
+        "input": "0",
+        "output": "YES"
+      },
+      {
+        "no": 4,
+        "input": "1",
+        "output": "NO"
+      },
+      {
+        "no": 5,
+        "input": "3",
+        "output": "NO"
+      },
+      {
+        "no": 6,
+        "input": "5",
+        "output": "NO"
+      },
+      {
+        "no": 7,
+        "input": "15",
+        "output": "YES"
+      },
+      {
+        "no": 8,
+        "input": "100",
+        "output": "NO"
+      }
+    ],
+    "sample_input": "-15",
+    "sample_output": "YES",
+    "difficulty_rank": 1,
+    "legacyId": 22,
+    "knowledge_note": ""
+  },
+  {
+    "id": 18,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Chia hết cho 3 hoặc 5",
+    "level": "Cơ bản",
+    "statement": "Nhập số nguyên n. Kiểm tra n chia hết cho 3 hoặc chia hết cho 5 (hoặc cả hai).",
+    "input": "Một số nguyên n cần kiểm tra với các ước 3 và 5.",
+    "output": "In YES nếu n chia hết cho ít nhất một trong hai số 3 hoặc 5. Nếu không, in NO.",
+    "constraints": "-10⁹ <= n <= 10⁹.",
+    "kind": "div3or5",
+    "gen": "div35",
+    "tests": [
+      {
+        "no": 1,
+        "input": "-15",
+        "output": "YES"
+      },
+      {
+        "no": 2,
+        "input": "-3",
+        "output": "YES"
+      },
+      {
+        "no": 3,
+        "input": "0",
+        "output": "YES"
+      },
+      {
+        "no": 4,
+        "input": "1",
+        "output": "NO"
+      },
+      {
+        "no": 5,
+        "input": "3",
+        "output": "YES"
+      },
+      {
+        "no": 6,
+        "input": "5",
+        "output": "YES"
+      },
+      {
+        "no": 7,
+        "input": "15",
+        "output": "YES"
+      },
+      {
+        "no": 8,
+        "input": "100",
+        "output": "YES"
+      }
+    ],
+    "sample_input": "-15",
+    "sample_output": "YES",
+    "difficulty_rank": 1,
+    "legacyId": 23,
+    "knowledge_note": ""
+  },
+  {
+    "id": 19,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "So sánh hai số",
+    "level": "Cơ bản",
+    "statement": "Nhập hai số nguyên a, b và xác định quan hệ giữa chúng.",
+    "input": "Một dòng gồm hai số nguyên a và b, so sánh số đầu với số thứ hai.",
+    "output": "In LESS nếu a nhỏ hơn b, EQUAL nếu bằng nhau hoặc GREATER nếu a lớn hơn b.",
+    "constraints": "-10⁹ <= a, b <= 10⁹.",
+    "kind": "compare",
+    "gen": "pair_signed",
+    "tests": [
+      {
+        "no": 1,
+        "input": "-5 3",
+        "output": "LESS"
+      },
+      {
+        "no": 2,
+        "input": "0 0",
+        "output": "EQUAL"
+      },
+      {
+        "no": 3,
+        "input": "1 1",
+        "output": "EQUAL"
+      },
+      {
+        "no": 4,
+        "input": "1 2",
+        "output": "LESS"
+      },
+      {
+        "no": 5,
+        "input": "-4 -3",
+        "output": "LESS"
+      },
+      {
+        "no": 6,
+        "input": "7 7",
+        "output": "EQUAL"
+      },
+      {
+        "no": 7,
+        "input": "100 -25",
+        "output": "GREATER"
+      },
+      {
+        "no": 8,
+        "input": "-100 120",
+        "output": "LESS"
+      }
+    ],
+    "sample_input": "-5 3",
+    "sample_output": "LESS",
+    "difficulty_rank": 1,
+    "legacyId": 24,
+    "knowledge_note": ""
+  },
+  {
+    "id": 20,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Kiểm tra ba cạnh có tạo thành tam giác",
+    "level": "Cơ bản",
+    "statement": "Cho ba độ dài dương a, b, c. Một tam giác hợp lệ khi tổng hai cạnh bất kỳ lớn hơn cạnh còn lại.",
+    "input": "Một dòng gồm ba số nguyên dương a, b và c là độ dài ba cạnh dự kiến.",
+    "output": "In VALID nếu ba độ dài tạo được tam giác, ngược lại in INVALID.",
+    "constraints": "1 <= a, b, c <= 10⁹.",
+    "kind": "triangle_valid",
+    "gen": "triangle",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1 1 1",
+        "output": "VALID"
+      },
+      {
+        "no": 2,
+        "input": "1 2 3",
+        "output": "INVALID"
+      },
+      {
+        "no": 3,
+        "input": "1 2 2",
+        "output": "VALID"
+      },
+      {
+        "no": 4,
+        "input": "2 3 4",
+        "output": "VALID"
+      },
+      {
+        "no": 5,
+        "input": "2 3 5",
+        "output": "INVALID"
+      },
+      {
+        "no": 6,
+        "input": "3 4 5",
+        "output": "VALID"
+      },
+      {
+        "no": 7,
+        "input": "5 5 9",
+        "output": "VALID"
+      },
+      {
+        "no": 8,
+        "input": "7 10 12",
+        "output": "VALID"
+      },
+      {
+        "no": 9,
+        "input": "9 9 1",
+        "output": "VALID"
+      },
+      {
+        "no": 10,
+        "input": "12 13 14",
+        "output": "VALID"
+      },
+      {
+        "no": 11,
+        "input": "20 21 40",
+        "output": "VALID"
+      },
+      {
+        "no": 12,
+        "input": "25 26 30",
+        "output": "VALID"
+      }
+    ],
+    "sample_input": "1 1 1",
+    "sample_output": "VALID",
+    "difficulty_rank": 1,
+    "legacyId": 25,
+    "knowledge_note": "Kiến thức cần nhớ: Ba cạnh tạo thành tam giác khi tổng độ dài của từng cặp cạnh lớn hơn cạnh còn lại. Cần kiểm tra cả điều kiện độ dài dương."
+  },
+  {
+    "id": 21,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Phân loại tam giác",
+    "level": "Trung bình",
+    "statement": "Cho ba độ dài a, b, c. Nếu không tạo thành tam giác, in INVALID. Nếu hợp lệ, phân loại thành EQUILATERAL, ISOSCELES hoặc SCALENE.",
+    "input": "Một dòng gồm ba số nguyên dương a, b và c là độ dài cần phân loại.",
+    "output": "In INVALID nếu ba cạnh không tạo thành tam giác. Với tam giác hợp lệ, in EQUILATERAL cho tam giác đều, ISOSCELES cho tam giác cân không đều hoặc SCALENE cho tam giác có ba cạnh khác nhau.",
+    "constraints": "1 <= a, b, c <= 10⁹.",
+    "kind": "triangle_type",
+    "gen": "triangle",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1 1 1",
+        "output": "EQUILATERAL"
+      },
+      {
+        "no": 2,
+        "input": "1 2 2",
+        "output": "ISOSCELES"
+      },
+      {
+        "no": 3,
+        "input": "2 2 3",
+        "output": "ISOSCELES"
+      },
+      {
+        "no": 4,
+        "input": "3 4 5",
+        "output": "SCALENE"
+      },
+      {
+        "no": 5,
+        "input": "4 5 6",
+        "output": "SCALENE"
+      },
+      {
+        "no": 6,
+        "input": "2 3 4",
+        "output": "SCALENE"
+      },
+      {
+        "no": 7,
+        "input": "5 5 9",
+        "output": "ISOSCELES"
+      },
+      {
+        "no": 8,
+        "input": "6 7 8",
+        "output": "SCALENE"
+      },
+      {
+        "no": 9,
+        "input": "9 9 1",
+        "output": "ISOSCELES"
+      },
+      {
+        "no": 10,
+        "input": "12 12 12",
+        "output": "EQUILATERAL"
+      },
+      {
+        "no": 11,
+        "input": "7 10 12",
+        "output": "SCALENE"
+      },
+      {
+        "no": 12,
+        "input": "25 26 30",
+        "output": "SCALENE"
+      }
+    ],
+    "sample_input": "1 1 1",
+    "sample_output": "EQUILATERAL",
+    "difficulty_rank": 2,
+    "legacyId": 26,
+    "knowledge_note": "Kiến thức cần nhớ: Tam giác đều có ba cạnh bằng nhau; tam giác cân có ít nhất hai cạnh bằng nhau; tam giác thường có ba cạnh khác nhau. Kiểm tra tính hợp lệ trước khi phân loại."
+  },
+  {
+    "id": 22,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Kiểm tra tam giác vuông",
+    "level": "Trung bình",
+    "statement": "Cho ba cạnh nguyên dương a, b, c. Kiểm tra chúng có tạo thành tam giác vuông hay không. Phải kiểm tra điều kiện tam giác trước.",
+    "input": "Một dòng gồm ba số nguyên dương a, b và c là độ dài ba cạnh cần kiểm tra.",
+    "output": "In INVALID nếu ba cạnh không tạo thành tam giác. Nếu hợp lệ, in RIGHT cho tam giác vuông hoặc NOT RIGHT cho tam giác không vuông.",
+    "constraints": "1 <= a, b, c <= 10⁹.",
+    "kind": "right_triangle",
+    "gen": "triangle",
+    "tests": [
+      {
+        "no": 1,
+        "input": "3 4 5",
+        "output": "RIGHT"
+      },
+      {
+        "no": 2,
+        "input": "5 12 13",
+        "output": "RIGHT"
+      },
+      {
+        "no": 3,
+        "input": "8 15 17",
+        "output": "RIGHT"
+      },
+      {
+        "no": 4,
+        "input": "6 8 10",
+        "output": "RIGHT"
+      },
+      {
+        "no": 5,
+        "input": "1 1 1",
+        "output": "NOT RIGHT"
+      },
+      {
+        "no": 6,
+        "input": "2 3 4",
+        "output": "NOT RIGHT"
+      },
+      {
+        "no": 7,
+        "input": "4 5 6",
+        "output": "NOT RIGHT"
+      },
+      {
+        "no": 8,
+        "input": "7 24 25",
+        "output": "RIGHT"
+      },
+      {
+        "no": 9,
+        "input": "9 40 41",
+        "output": "RIGHT"
+      },
+      {
+        "no": 10,
+        "input": "5 5 8",
+        "output": "NOT RIGHT"
+      },
+      {
+        "no": 11,
+        "input": "12 13 14",
+        "output": "NOT RIGHT"
+      },
+      {
+        "no": 12,
+        "input": "20 21 28",
+        "output": "NOT RIGHT"
+      }
+    ],
+    "sample_input": "3 4 5",
+    "sample_output": "RIGHT",
+    "difficulty_rank": 2,
+    "legacyId": 27,
+    "knowledge_note": "Kiến thức cần nhớ: Tam giác vuông thỏa mãn định lý Pythagore: bình phương cạnh lớn nhất bằng tổng bình phương hai cạnh còn lại. Ba cạnh cũng phải tạo thành tam giác hợp lệ."
+  },
+  {
+    "id": 23,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Xếp loại điểm",
+    "level": "Cơ bản",
+    "statement": "Điểm kiểm tra x nằm trong [0,100]. Xếp loại: A nếu x>=90; B nếu x>=80; C nếu x>=70; D nếu x>=50; còn lại F.",
+    "input": "Một số nguyên x là điểm kiểm tra trên thang 100.",
+    "output": "In một chữ cái xếp loại: A từ 90, B từ 80 đến 89, C từ 70 đến 79, D từ 50 đến 69, F dưới 50.",
+    "constraints": "0 <= x <= 100.",
+    "kind": "grade",
+    "gen": "scores",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0",
+        "output": "F"
+      },
+      {
+        "no": 2,
+        "input": "1",
+        "output": "F"
+      },
+      {
+        "no": 3,
+        "input": "49",
+        "output": "F"
+      },
+      {
+        "no": 4,
+        "input": "50",
+        "output": "D"
+      },
+      {
+        "no": 5,
+        "input": "59",
+        "output": "D"
+      },
+      {
+        "no": 6,
+        "input": "60",
+        "output": "D"
+      },
+      {
+        "no": 7,
+        "input": "69",
+        "output": "D"
+      },
+      {
+        "no": 8,
+        "input": "70",
+        "output": "C"
+      },
+      {
+        "no": 9,
+        "input": "79",
+        "output": "C"
+      },
+      {
+        "no": 10,
+        "input": "80",
+        "output": "B"
+      },
+      {
+        "no": 11,
+        "input": "90",
+        "output": "A"
+      },
+      {
+        "no": 12,
+        "input": "100",
+        "output": "A"
+      }
+    ],
+    "sample_input": "85",
+    "sample_output": "B",
+    "difficulty_rank": 1,
+    "legacyId": 28,
+    "knowledge_note": ""
+  },
+  {
+    "id": 24,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Giải phương trình bậc nhất",
+    "level": "Trung bình",
+    "statement": "Giải phương trình ax + b = 0. Xét riêng trường hợp a=0: nếu b=0 thì vô số nghiệm, nếu b khác 0 thì vô nghiệm.",
+    "input": "Một dòng gồm hệ số a của ẩn và hằng số b, đều là số nguyên.",
+    "output": "In INFINITE nếu phương trình có vô số nghiệm, NO SOLUTION nếu vô nghiệm. Nếu có một nghiệm, in nghiệm với đúng 2 chữ số sau dấu chấm. Kết quả bằng 0 ghi 0.00.",
+    "constraints": "-10⁹ <= a, b <= 10⁹.",
+    "kind": "linear",
+    "gen": "linear",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0 0",
+        "output": "INFINITE"
+      },
+      {
+        "no": 2,
+        "input": "0 5",
+        "output": "NO SOLUTION"
+      },
+      {
+        "no": 3,
+        "input": "0 -7",
+        "output": "NO SOLUTION"
+      },
+      {
+        "no": 4,
+        "input": "1 0",
+        "output": "0.00"
+      },
+      {
+        "no": 5,
+        "input": "1 5",
+        "output": "-5.00"
+      },
+      {
+        "no": 6,
+        "input": "-1 5",
+        "output": "5.00"
+      },
+      {
+        "no": 7,
+        "input": "2 -4",
+        "output": "2.00"
+      },
+      {
+        "no": 8,
+        "input": "-3 -9",
+        "output": "-3.00"
+      },
+      {
+        "no": 9,
+        "input": "5 10",
+        "output": "-2.00"
+      },
+      {
+        "no": 10,
+        "input": "-7 14",
+        "output": "2.00"
+      },
+      {
+        "no": 11,
+        "input": "9 -27",
+        "output": "3.00"
+      },
+      {
+        "no": 12,
+        "input": "12 36",
+        "output": "-3.00"
+      }
+    ],
+    "sample_input": "2 -6",
+    "sample_output": "3.00",
+    "difficulty_rank": 2,
+    "legacyId": 29,
+    "knowledge_note": "Kiến thức cần nhớ: Với ax + b = 0, nếu a khác 0 thì x = -b/a. Nếu a = 0, phương trình có vô số nghiệm khi b = 0 và vô nghiệm khi b khác 0."
+  },
+  {
+    "id": 25,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Tính tiền điện theo bậc",
+    "level": "Trung bình",
+    "statement": "Tính tiền điện theo số kWh n: 50 kWh đầu giá 1000 đồng/kWh; 50 kWh tiếp theo giá 1200 đồng/kWh; phần vượt 100 kWh giá 1500 đồng/kWh.",
+    "input": "Một số nguyên không âm n là số kWh điện đã dùng.",
+    "output": "In tổng tiền điện bằng đồng, tính riêng lượng điện nằm trong mỗi bậc giá.",
+    "constraints": "0 <= n <= 10⁹.",
+    "kind": "electric",
+    "gen": "sumN",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "1",
+        "output": "1000"
+      },
+      {
+        "no": 3,
+        "input": "49",
+        "output": "49000"
+      },
+      {
+        "no": 4,
+        "input": "50",
+        "output": "50000"
+      },
+      {
+        "no": 5,
+        "input": "51",
+        "output": "51200"
+      },
+      {
+        "no": 6,
+        "input": "99",
+        "output": "108800"
+      },
+      {
+        "no": 7,
+        "input": "100",
+        "output": "110000"
+      },
+      {
+        "no": 8,
+        "input": "101",
+        "output": "111500"
+      },
+      {
+        "no": 9,
+        "input": "120",
+        "output": "140000"
+      },
+      {
+        "no": 10,
+        "input": "150",
+        "output": "185000"
+      },
+      {
+        "no": 11,
+        "input": "250",
+        "output": "335000"
+      },
+      {
+        "no": 12,
+        "input": "500",
+        "output": "710000"
+      }
+    ],
+    "sample_input": "51",
+    "sample_output": "51200",
+    "difficulty_rank": 2,
+    "legacyId": 30,
+    "knowledge_note": ""
+  },
+  {
+    "id": 26,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Giá vé theo độ tuổi",
+    "level": "Trung bình",
+    "statement": "Giá vé được tính như sau: từ 0 đến 5 tuổi miễn phí; 6 đến 17 tuổi giá 30000 đồng; 18 đến 59 tuổi giá 50000 đồng; từ 60 tuổi trở lên giá 40000 đồng.",
+    "input": "Một số nguyên không âm là tuổi tính theo số năm tròn.",
+    "output": "In giá vé bằng đồng theo nhóm tuổi. Nếu được miễn phí, in 0.",
+    "constraints": "0 <= tuổi <= 120.",
+    "kind": "ticket",
+    "gen": "ages",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0",
+        "output": "0"
+      },
+      {
+        "no": 2,
+        "input": "5",
+        "output": "0"
+      },
+      {
+        "no": 3,
+        "input": "6",
+        "output": "30000"
+      },
+      {
+        "no": 4,
+        "input": "10",
+        "output": "30000"
+      },
+      {
+        "no": 5,
+        "input": "17",
+        "output": "30000"
+      },
+      {
+        "no": 6,
+        "input": "18",
+        "output": "50000"
+      },
+      {
+        "no": 7,
+        "input": "30",
+        "output": "50000"
+      },
+      {
+        "no": 8,
+        "input": "59",
+        "output": "50000"
+      },
+      {
+        "no": 9,
+        "input": "60",
+        "output": "40000"
+      },
+      {
+        "no": 10,
+        "input": "61",
+        "output": "40000"
+      },
+      {
+        "no": 11,
+        "input": "100",
+        "output": "40000"
+      },
+      {
+        "no": 12,
+        "input": "120",
+        "output": "40000"
+      }
+    ],
+    "sample_input": "18",
+    "sample_output": "50000",
+    "difficulty_rank": 2,
+    "legacyId": 31,
+    "knowledge_note": ""
+  },
+  {
+    "id": 27,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Tính phí vận chuyển",
+    "level": "Trung bình",
+    "statement": "Khối lượng hàng w tính bằng gram. Phí: không quá 1000g là 15000 đồng; trên 1000g đến 5000g là 25000 đồng; trên 5000g, phí là 25000 đồng cộng 4000 đồng cho mỗi 1000g tăng thêm (làm tròn lên).",
+    "input": "Một số nguyên dương w là khối lượng kiện hàng tính bằng gram.",
+    "output": "In phí vận chuyển bằng đồng. Với phần vượt 5000 gram, tính phí theo từng khối 1000 gram làm tròn lên.",
+    "constraints": "1 <= w <= 10⁹.",
+    "kind": "shipping",
+    "gen": "weights",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1",
+        "output": "15000"
+      },
+      {
+        "no": 2,
+        "input": "999",
+        "output": "15000"
+      },
+      {
+        "no": 3,
+        "input": "1000",
+        "output": "15000"
+      },
+      {
+        "no": 4,
+        "input": "1001",
+        "output": "25000"
+      },
+      {
+        "no": 5,
+        "input": "2000",
+        "output": "25000"
+      },
+      {
+        "no": 6,
+        "input": "4999",
+        "output": "25000"
+      },
+      {
+        "no": 7,
+        "input": "5000",
+        "output": "25000"
+      },
+      {
+        "no": 8,
+        "input": "5001",
+        "output": "29000"
+      },
+      {
+        "no": 9,
+        "input": "6000",
+        "output": "29000"
+      },
+      {
+        "no": 10,
+        "input": "7500",
+        "output": "37000"
+      },
+      {
+        "no": 11,
+        "input": "9999",
+        "output": "45000"
+      },
+      {
+        "no": 12,
+        "input": "10000",
+        "output": "45000"
+      }
+    ],
+    "sample_input": "1",
+    "sample_output": "15000",
+    "difficulty_rank": 2,
+    "legacyId": 32,
+    "knowledge_note": ""
+  },
+  {
+    "id": 28,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Xác định góc phần tư",
+    "level": "Trung bình",
+    "statement": "Cho tọa độ điểm (x,y). Hãy xác định điểm nằm ở gốc tọa độ, trên trục Ox, trên trục Oy hoặc ở góc phần tư nào.",
+    "input": "Một dòng gồm hai số thực x và y là hoành độ và tung độ.",
+    "output": "In ORIGIN tại gốc tọa độ, X_AXIS hoặc Y_AXIS nếu điểm nằm trên trục tương ứng. Các trường hợp còn lại in Q1, Q2, Q3 hoặc Q4 theo góc phần tư.",
+    "constraints": "-10⁹ <= x, y <= 10⁹.",
+    "kind": "quadrant",
+    "gen": "quadrant",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0 0",
+        "output": "ORIGIN"
+      },
+      {
+        "no": 2,
+        "input": "0 2",
+        "output": "Y_AXIS"
+      },
+      {
+        "no": 3,
+        "input": "0 -3",
+        "output": "Y_AXIS"
+      },
+      {
+        "no": 4,
+        "input": "4 0",
+        "output": "X_AXIS"
+      },
+      {
+        "no": 5,
+        "input": "-5 0",
+        "output": "X_AXIS"
+      },
+      {
+        "no": 6,
+        "input": "1 1",
+        "output": "Q1"
+      },
+      {
+        "no": 7,
+        "input": "-1 1",
+        "output": "Q2"
+      },
+      {
+        "no": 8,
+        "input": "-2 -3",
+        "output": "Q3"
+      },
+      {
+        "no": 9,
+        "input": "3 -4",
+        "output": "Q4"
+      },
+      {
+        "no": 10,
+        "input": "5 7",
+        "output": "Q1"
+      },
+      {
+        "no": 11,
+        "input": "-6 8",
+        "output": "Q2"
+      },
+      {
+        "no": 12,
+        "input": "9 -10",
+        "output": "Q4"
+      }
+    ],
+    "sample_input": "3 -4",
+    "sample_output": "Q4",
+    "difficulty_rank": 2,
+    "legacyId": 33,
+    "knowledge_note": ""
+  },
+  {
+    "id": 29,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Số nào xa 0 hơn?",
+    "level": "Trung bình",
+    "statement": "Nhập hai số nguyên a, b. So sánh khoảng cách từ mỗi số đến 0, tức là so sánh |a| và |b|.",
+    "input": "Một dòng gồm hai số nguyên a và b cần so khoảng cách đến 0.",
+    "output": "In A nếu trị tuyệt đối của a lớn hơn, B nếu trị tuyệt đối của b lớn hơn hoặc EQUAL nếu hai khoảng cách bằng nhau.",
+    "constraints": "-10⁹ <= a, b <= 10⁹.",
+    "kind": "farther_zero",
+    "gen": "pair_signed",
+    "tests": [
+      {
+        "no": 1,
+        "input": "0 0",
+        "output": "EQUAL"
+      },
+      {
+        "no": 2,
+        "input": "0 5",
+        "output": "B"
+      },
+      {
+        "no": 3,
+        "input": "-5 5",
+        "output": "EQUAL"
+      },
+      {
+        "no": 4,
+        "input": "3 -8",
+        "output": "B"
+      },
+      {
+        "no": 5,
+        "input": "-9 2",
+        "output": "A"
+      },
+      {
+        "no": 6,
+        "input": "10 -10",
+        "output": "EQUAL"
+      },
+      {
+        "no": 7,
+        "input": "-12 -4",
+        "output": "A"
+      },
+      {
+        "no": 8,
+        "input": "17 6",
+        "output": "A"
+      },
+      {
+        "no": 9,
+        "input": "-25 24",
+        "output": "A"
+      },
+      {
+        "no": 10,
+        "input": "99 -100",
+        "output": "B"
+      },
+      {
+        "no": 11,
+        "input": "-120 30",
+        "output": "A"
+      },
+      {
+        "no": 12,
+        "input": "47 -48",
+        "output": "B"
+      }
+    ],
+    "sample_input": "-9 6",
+    "sample_output": "A",
+    "difficulty_rank": 2,
+    "legacyId": 34,
+    "knowledge_note": ""
+  },
+  {
+    "id": 30,
+    "section": "Phần 2 - Câu lệnh rẽ nhánh",
+    "title": "Phân loại phương trình bậc hai",
+    "level": "Trung bình",
+    "statement": "Cho ba hệ số a, b, c. Nếu a=0 thì đây không phải phương trình bậc hai. Ngược lại, xét delta=b*b-4*a*c để phân loại số nghiệm thực.",
+    "input": "Một dòng gồm ba hệ số nguyên a, b và c theo thứ tự của phương trình bậc hai.",
+    "output": "In NOT QUADRATIC nếu hệ số bậc hai bằng 0. Nếu khác 0, in NO REAL ROOT, ONE ROOT hoặc TWO ROOTS tương ứng với 0, 1 hoặc 2 nghiệm thực phân biệt.",
+    "constraints": "-10⁹ <= a, b, c <= 10⁹.",
+    "kind": "quadratic_type",
+    "gen": "quadratic",
+    "tests": [
+      {
+        "no": 1,
+        "input": "1 0 0",
+        "output": "ONE ROOT"
+      },
+      {
+        "no": 2,
+        "input": "0 1 1",
+        "output": "NOT QUADRATIC"
+      },
+      {
+        "no": 3,
+        "input": "0 0 0",
+        "output": "NOT QUADRATIC"
+      },
+      {
+        "no": 4,
+        "input": "1 2 1",
+        "output": "ONE ROOT"
+      },
+      {
+        "no": 5,
+        "input": "1 0 1",
+        "output": "NO REAL ROOT"
+      },
+      {
+        "no": 6,
+        "input": "1 2 0",
+        "output": "TWO ROOTS"
+      },
+      {
+        "no": 7,
+        "input": "1 5 6",
+        "output": "TWO ROOTS"
+      },
+      {
+        "no": 8,
+        "input": "2 4 2",
+        "output": "ONE ROOT"
+      },
+      {
+        "no": 9,
+        "input": "3 0 -12",
+        "output": "TWO ROOTS"
+      },
+      {
+        "no": 10,
+        "input": "-1 2 3",
+        "output": "TWO ROOTS"
+      },
+      {
+        "no": 11,
+        "input": "4 4 1",
+        "output": "ONE ROOT"
+      },
+      {
+        "no": 12,
+        "input": "2 -5 2",
+        "output": "TWO ROOTS"
+      }
+    ],
+    "sample_input": "1 0 0",
+    "sample_output": "ONE ROOT",
+    "difficulty_rank": 2,
+    "legacyId": 35,
+    "knowledge_note": "Kiến thức cần nhớ: Với ax² + bx + c = 0 và a khác 0, biệt thức Δ = b² - 4ac. Δ > 0 có hai nghiệm thực, Δ = 0 có nghiệm kép, Δ < 0 không có nghiệm thực."
+  }
 ]

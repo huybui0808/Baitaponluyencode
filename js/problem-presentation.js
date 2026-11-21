@@ -262,10 +262,10 @@ function taskSample(task) {
 const NUMERIC_VALUE = "[+-]?(?:\\d+(?:[.,]\\d*)?|[.,]\\d+)(?:[eE][+-]?\\d+)?";
 const VALUE_LINE = new RegExp(`^${NUMERIC_VALUE}(?:\\s+${NUMERIC_VALUE})*$`);
 
-// VI: Dùng sample_output đầy đủ để suy ra nhãn cho mọi bài khi các giá trị
-// trong mẫu khớp sample_input và output của test đầu; nhãn JS là phương án cũ.
-// EN: Infer labels for any task when the full sample transcript matches sample
-// input and the first test output; retain legacy labels as a fallback.
+// VI: Suy ra lời nhắc, nhóm dữ liệu nhập và nhãn kết quả từ màn hình mẫu.
+// Các giá trị ở phần lời nhắc phải khớp input mẫu hoặc input test đầu.
+// EN: Infer prompts, stdin grouping, and result labels from the sample screen.
+// Echoed prompt values must match the sample input or first test input.
 function sampleFormat(task) {
   const lines = String(task.sample_output ?? "").replace(/\r\n?/g, "\n").replace(/\n+$/, "").split("\n");
   const pattern = /^([\p{L}][^\n]*?[:=]\s*)(.*)$/u;
@@ -273,10 +273,16 @@ function sampleFormat(task) {
     const match = pattern.exec(line);
     return match ? { label: match[1], value: match[2].trim() } : null;
   });
-  if (!parts.length || parts.some((part) => !part)) return { prompts: [], lineLabels: null };
+  if (!parts.length || parts.some((part) => !part)) return { prompts: [], inputGroups: [], lineLabels: null };
 
-  const inputCandidates = [task.sample_input, task.tests?.[0]?.input]
-    .map((value) => String(value ?? "").replace(/\r\n?/g, "\n").trim().split(/\s+/).filter(Boolean));
+  const inputCandidates = [task.sample_input, task.tests?.[0]?.input].map((value) => {
+    const normalized = String(value ?? "").replace(/\r\n?/g, "\n").trim();
+    const values = normalized.split("\n").map((line) => {
+      const prompt = /^[\p{L}][^\n]*?[:=：＝]\s*/u.exec(line);
+      return prompt ? line.slice(prompt[0].length) : line;
+    }).join(" ");
+    return values.split(/\s+/).filter(Boolean);
+  });
   for (let prefixCount = parts.length - 1; prefixCount >= 0; prefixCount--) {
     const prefix = parts.slice(0, prefixCount);
     const result = parts.slice(prefixCount);
@@ -286,11 +292,14 @@ function sampleFormat(task) {
         result.length && result.every(Boolean)) {
       return {
         prompts: prefix.map((part) => part.label),
+        // The last prompt receives remaining values when later tests have a
+        // longer list (e.g. N followed by N array elements).
+        inputGroups: prefix.map((part) => part.value.split(/\s+/).filter(Boolean).length),
         lineLabels: result.map((part) => part.label),
       };
     }
   }
-  return { prompts: [], lineLabels: null };
+  return { prompts: [], inputGroups: [], lineLabels: null };
 }
 
 function taskPresentation(task, input = taskSample(task).input) {
@@ -340,8 +349,22 @@ function taskPresentation(task, input = taskSample(task).input) {
     const normalizedInput = String(inputValue ?? "").replace(/\r/g, "").trim();
     const tokens = normalizedInput ? normalizedInput.split(/\s+/) : [];
     const lines = normalizedInput ? normalizedInput.split("\n") : [];
-    if (prompts.length && prompts.length === tokens.length) return tokens;
     if (prompts.length && prompts.length === lines.length) return lines;
+    if (prompts.length && prompts.length === tokens.length) return tokens;
+    if (prompts.length === inferred.inputGroups.length && inferred.inputGroups.length) {
+      const groups = [];
+      let cursor = 0;
+      for (let index = 0; index < inferred.inputGroups.length; index++) {
+        const remaining = tokens.length - cursor;
+        const count = index === inferred.inputGroups.length - 1
+          ? remaining
+          : inferred.inputGroups[index];
+        if (count < 1 || count > remaining) return null;
+        groups.push(tokens.slice(cursor, cursor + count).join(" "));
+        cursor += count;
+      }
+      if (cursor === tokens.length) return groups;
+    }
     return null;
   };
   const expectedProgramOutput = (rawOutput) => promptText + formattedOutput(rawOutput);
@@ -356,11 +379,21 @@ function taskPresentation(task, input = taskSample(task).input) {
     let cursor = 0;
     let transcript = "";
     for (let index = 0; index < prompts.length; index++) {
-      const promptAt = String(rawOutput ?? "").indexOf(prompts[index], cursor);
-      if (promptAt < 0) return String(rawOutput ?? "");
+      const output = String(rawOutput ?? "");
+      let promptAt = output.indexOf(prompts[index], cursor);
+      let actualPrompt = prompts[index];
+      if (promptAt < 0) {
+        // Prompts that differ from the sample still get natural stdin echo in
+        // the displayed console. The checker separately marks the wording PE.
+        const genericPrompt = /(?:nh[aậ]p|cho)\s+[^:=\n]{0,100}[:=：＝]\s*/iu;
+        const match = genericPrompt.exec(output.slice(cursor));
+        if (!match) return output;
+        promptAt = cursor + match.index;
+        actualPrompt = match[0];
+      }
       transcript += String(rawOutput ?? "").slice(cursor, promptAt);
-      transcript += `${prompts[index]}${values[index]}\n`;
-      cursor = promptAt + prompts[index].length;
+      transcript += `${actualPrompt}${values[index]}\n`;
+      cursor = promptAt + actualPrompt.length;
     }
     return transcript + String(rawOutput ?? "").slice(cursor);
   };
@@ -372,7 +405,13 @@ function taskPresentation(task, input = taskSample(task).input) {
     expected,
     expectedProgramOutput,
     renderConsoleOutput,
-    guide: !legacy ? [
+    guide: hasSampleLabels ? [
+      "Yêu cầu trình bày được lấy trực tiếp từ Sample output bên trên.",
+      ...(prompts.length ? ["Giữ nguyên các lời nhắc nhập theo đúng thứ tự:", ...prompts] : []),
+      "In các nhãn kết quả theo đúng thứ tự:",
+      ...(lineLabels || []),
+      "Khi sửa Sample output, hướng dẫn và quy tắc nhận diện nhãn sẽ cập nhật theo mẫu này.",
+    ].join("\n") : !legacy ? [
       "In đúng các dòng, nhãn và thứ tự theo mục OUTPUT và màn hình mẫu.",
       "Chỉ ghi vào test output những gì chương trình tự in; dữ liệu nhập không tự xuất hiện trong stdout.",
     ].join("\n") : [
@@ -386,4 +425,4 @@ function taskPresentation(task, input = taskSample(task).input) {
   };
 }
 
-export { CONCEPT_NOTES, OUTPUT_RULES, taskPresentation, taskSample };
+export { CONCEPT_NOTES, OUTPUT_RULES, sampleFormat, taskPresentation, taskSample };

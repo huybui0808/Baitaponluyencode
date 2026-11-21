@@ -1,5 +1,7 @@
 // VI: Giữ metadata chỉ có trong JSON khi xuất bài đã xuất bản từ Supabase.
 // EN: Preserve JSON-only metadata while exporting published Supabase tasks.
+import { CONCEPT_NOTES } from "./problem-presentation.js";
+
 export function buildExportParts(rows, originalParts) {
   const originalById = new Map(originalParts.flat().map((task) => [task.id, task]));
   const parts = [];
@@ -28,6 +30,7 @@ export function buildExportParts(rows, originalParts) {
       input: row.input ?? "",
       output: row.output ?? "",
       constraints: row.constraints ?? "",
+      knowledge_note: row.knowledge_note ?? originalById.get(row.id)?.knowledge_note ?? CONCEPT_NOTES.get(row.id) ?? "",
       sample_input: row.sample_input ?? "",
       sample_output: row.sample_output ?? "",
       tests: tests.map((test) => ({
