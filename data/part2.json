@@ -56,7 +56,8 @@
     "sample_output": "EVEN",
     "difficulty_rank": 1,
     "legacyId": 16,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 12,
@@ -115,7 +116,8 @@
     "sample_output": "NEGATIVE",
     "difficulty_rank": 1,
     "legacyId": 17,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 13,
@@ -174,7 +176,8 @@
     "sample_output": "3",
     "difficulty_rank": 1,
     "legacyId": 18,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 14,
@@ -233,7 +236,8 @@
     "sample_output": "12",
     "difficulty_rank": 1,
     "legacyId": 19,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 15,
@@ -292,7 +296,8 @@
     "sample_output": "-3",
     "difficulty_rank": 1,
     "legacyId": 20,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 16,
@@ -351,7 +356,8 @@
     "sample_output": "LEAP",
     "difficulty_rank": 1,
     "legacyId": 21,
-    "knowledge_note": "Kiến thức cần nhớ: Năm nhuận là năm chia hết cho 400, hoặc chia hết cho 4 nhưng không chia hết cho 100."
+    "knowledge_note": "Kiến thức cần nhớ: Năm nhuận là năm chia hết cho 400, hoặc chia hết cho 4 nhưng không chia hết cho 100.",
+    "presentation_rules": ""
   },
   {
     "id": 17,
@@ -410,7 +416,8 @@
     "sample_output": "YES",
     "difficulty_rank": 1,
     "legacyId": 22,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 18,
@@ -469,7 +476,8 @@
     "sample_output": "YES",
     "difficulty_rank": 1,
     "legacyId": 23,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 19,
@@ -528,7 +536,8 @@
     "sample_output": "LESS",
     "difficulty_rank": 1,
     "legacyId": 24,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 20,
@@ -607,7 +616,8 @@
     "sample_output": "VALID",
     "difficulty_rank": 1,
     "legacyId": 25,
-    "knowledge_note": "Kiến thức cần nhớ: Ba cạnh tạo thành tam giác khi tổng độ dài của từng cặp cạnh lớn hơn cạnh còn lại. Cần kiểm tra cả điều kiện độ dài dương."
+    "knowledge_note": "Kiến thức cần nhớ: Ba cạnh tạo thành tam giác khi tổng độ dài của từng cặp cạnh lớn hơn cạnh còn lại. Cần kiểm tra cả điều kiện độ dài dương.",
+    "presentation_rules": ""
   },
   {
     "id": 21,
@@ -686,7 +696,8 @@
     "sample_output": "EQUILATERAL",
     "difficulty_rank": 2,
     "legacyId": 26,
-    "knowledge_note": "Kiến thức cần nhớ: Tam giác đều có ba cạnh bằng nhau; tam giác cân có ít nhất hai cạnh bằng nhau; tam giác thường có ba cạnh khác nhau. Kiểm tra tính hợp lệ trước khi phân loại."
+    "knowledge_note": "Kiến thức cần nhớ: Tam giác đều có ba cạnh bằng nhau; tam giác cân có ít nhất hai cạnh bằng nhau; tam giác thường có ba cạnh khác nhau. Kiểm tra tính hợp lệ trước khi phân loại.",
+    "presentation_rules": ""
   },
   {
     "id": 22,
@@ -765,7 +776,8 @@
     "sample_output": "RIGHT",
     "difficulty_rank": 2,
     "legacyId": 27,
-    "knowledge_note": "Kiến thức cần nhớ: Tam giác vuông thỏa mãn định lý Pythagore: bình phương cạnh lớn nhất bằng tổng bình phương hai cạnh còn lại. Ba cạnh cũng phải tạo thành tam giác hợp lệ."
+    "knowledge_note": "Kiến thức cần nhớ: Tam giác vuông thỏa mãn định lý Pythagore: bình phương cạnh lớn nhất bằng tổng bình phương hai cạnh còn lại. Ba cạnh cũng phải tạo thành tam giác hợp lệ.",
+    "presentation_rules": ""
   },
   {
     "id": 23,
@@ -844,7 +856,8 @@
     "sample_output": "B",
     "difficulty_rank": 1,
     "legacyId": 28,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 24,
@@ -923,7 +936,8 @@
     "sample_output": "3.00",
     "difficulty_rank": 2,
     "legacyId": 29,
-    "knowledge_note": "Kiến thức cần nhớ: Với ax + b = 0, nếu a khác 0 thì x = -b/a. Nếu a = 0, phương trình có vô số nghiệm khi b = 0 và vô nghiệm khi b khác 0."
+    "knowledge_note": "Kiến thức cần nhớ: Với ax + b = 0, nếu a khác 0 thì x = -b/a. Nếu a = 0, phương trình có vô số nghiệm khi b = 0 và vô nghiệm khi b khác 0.",
+    "presentation_rules": ""
   },
   {
     "id": 25,
@@ -1002,7 +1016,8 @@
     "sample_output": "51200",
     "difficulty_rank": 2,
     "legacyId": 30,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 26,
@@ -1081,7 +1096,8 @@
     "sample_output": "50000",
     "difficulty_rank": 2,
     "legacyId": 31,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 27,
@@ -1160,7 +1176,8 @@
     "sample_output": "15000",
     "difficulty_rank": 2,
     "legacyId": 32,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 28,
@@ -1239,7 +1256,8 @@
     "sample_output": "Q4",
     "difficulty_rank": 2,
     "legacyId": 33,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 29,
@@ -1318,7 +1336,8 @@
     "sample_output": "A",
     "difficulty_rank": 2,
     "legacyId": 34,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 30,
@@ -1397,6 +1416,7 @@
     "sample_output": "ONE ROOT",
     "difficulty_rank": 2,
     "legacyId": 35,
-    "knowledge_note": "Kiến thức cần nhớ: Với ax² + bx + c = 0 và a khác 0, biệt thức Δ = b² - 4ac. Δ > 0 có hai nghiệm thực, Δ = 0 có nghiệm kép, Δ < 0 không có nghiệm thực."
+    "knowledge_note": "Kiến thức cần nhớ: Với ax² + bx + c = 0 và a khác 0, biệt thức Δ = b² - 4ac. Δ > 0 có hai nghiệm thực, Δ = 0 có nghiệm kép, Δ < 0 không có nghiệm thực.",
+    "presentation_rules": ""
   }
 ]

@@ -335,7 +335,8 @@ const partOf = (p) => (/^Phần\s*(\d+)/.exec(p.section) || [])[1] || "?";
 
 async function viewProblems(body) {
   await loadProblems();
-  state.pf = state.pf || { text: "", part: "all", status: "all" };
+  state.pf = state.pf || { text: "", part: "all", status: "all", page: 1 };
+  state.pf.page = Math.max(1, Number(state.pf.page) || 1);
   body.innerHTML =
     head(
       "Quản lý bài tập",
@@ -350,10 +351,12 @@ async function viewProblems(body) {
   $("#pfPart").value = state.pf.part;
   $("#pfStatus").value = state.pf.status;
   const rerender = () => renderProblemList();
-  $("#pfText").oninput = (e) => ((state.pf.text = e.target.value), rerender());
-  $("#pfPart").onchange = (e) => ((state.pf.part = e.target.value), rerender());
+  const resetPage = () => (state.pf.page = 1);
+  $("#pfText").oninput = (e) => ((state.pf.text = e.target.value), resetPage(), rerender());
+  $("#pfPart").onchange = (e) => ((state.pf.part = e.target.value), resetPage(), rerender());
   $("#pfStatus").onchange = (e) => (
     (state.pf.status = e.target.value),
+    resetPage(),
     rerender()
   );
   $("#admImportFiles").onchange = (event) => {
@@ -379,6 +382,11 @@ function filteredProblems() {
 }
 function renderProblemList() {
   const list = filteredProblems();
+  const pageSize = 50;
+  const pageCount = Math.max(1, Math.ceil(list.length / pageSize));
+  state.pf.page = Math.min(state.pf.page, pageCount);
+  const page = state.pf.page;
+  const visible = list.slice((page - 1) * pageSize, page * pageSize);
   const box = $("#pList");
   if (!state.problems.length) {
     box.innerHTML = `<div class="adm-card adm-empty">Chưa có bài nào trong cơ sở dữ liệu.<br><br>Bấm <b>“Nhập từ file JSON”</b> để chuyển các bài trong bộ dữ liệu hiện có sang Supabase, hoặc <b>“Thêm bài”</b> để tạo bài mới.</div>`;
@@ -386,7 +394,7 @@ function renderProblemList() {
   }
   box.innerHTML = `<div class="adm-tablewrap"><table class="adm-table"><thead><tr><th>#</th><th>Bài</th><th>Phần</th><th>Mức độ</th><th>Test</th><th>Xuất bản</th><th></th></tr></thead><tbody>
     ${
-      list
+      visible
         .map((p) => {
           const n = testCount(p);
           return `<tr data-id="${p.id}"><td><b>${pad3(p.id)}</b></td><td class="ttl">${esc(p.title)}</td><td class="mut">${esc(p.section.split(" - ")[0])}</td>
@@ -398,9 +406,12 @@ function renderProblemList() {
         .join("") ||
       '<tr><td colspan="7" class="adm-empty">Không có bài phù hợp.</td></tr>'
     }</tbody></table></div>
+    <div class="adm-pagination"><button class="adm-btn sm" data-page="${page - 1}" ${page <= 1 ? "disabled" : ""}>Trước</button><span>Trang ${page}/${pageCount} · ${visible.length}/${list.length} bài</span><button class="adm-btn sm" data-page="${page + 1}" ${page >= pageCount ? "disabled" : ""}>Sau</button></div>
     <p class="mut" style="color:var(--muted);font-size:12px;margin-top:8px">Hiển thị ${list.length}/${state.problems.length} bài. Thứ tự hiển thị trên website theo cột sắp xếp (↑ ↓).</p>`;
 }
 async function onProblemsClick(e) {
+  const pageButton = e.target.closest("[data-page]");
+  if (pageButton) { state.pf.page = Number(pageButton.dataset.page); return renderProblemList(); }
   const b = e.target.closest("[data-act]");
   if (!b) return;
   const act = b.dataset.act;
@@ -1149,22 +1160,30 @@ async function viewAdmins(body) {
 
 // ---------- Nhật ký (chỉ Super Admin) ----------
 async function viewAudit(body) {
+  state.auditPage = Math.max(1, Number(state.auditPage) || 1);
+  state.auditCategory ||= "all";
+  const pageSize = 50;
   const rows = await q(
     sb
       .from("admin_audit_log")
       .select("created_at,actor_name,action,target,detail")
       .order("created_at", { ascending: false })
-      .limit(150),
+      .limit(1000),
   );
+  const categoryOf = (row) => /^(user_|role_|profile_)/.test(row.action) ? "account" : /test|problem/.test(row.action) ? "problem" : "other";
+  const filtered = rows.filter((row) => state.auditCategory === "all" || categoryOf(row) === state.auditCategory);
+  const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize));
+  state.auditPage = Math.min(state.auditPage, pageCount);
+  const visible = filtered.slice((state.auditPage - 1) * pageSize, state.auditPage * pageSize);
   body.innerHTML =
     head(
       "Nhật ký hoạt động",
-      "150 thao tác quản trị và đổi tên gần nhất",
+      `Nhật ký hoạt động · trang ${state.auditPage} · tối đa ${pageSize} mục mỗi trang`,
       `<button class="adm-btn" data-r="1">↻ Làm mới</button>`,
     ) +
-    `<div class="adm-tablewrap"><table class="adm-table"><thead><tr><th>Thời gian</th><th>Người thực hiện</th><th>Thao tác</th><th>Đối tượng</th></tr></thead><tbody>
+    `<div class="adm-toolbar"><select class="adm-select" id="auditCategory"><option value="all">Tất cả hoạt động</option><option value="problem">Bài tập và test</option><option value="account">Tài khoản và hồ sơ</option><option value="other">Hoạt động khác</option></select></div><div class="adm-tablewrap"><table class="adm-table"><thead><tr><th>Thời gian</th><th>Người thực hiện</th><th>Thao tác</th><th>Đối tượng</th></tr></thead><tbody>
     ${
-      rows
+      visible
         .map((r) => {
           const d = r.detail || {};
           const extra = d.old_name || d.new_name
@@ -1182,6 +1201,13 @@ async function viewAudit(body) {
         })
         .join("") ||
       '<tr><td colspan="4" class="adm-empty">Chưa có hoạt động nào.</td></tr>'
-    }</tbody></table></div>`;
-  body.onclick = (e) => e.target.closest("[data-r]") && show("audit");
+    }</tbody></table></div>
+    <div class="adm-pagination"><button class="adm-btn sm" data-audit-page="${state.auditPage - 1}" ${state.auditPage <= 1 ? "disabled" : ""}>Trước</button><span>Trang ${state.auditPage}/${pageCount} · ${visible.length}/${filtered.length} hoạt động</span><button class="adm-btn sm" data-audit-page="${state.auditPage + 1}" ${state.auditPage >= pageCount ? "disabled" : ""}>Sau</button></div>`;
+  $("#auditCategory").value = state.auditCategory;
+  $("#auditCategory").onchange = (e) => { state.auditCategory = e.target.value; state.auditPage = 1; show("audit"); };
+  body.onclick = (e) => {
+    if (e.target.closest("[data-r]")) return show("audit");
+    const page = e.target.closest("[data-audit-page]");
+    if (page) { state.auditPage = Number(page.dataset.auditPage); return show("audit"); }
+  };
 }

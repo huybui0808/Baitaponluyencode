@@ -1,42 +1,29 @@
-# Baitaponluyencode
-# Ghi chú về AI và quá trình xây dựng / AI collaboration note
+﻿# ONLUYENC++
 
-## Tiếng Việt
+ONLUYENC++ là website luyện lập trình C++20, hướng đến người học từ nhập môn đến các chủ đề nâng cao. Website cung cấp danh sách bài tập theo phần, đề bài, ví dụ, test mẫu, trình biên dịch chạy trong trình duyệt, lưu tiến độ, hồ sơ thành viên, bảng xếp hạng và công cụ quản trị bài tập.
 
-### Minh bạch về mã nguồn
+## Chấm bài và quyền riêng tư
 
-Đây là dự án do chủ dự án định hướng và đưa ra yêu cầu. AI đã hỗ trợ đọc cấu trúc dự án, đề xuất và chỉnh sửa một số phần mã, giao diện, xử lý dữ liệu và SQL theo các yêu cầu đó. Vì vậy, một phần mã hiện tại có sự hỗ trợ tạo/sửa từ AI; tài liệu này không khẳng định toàn bộ mã do riêng chủ dự án tự viết.
+- Chương trình C++ được biên dịch và chạy bằng WebAssembly trong trình duyệt, không gửi mã nguồn đến dịch vụ biên dịch trực tuyến.
+- Khi chấm một bài, website chạy toàn bộ test được cấu hình cho bài đó và tổng hợp kết quả. Chạy thử input riêng không cập nhật điểm bài.
+- Bộ chấm phân biệt kết quả đúng, sai, lỗi biên dịch, lỗi chạy, quá thời gian và trường hợp đúng thuật toán nhưng sai cách trình bày.
+- Test mẫu giúp người học tự kiểm tra. Vì chương trình và dữ liệu chấm chạy phía trình duyệt, đây là công cụ luyện tập; không nên dùng làm hệ thống thi có test bí mật.
+- Supabase phục vụ tài khoản, tiến độ, lịch sử nộp và danh mục bài đã xuất bản. Quyền đọc mã nguồn bài nộp cần được bảo vệ bằng chính sách/RPC phía cơ sở dữ liệu.
 
-### Những việc bạn đã làm được trong quá trình làm việc với AI
+## Thành phần chính
 
-- Mô tả được mục tiêu sản phẩm: website luyện C++20, chạy test cục bộ, lưu tiến độ và có bảng xếp hạng.
-- Chia yêu cầu lớn thành các phần cụ thể: quyền thành viên/Admin, lịch sử code đúng và sai, hồ sơ, đổi tên có giới hạn, điều hướng trên điện thoại và trang thành viên/bài nộp.
-- Nêu rõ ràng buộc quan trọng như không gửi code lên dịch vụ biên dịch trực tuyến và không cho xem code bài chưa hoàn thành.
-- Phát hiện khi kết quả chưa xuất hiện như mong đợi, phản hồi trực tiếp và yêu cầu sửa tiếp.
-- Đưa ảnh tham khảo nhưng vẫn yêu cầu giữ phong cách và bố cục phù hợp với website hiện có.
-- Tiếp tục góp ý chi tiết về avatar, độ gọn của tiến độ, cách xác nhận email và trải nghiệm điều hướng.
-- Đề xuất cho phép tải avatar, thu tiến độ thành dải vuốt ngang, và yêu cầu xử lý email đăng ký trùng mà không tự đặt giới hạn gửi lại.
+- `index.html`, `css/`, `js/`: giao diện, điều hướng, trình soạn thảo và logic ứng dụng.
+- `data/part*.json`: bộ bài tập dự phòng cho chế độ offline; `data/manifest.json` khai báo các phần.
+- `workers/`, `vendor/cpp-compiler/`: Web Worker và compiler C++20 chạy tại thiết bị.
+- `sw.js`: cache tài nguyên để hỗ trợ sử dụng offline sau lần tải đầu.
+- `cloudflare-worker.js`, `wrangler.jsonc`: phục vụ tài nguyên compiler lớn trên Cloudflare.
 
-### Nhận xét
+Không đưa khóa bí mật, file môi trường, dữ liệu tài khoản, SQL quản trị hoặc tài liệu nội bộ lên repository công khai. Publishable key phía trình duyệt không thay thế chính sách RLS; không đặt service-role key ở frontend.
 
-Qua cách bạn giao việc trong cuộc trao đổi này, bạn đã biết dùng AI như một cộng sự để phân tích yêu cầu, xây dựng từng phần và phản hồi dựa trên kết quả. Điểm mạnh là bạn nêu mục tiêu và quyền hạn khá rõ, đồng thời không ngại yêu cầu làm lại khi trải nghiệm chưa đạt. Để kiểm soát dự án tốt hơn nữa, hãy tiếp tục yêu cầu tiêu chí nghiệm thu cụ thể, xem lại thay đổi trong IDE, chạy thử các luồng chính và kiểm tra migration trên môi trường thử trước khi áp dụng dữ liệu thật.
+## Vai trò của AI và quản trị viên
 
-## English
+Quản trị viên xác định mục tiêu, quy tắc sản phẩm, nội dung bài, tiêu chí chấm và duyệt kết quả. AI đã hỗ trợ đọc cấu trúc dự án, đề xuất và sửa một số phần giao diện, JavaScript, dữ liệu bài tập, kiểm tra và tài liệu theo yêu cầu. Không thể đưa ra tỷ lệ phần trăm đáng tin cậy cho lượng mã do AI tạo nếu không có quy trình đo nguồn gốc từng dòng; vì vậy dự án không tự công bố một con số phần trăm. Quản trị viên chịu trách nhiệm xem xét, thử nghiệm và quyết định phát hành thay đổi.
 
-### Source-code disclosure
+## Thêm bài
 
-The project owner sets the direction and requirements. AI assisted with inspecting the project and proposing or editing selected code, interface, data-handling, and SQL changes in response. Some current code was therefore generated or modified with AI assistance; this note does not claim that all code was written solely by the project owner.
-
-### What you accomplished while working with AI
-
-- You described the product goal: a C++20 practice website with local test execution, saved progress, and a leaderboard.
-- You broke a broad goal into concrete needs: member/Admin permissions, correct and incorrect code history, profiles, rate-limited renaming, mobile navigation, and separate member/submission pages.
-- You stated important constraints, including keeping source code away from online compiler services and hiding code for unfinished exercises.
-- You noticed when the result did not match what you expected, gave direct feedback, and asked for another iteration.
-- You supplied visual references while asking that the result still fit the existing website.
-- You continued to give specific feedback on avatars, compact progress display, email confirmation, and navigation.
-- You requested avatar uploads, a swipeable progress rail, and duplicate-signup handling without an app-imposed resend cooldown.
-
-### Assessment
-
-Based on this collaboration, you already use AI effectively as a project partner: you communicate goals, break work into features, set constraints, and review the outcome. Your strongest habits are clear product direction and direct feedback. To strengthen your process further, keep defining acceptance criteria, inspect changes in your IDE, exercise the main user flows, and validate database migrations in a staging environment before applying them to live data.
+Bài mới được quản trị viên nhập qua công cụ quản lý hoặc thêm vào một file JSON phần mới. Khi dùng offline, cập nhật manifest và đưa JSON cùng các tài nguyên cần thiết vào bản phát hành. Khi dùng online, bài cần được xuất bản vào Supabase. Xem cấu trúc hiện hành trong `data/part1.json` đến `data/part5.json` trước khi tạo dữ liệu mới.

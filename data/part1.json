@@ -113,10 +113,11 @@
       }
     ],
     "sample_input": "42 58",
-    "sample_output": "100",
+    "sample_output": "Nhap gia tri a = 42\nNhap gia tri b = 58\nTong cua a va b = 100",
     "difficulty_rank": 1,
     "legacyId": 1,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 2,
@@ -235,7 +236,8 @@
     "sample_output": "31\n-184",
     "difficulty_rank": 1,
     "legacyId": 2,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 3,
@@ -354,7 +356,8 @@
     "sample_output": "24\n35",
     "difficulty_rank": 1,
     "legacyId": 3,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 4,
@@ -473,7 +476,8 @@
     "sample_output": "14.76\n17.34",
     "difficulty_rank": 1,
     "legacyId": 4,
-    "knowledge_note": "Kiến thức cần nhớ: π là hằng số xấp xỉ 3,14. Chu vi hình tròn C = 2πr; diện tích S = πr². Dùng đúng giá trị π và cách làm tròn đề bài yêu cầu."
+    "knowledge_note": "Kiến thức cần nhớ: π là hằng số xấp xỉ 3,14. Chu vi hình tròn C = 2πr; diện tích S = πr². Dùng đúng giá trị π và cách làm tròn đề bài yêu cầu.",
+    "presentation_rules": ""
   },
   {
     "id": 5,
@@ -597,7 +601,8 @@
     "sample_output": "15.50",
     "difficulty_rank": 1,
     "legacyId": 5,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 6,
@@ -716,7 +721,8 @@
     "sample_output": "25:01:01",
     "difficulty_rank": 1,
     "legacyId": 6,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 7,
@@ -835,7 +841,8 @@
     "sample_output": "-8 23",
     "difficulty_rank": 1,
     "legacyId": 7,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 8,
@@ -954,7 +961,8 @@
     "sample_output": "19 3",
     "difficulty_rank": 1,
     "legacyId": 8,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 9,
@@ -1073,7 +1081,8 @@
     "sample_output": "3250",
     "difficulty_rank": 1,
     "legacyId": 9,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 10,
@@ -1192,6 +1201,7 @@
     "sample_output": "1085.92",
     "difficulty_rank": 1,
     "legacyId": 10,
-    "knowledge_note": ""
+    "knowledge_note": "",
+    "presentation_rules": ""
   }
 ]

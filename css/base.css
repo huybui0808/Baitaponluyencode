@@ -946,6 +946,35 @@ textarea#stdin {
 .titleline .export-pdf:hover {
   background: var(--hover-bg);
 }
+
+/* Soft interaction feedback shared across navigation, controls and tasks. */
+@media (prefers-reduced-motion: no-preference) {
+  :where(button, .btn, .taskbtn, .pill, .nav-icon, .streak-nav, .user-chip, [role="button"]) {
+    transition: transform 160ms ease, box-shadow 180ms ease, background-color 180ms ease,
+      border-color 180ms ease, color 180ms ease, filter 180ms ease;
+  }
+  :where(button, .btn, .taskbtn, .pill, .nav-icon, .streak-nav, .user-chip, [role="button"]):not(:disabled):active {
+    transform: translateY(1px) scale(.985);
+  }
+  :where(button, .btn, .taskbtn, .pill, .nav-icon, .streak-nav, .user-chip, [role="button"]):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  @media (hover: hover) {
+    :where(button, .btn, .taskbtn, .pill, .nav-icon, .streak-nav, .user-chip, [role="button"]):not(:disabled):hover {
+      filter: brightness(1.035);
+    }
+    :where(.btn, .taskbtn, .pill, .nav-icon, .streak-nav, .user-chip):not(:disabled):hover:not(:active) {
+      transform: translateY(-1px);
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(button, .btn, .taskbtn, .pill, .nav-icon, .streak-nav, .user-chip, [role="button"]) {
+    transition: none !important;
+    animation-duration: .01ms !important;
+  }
+}
 @media (max-width: 650px) {
   .titleline .export-pdf {
     width: 100%;

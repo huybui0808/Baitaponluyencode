@@ -765,3 +765,30 @@ a {
   font: 15px/1.65 var(--mono);
 }
 .adm-code-view code { font: inherit; }
+
+.adm-pagination { display:flex; align-items:center; justify-content:center; gap:12px; padding:14px 0 4px; color:var(--muted); }
+.adm-pagination button { min-width:84px; }
+.adm-pagination button:disabled { opacity:.45; cursor:not-allowed; }
+@media (prefers-reduced-motion: no-preference) {
+  .adm-btn,.adm-tab,.adm-item,.adm-iconbtn,.adm-switch { transition:transform 150ms ease,background-color 150ms ease,border-color 150ms ease,color 150ms ease; }
+  .adm-btn:not(:disabled):active,.adm-iconbtn:active { transform:translateY(1px) scale(.98); }
+}
+
+.adm-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 14px 0 4px;
+  color: var(--muted);
+}
+.adm-pagination button { min-width: 84px; }
+.adm-pagination button:disabled { opacity: .45; cursor: not-allowed; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .adm-btn, .adm-tab, .adm-item, .adm-iconbtn, .adm-switch, .adm-table tbody tr {
+    transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+  }
+  .adm-btn:not(:disabled):active, .adm-iconbtn:active { transform: translateY(1px) scale(.98); }
+  .adm-table tbody tr:hover { transform: translateX(2px); }
+}

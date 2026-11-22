@@ -7,7 +7,7 @@
     "statement": "Nhập N số nguyên. Tìm giá trị lớn nhất, nhỏ nhất, đếm số phần tử là số nguyên tố, tính tổng dãy và đếm số phần tử chẵn. Số nguyên tố là số nguyên lớn hơn 1 và chỉ có hai ước dương là 1 và chính nó. Các phần tử trùng nhau vẫn được đếm riêng.",
     "input": "Dòng đầu chứa số nguyên dương N. Dòng tiếp theo chứa N số nguyên của dãy, cách nhau bởi dấu cách.",
     "output": "Trước khi đọc N, in lời nhắc 'Nhap N = '; trước khi đọc dãy, in 'Cac so la: '. Không xuống dòng giữa lời nhắc và dữ liệu người dùng nhập. Sau đó in đúng 5 dòng kết quả theo thứ tự: 'Gia tri lon nhat = X', 'Min so la: Y', 'So luong so nguyen to la: P', 'Tong day la: S', 'So luong so chan la: E'. Thay X, Y, P, S, E bằng kết quả tương ứng; có đúng một dấu cách sau dấu bằng hoặc dấu hai chấm. Không tự in lại giá trị đã nhập hoặc thêm dòng trống.",
-    "constraints": "1 <= N <= 100; -1000000 <= mỗi phần tử <= 1000000. Dùng kiểu số nguyên phù hợp để tính tổng.",
+    "constraints": "1 <= N <= 100; -10⁶ <= mỗi phần tử <= 10⁶. Dùng kiểu số nguyên phù hợp để tính tổng.",
     "sample_input": "4\n2 9 1 5",
     "sample_output": "Nhap N = 4\nCac so la: 2 9 1 5\nGia tri lon nhat = 9\nMin so la: 1\nSo luong so nguyen to la: 2\nTong day la: 17\nSo luong so chan la: 1",
     "tests": [
@@ -51,7 +51,9 @@
         "input": "5\n25 29 30 31 32",
         "output": "32\n25\n2\n147\n2"
       }
-    ]
+    ],
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 152,
@@ -61,7 +63,7 @@
     "statement": "Cho dãy N số nguyên. Tính tổng của tất cả phần tử, kể cả số âm và số 0.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Tong day la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nTong day la: 0",
     "tests": [
@@ -147,7 +149,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_sum"
+    "kind": "array_sum",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 153,
@@ -157,7 +161,7 @@
     "statement": "Tìm đồng thời giá trị lớn nhất và nhỏ nhất trong dãy. Nếu một giá trị xuất hiện nhiều lần, giá trị kết quả vẫn chỉ in một lần.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In các kết quả theo đúng thứ tự, dùng nhãn `Gia tri lon nhat la:`, `Gia tri nho nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nGia tri lon nhat la: 10\nGia tri nho nhat la: -5",
     "tests": [
@@ -223,7 +227,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_maxmin"
+    "kind": "array_maxmin",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 154,
@@ -233,7 +239,7 @@
     "statement": "Đếm riêng số phần tử dương, âm và bằng 0. Mỗi phần tử trong dãy được xét đúng một lần.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In các kết quả theo đúng thứ tự, dùng nhãn `So luong so duong la:`, `So luong so am la:`, `So luong so 0 la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nSo luong so duong la: 2\nSo luong so am la: 3\nSo luong so 0 la: 1",
     "tests": [
@@ -319,7 +325,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_signs"
+    "kind": "array_signs",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 155,
@@ -329,7 +337,7 @@
     "statement": "Đếm số chẵn và số lẻ trong dãy, kể cả số âm. Số 0 được tính là số chẵn.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In các kết quả theo đúng thứ tự, dùng nhãn `So luong so chan la:`, `So luong so le la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nSo luong so chan la: 2\nSo luong so le la: 4",
     "tests": [
@@ -415,7 +423,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_parity"
+    "kind": "array_parity",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 156,
@@ -425,7 +435,7 @@
     "statement": "Tìm vị trí đầu tiên (đánh số từ 1) có giá trị bằng phần tử lớn nhất.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Vi tri dau tien co gia tri lon nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nVi tri dau tien co gia tri lon nhat la: 5",
     "tests": [
@@ -511,7 +521,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_maxfirst"
+    "kind": "array_maxfirst",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 157,
@@ -521,7 +533,7 @@
     "statement": "Tìm vị trí cuối cùng (đánh số từ 1) có giá trị bằng phần tử nhỏ nhất.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Vi tri cuoi cung co gia tri nho nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nVi tri cuoi cung co gia tri nho nhat la: 6",
     "tests": [
@@ -607,7 +619,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_minlast"
+    "kind": "array_minlast",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 158,
@@ -617,7 +631,7 @@
     "statement": "Tính hiệu giữa giá trị lớn nhất và giá trị nhỏ nhất của dãy.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Do chenh lech la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDo chenh lech la: 15",
     "tests": [
@@ -703,7 +717,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_range"
+    "kind": "array_range",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 159,
@@ -713,7 +729,7 @@
     "statement": "Cho thêm số nguyên X. Đếm số phần tử có giá trị đúng bằng X; nếu không có, kết quả là 0.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là X.",
     "output": "In một dòng kết quả, dùng nhãn `So lan xuat hien la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. |X| <= 1000000.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. |X| <= 10⁶.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap X = -5\nSo lan xuat hien la: 3",
     "tests": [
@@ -799,7 +815,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_countx"
+    "kind": "array_countx",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 160,
@@ -809,7 +827,7 @@
     "statement": "Tìm vị trí đầu tiên và cuối cùng (đánh số từ 1) của X. Nếu X không xuất hiện, in -1 cho cả hai vị trí.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là X.",
     "output": "In các kết quả theo đúng thứ tự, dùng nhãn `Vi tri dau tien la:`, `Vi tri cuoi cung la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. |X| <= 1000000.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. |X| <= 10⁶.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap X = -5\nVi tri dau tien la: 1\nVi tri cuoi cung la: 6",
     "tests": [
@@ -895,7 +913,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_firstlast"
+    "kind": "array_firstlast",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 161,
@@ -905,7 +925,7 @@
     "statement": "Cho X và Y. Thay mọi phần tử bằng X thành Y; các phần tử khác giữ nguyên. In dãy sau khi thay thế.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là X, Y.",
     "output": "In một dòng kết quả, dùng nhãn `Day ket qua la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. |X| <= 1000000. |Y| <= 1000000.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. |X| <= 10⁶. |Y| <= 10⁶.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5\n0",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap X = -5\nNhap Y = 0\nDay ket qua la: 0 0 5 0 10 0",
     "tests": [
@@ -991,7 +1011,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_replace"
+    "kind": "array_replace",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 162,
@@ -1001,7 +1023,7 @@
     "statement": "Xóa mọi lần xuất hiện của X nhưng giữ nguyên thứ tự các phần tử còn lại. Nếu dãy rỗng, in -1.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là X.",
     "output": "In một dòng kết quả, dùng nhãn `Day ket qua la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. |X| <= 1000000.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. |X| <= 10⁶.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap X = -5\nDay ket qua la: 0 5 10",
     "tests": [
@@ -1087,7 +1109,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_remove"
+    "kind": "array_remove",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 163,
@@ -1097,7 +1121,7 @@
     "statement": "In các phần tử theo thứ tự ngược lại với thứ tự nhập.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Day ket qua la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDay ket qua la: -5 10 -5 5 0 -5",
     "tests": [
@@ -1183,7 +1207,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_reverse"
+    "kind": "array_reverse",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 164,
@@ -1193,7 +1219,7 @@
     "statement": "Dịch vòng dãy sang trái K vị trí. K có thể lớn hơn N; hãy rút gọn K theo N.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là K.",
     "output": "In một dòng kết quả, dùng nhãn `Day ket qua la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. 0 <= K <= 10^9.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. 0 <= K <= 10^9.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n0",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap K = 0\nDay ket qua la: -5 0 5 -5 10 -5",
     "tests": [
@@ -1279,7 +1305,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_rotateleft"
+    "kind": "array_rotateleft",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 165,
@@ -1289,7 +1317,7 @@
     "statement": "Dịch vòng dãy sang phải K vị trí. K có thể lớn hơn N; hãy rút gọn K theo N.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là K.",
     "output": "In một dòng kết quả, dùng nhãn `Day ket qua la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. 0 <= K <= 10^9.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. 0 <= K <= 10^9.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n0",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap K = 0\nDay ket qua la: -5 0 5 -5 10 -5",
     "tests": [
@@ -1375,7 +1403,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_rotateright"
+    "kind": "array_rotateright",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 166,
@@ -1385,7 +1415,7 @@
     "statement": "Xác định dãy có không giảm hay không, tức là a[i] <= a[i+1] với mọi cặp liền kề. In YES hoặc NO.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Day co thu tu khong giam hay khong:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDay co thu tu khong giam hay khong: NO",
     "tests": [
@@ -1471,7 +1501,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_nondesc"
+    "kind": "array_nondesc",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 167,
@@ -1481,7 +1513,7 @@
     "statement": "Tìm vị trí i nhỏ nhất (đánh số từ 1) sao cho a[i] > a[i+1]. Nếu dãy không giảm, in 0.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Vi tri can tim la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nVi tri can tim la: 3",
     "tests": [
@@ -1567,7 +1599,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_firstdrop"
+    "kind": "array_firstdrop",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 168,
@@ -1577,7 +1611,7 @@
     "statement": "Tìm giá trị lớn thứ hai khác giá trị lớn nhất. Nếu dãy không có hai giá trị phân biệt, in -1.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `So lon thu hai phan biet la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nSo lon thu hai phan biet la: 5",
     "tests": [
@@ -1663,7 +1697,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_secondmax"
+    "kind": "array_secondmax",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 169,
@@ -1673,7 +1709,7 @@
     "statement": "Sắp xếp dãy theo thứ tự tăng dần và in phần tử ở vị trí K (đánh số từ 1). Giá trị trùng nhau chiếm các vị trí riêng.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là K.",
     "output": "In một dòng kết quả, dùng nhãn `Phan tu nho thu K la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. 1 <= K <= N.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. 1 <= K <= N.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n1",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap K = 1\nPhan tu nho thu K la: -5",
     "tests": [
@@ -1759,7 +1795,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_kthsmall"
+    "kind": "array_kthsmall",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 170,
@@ -1769,7 +1807,7 @@
     "statement": "Sắp xếp dãy theo thứ tự giảm dần và in phần tử ở vị trí K (đánh số từ 1). Giá trị trùng nhau chiếm các vị trí riêng.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là K.",
     "output": "In một dòng kết quả, dùng nhãn `Phan tu lon thu K la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. 1 <= K <= N.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. 1 <= K <= N.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n1",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap K = 1\nPhan tu lon thu K la: 10",
     "tests": [
@@ -1855,7 +1893,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_kthlarge"
+    "kind": "array_kthlarge",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 171,
@@ -1865,7 +1905,7 @@
     "statement": "Sắp xếp các phần tử theo thứ tự không giảm. In trên một dòng, giữa hai số có đúng một dấu cách.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Day sau khi sap xep:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDay sau khi sap xep: -5 -5 -5 0 5 10",
     "tests": [
@@ -1951,7 +1991,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_sortasc"
+    "kind": "array_sortasc",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 172,
@@ -1961,7 +2003,7 @@
     "statement": "Sắp xếp các phần tử theo thứ tự không tăng. In trên một dòng, giữa hai số có đúng một dấu cách.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Day sau khi sap xep:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDay sau khi sap xep: 10 5 0 -5 -5 -5",
     "tests": [
@@ -2047,7 +2089,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_sortdesc"
+    "kind": "array_sortdesc",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 173,
@@ -2057,7 +2101,7 @@
     "statement": "Dãy chỉ gồm 0, 1, 2. Sắp xếp tăng dần mà không dùng hàm sort có sẵn; in một dấu cách giữa các số.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Day sau khi sap xep:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử chỉ thuộc {0, 1, 2}.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử chỉ thuộc {0, 1, 2}.",
     "sample_input": "6\n2 0 2 2 1 2",
     "sample_output": "Nhap N = 6\nNhap day so = 2 0 2 2 1 2\nDay sau khi sap xep: 0 1 2 2 2 2",
     "tests": [
@@ -2143,7 +2187,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_sort012"
+    "kind": "array_sort012",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 174,
@@ -2153,7 +2199,7 @@
     "statement": "Chuyển tất cả số 0 về cuối, giữ nguyên thứ tự tương đối của các phần tử khác.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Day ket qua la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDay ket qua la: -5 5 -5 10 -5 0",
     "tests": [
@@ -2239,7 +2285,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_movezero"
+    "kind": "array_movezero",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 175,
@@ -2249,7 +2297,7 @@
     "statement": "Đưa các số chẵn lên trước số lẻ và giữ nguyên thứ tự tương đối trong từng nhóm. Số âm được phân loại theo tính chia hết cho 2.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Day ket qua la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDay ket qua la: 0 10 -5 5 -5 -5",
     "tests": [
@@ -2335,7 +2383,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_stableparity"
+    "kind": "array_stableparity",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 176,
@@ -2345,7 +2395,7 @@
     "statement": "Cho hai dãy không giảm. Trộn thành một dãy không giảm; phải giữ đủ số lần xuất hiện của mọi giá trị.",
     "input": "Dòng 1 là N; dòng 2 gồm N số của dãy A đã sắp xếp. Dòng 3 là M; dòng 4 gồm M số của dãy B đã sắp xếp.",
     "output": "In một dòng kết quả, dùng nhãn `Day sau khi sap xep:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N, M <= 200000; mỗi dãy đầu vào đã được sắp xếp không giảm; |mỗi phần tử| <= 1000000.",
+    "constraints": "1 <= N, M <= 2 × 10⁵; mỗi dãy đầu vào đã được sắp xếp không giảm; |mỗi phần tử| <= 10⁶.",
     "sample_input": "6\n-5 -5 -5 0 5 10\n1\n-8",
     "sample_output": "Nhap N = 6\nNhap day A da sap xep = -5 -5 -5 0 5 10\nNhap M = 1\nNhap day B da sap xep = -8\nDay sau khi sap xep: -8 -5 -5 -5 0 5 10",
     "tests": [
@@ -2431,7 +2481,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_merge"
+    "kind": "array_merge",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 177,
@@ -2441,7 +2493,7 @@
     "statement": "Dãy đầu vào đã không giảm. Tạo dãy mới chỉ giữ một bản của mỗi giá trị và giữ thứ tự tăng dần.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Day khong trung la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; dãy đầu vào đã được sắp xếp không giảm; |mỗi phần tử| <= 1000000.",
+    "constraints": "1 <= N <= 2 × 10⁵; dãy đầu vào đã được sắp xếp không giảm; |mỗi phần tử| <= 10⁶.",
     "sample_input": "6\n-5 -5 -5 0 5 10",
     "sample_output": "Nhap N = 6\nNhap day so = -5 -5 -5 0 5 10\nDay khong trung la: -5 0 5 10",
     "tests": [
@@ -2527,7 +2579,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_uniqueSorted"
+    "kind": "array_uniqueSorted",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 178,
@@ -2537,7 +2591,7 @@
     "statement": "Đếm số giá trị khác nhau trong dãy. Các lần xuất hiện lặp lại chỉ tính một giá trị phân biệt.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `So gia tri phan biet la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nSo gia tri phan biet la: 4",
     "tests": [
@@ -2623,7 +2677,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_distinctCount"
+    "kind": "array_distinctCount",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 179,
@@ -2633,7 +2689,7 @@
     "statement": "Tìm mode của dãy. Nếu nhiều giá trị có cùng tần suất cao nhất, chọn giá trị nhỏ nhất.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Gia tri xuat hien nhieu nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nGia tri xuat hien nhieu nhat la: -5",
     "tests": [
@@ -2719,7 +2775,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_mode"
+    "kind": "array_mode",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 180,
@@ -2729,7 +2787,7 @@
     "statement": "Dãy có N phần tử phân biệt, mỗi số thuộc [1, N+1], thiếu đúng một số. Tìm số bị thiếu.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `So bi thieu la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; dãy có N số phân biệt thuộc [1, N+1] và thiếu đúng một số.",
+    "constraints": "1 <= N <= 2 × 10⁵; dãy có N số phân biệt thuộc [1, N+1] và thiếu đúng một số.",
     "sample_input": "6\n1 3 4 5 6 7",
     "sample_output": "Nhap N = 6\nNhap day so = 1 3 4 5 6 7\nSo bi thieu la: 2",
     "tests": [
@@ -2815,7 +2873,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_missing"
+    "kind": "array_missing",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 181,
@@ -2825,7 +2885,7 @@
     "statement": "Dãy gồm các số trong [1, N-1]; có đúng một giá trị xuất hiện hai lần, các giá trị còn lại xuất hiện một lần. In giá trị bị lặp.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Gia tri bi lap la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "3 <= N <= 200000; mỗi giá trị thuộc [1, N-1]; đúng một giá trị xuất hiện hai lần, các giá trị còn lại một lần.",
+    "constraints": "3 <= N <= 2 × 10⁵; mỗi giá trị thuộc [1, N-1]; đúng một giá trị xuất hiện hai lần, các giá trị còn lại một lần.",
     "sample_input": "6\n2 3 4 5 3 1",
     "sample_output": "Nhap N = 6\nNhap day so = 2 3 4 5 3 1\nGia tri bi lap la: 3",
     "tests": [
@@ -2911,7 +2971,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_duplicate"
+    "kind": "array_duplicate",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 182,
@@ -2921,7 +2983,7 @@
     "statement": "Duyệt dãy từ trái sang phải. Tìm phần tử đầu tiên mà tại thời điểm gặp nó, giá trị đó đã xuất hiện trước đó. Nếu không có, in -1.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Gia tri lap dau tien la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nGia tri lap dau tien la: -5",
     "tests": [
@@ -3007,7 +3069,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_firstRepeat"
+    "kind": "array_firstRepeat",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 183,
@@ -3017,7 +3081,7 @@
     "statement": "Tìm giá trị đầu tiên theo thứ tự dãy có tần suất đúng bằng 1. Nếu không có, in -1.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Gia tri khong lap dau tien la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nGia tri khong lap dau tien la: 0",
     "tests": [
@@ -3103,7 +3167,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_firstUnique"
+    "kind": "array_firstUnique",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 184,
@@ -3113,7 +3179,7 @@
     "statement": "Phần tử chiếm đa số xuất hiện nhiều hơn N/2 lần. Tìm phần tử đó; nếu không tồn tại, in -1.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Phan tu chiem da so la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nPhan tu chiem da so la: -1",
     "tests": [
@@ -3199,7 +3265,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_majority"
+    "kind": "array_majority",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 185,
@@ -3209,7 +3277,7 @@
     "statement": "In các giá trị xuất hiện hơn N/3 lần theo thứ tự tăng dần, không lặp. Nếu không có, in -1.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Cac gia tri thoa man la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nCac gia tri thoa man la: -5",
     "tests": [
@@ -3311,7 +3379,8 @@
     ],
     "difficulty_rank": 3,
     "kind": "array_overthird",
-    "knowledge_note": "Boyer–Moore mở rộng giữ tối đa hai ứng viên, sau đó đếm kiểm chứng trong O(N)."
+    "knowledge_note": "Boyer–Moore mở rộng giữ tối đa hai ứng viên, sau đó đếm kiểm chứng trong O(N).",
+    "presentation_rules": ""
   },
   {
     "id": 186,
@@ -3321,7 +3390,7 @@
     "statement": "Cho số T. Xác định có hai vị trí khác nhau i < j sao cho a[i] + a[j] = T hay không. In YES hoặc NO.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `Co cap tong T hay khong:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. -10^9 <= T <= 10^9. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nCo cap tong T hay khong: YES",
     "tests": [
@@ -3422,7 +3491,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_pairExists"
+    "kind": "array_pairExists",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 187,
@@ -3432,7 +3503,7 @@
     "statement": "Đếm số cặp chỉ số i < j có a[i] + a[j] = T. Hai phần tử cùng giá trị nhưng ở vị trí khác nhau vẫn tạo thành một cặp.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `So cap thoa man la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. -10^9 <= T <= 10^9. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nSo cap thoa man la: 3",
     "tests": [
@@ -3538,7 +3609,9 @@
       }
     ],
     "difficulty_rank": 3,
-    "kind": "array_pairCount"
+    "kind": "array_pairCount",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 188,
@@ -3548,7 +3621,7 @@
     "statement": "Tìm cặp (i,j) theo thứ tự từ điển nhỏ nhất, với i < j và a[i]+a[j]=T. In chỉ số từ 1; nếu không có, in -1 -1.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `Cap chi so la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. -10^9 <= T <= 10^9.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nCap chi so la: 1 2",
     "tests": [
@@ -3634,7 +3707,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_firstPair"
+    "kind": "array_firstPair",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 189,
@@ -3644,7 +3719,7 @@
     "statement": "Chọn hai vị trí khác nhau sao cho tổng hai phần tử gần T nhất. Nếu hòa, chọn tổng nhỏ hơn. In tổng được chọn.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `Tong cap gan T nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "2 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. -10^9 <= T <= 10^9.",
+    "constraints": "2 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nTong cap gan T nhat la: -5",
     "tests": [
@@ -3730,7 +3805,9 @@
       }
     ],
     "difficulty_rank": 3,
-    "kind": "array_closestPair"
+    "kind": "array_closestPair",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 190,
@@ -3740,7 +3817,7 @@
     "statement": "Xác định có ba vị trí phân biệt i < j < k sao cho tổng bằng T hay không. In YES hoặc NO.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `Co bo ba co tong bang T hay khong:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "3 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. -10^9 <= T <= 10^9.",
+    "constraints": "3 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nCo bo ba co tong bang T hay khong: YES",
     "tests": [
@@ -3826,7 +3903,9 @@
       }
     ],
     "difficulty_rank": 3,
-    "kind": "array_tripleExists"
+    "kind": "array_tripleExists",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 191,
@@ -3836,7 +3915,7 @@
     "statement": "Chọn i < j để tối đa hóa a[j]-a[i]. Nếu chỉ có một phần tử, in 0. Dãy có thể âm.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Hieu lon nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nHieu lon nhat la: 15",
     "tests": [
@@ -3922,7 +4001,9 @@
       }
     ],
     "difficulty_rank": 3,
-    "kind": "array_maxLaterDiff"
+    "kind": "array_maxLaterDiff",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 192,
@@ -3932,7 +4013,7 @@
     "statement": "Mỗi phần tử là giá ở một ngày. Chọn tối đa một ngày mua và một ngày bán sau đó; không giao dịch thì lợi nhuận bằng 0.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Loi nhuan lon nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên không âm trong [0, 1000000].",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên không âm trong [0, 10⁶].",
     "sample_input": "6\n5 0 5 5 10 5",
     "sample_output": "Nhap N = 6\nNhap day so = 5 0 5 5 10 5\nLoi nhuan lon nhat la: 10",
     "tests": [
@@ -4018,7 +4099,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_stock"
+    "kind": "array_stock",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 193,
@@ -4028,7 +4111,7 @@
     "statement": "Tìm số phần tử lớn nhất trong một đoạn liên tiếp mà mỗi phần tử sau lớn hơn phần tử trước.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Do dai doan tang dai nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDo dai doan tang dai nhat la: 3",
     "tests": [
@@ -4114,7 +4197,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_incRun"
+    "kind": "array_incRun",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 194,
@@ -4124,7 +4209,7 @@
     "statement": "Tìm đoạn liên tiếp dài nhất thỏa a[i] <= a[i+1]. Hai phần tử bằng nhau vẫn thuộc cùng đoạn.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Do dai doan khong giam dai nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDo dai doan khong giam dai nhat la: 3",
     "tests": [
@@ -4210,7 +4295,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_nondecRun"
+    "kind": "array_nondecRun",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 195,
@@ -4220,7 +4307,7 @@
     "statement": "Tìm số phần tử lớn nhất liên tiếp có cùng giá trị.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Do dai doan bang nhau dai nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDo dai doan bang nhau dai nhat la: 1",
     "tests": [
@@ -4306,7 +4393,9 @@
       }
     ],
     "difficulty_rank": 1,
-    "kind": "array_equalRun"
+    "kind": "array_equalRun",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 196,
@@ -4316,7 +4405,7 @@
     "statement": "Đếm vị trí i nằm giữa hai đầu dãy và thỏa a[i] > a[i-1] đồng thời a[i] > a[i+1]. Hai đầu dãy không được tính.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `So dinh cuc bo la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nSo dinh cuc bo la: 2",
     "tests": [
@@ -4402,7 +4491,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_peaks"
+    "kind": "array_peaks",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 197,
@@ -4412,7 +4503,7 @@
     "statement": "Một phần tử là “thủ lĩnh” nếu nó lớn hơn nghiêm ngặt mọi phần tử đứng bên phải. Phần tử cuối luôn là thủ lĩnh. In theo thứ tự ban đầu.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Day ket qua la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDay ket qua la: 10 -5",
     "tests": [
@@ -4498,7 +4589,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_leaders"
+    "kind": "array_leaders",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 198,
@@ -4508,7 +4601,7 @@
     "statement": "Với mỗi phần tử, tìm giá trị đầu tiên ở bên phải lớn hơn nghiêm ngặt nó; nếu không có, ghi -1.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Day ket qua la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDay ket qua la: 0 5 10 10 -1 -1",
     "tests": [
@@ -4595,7 +4688,8 @@
     ],
     "difficulty_rank": 3,
     "kind": "array_nextGreater",
-    "knowledge_note": "Ngăn xếp đơn điệu giúp xử lý mỗi phần tử tối đa một lần."
+    "knowledge_note": "Ngăn xếp đơn điệu giúp xử lý mỗi phần tử tối đa một lần.",
+    "presentation_rules": ""
   },
   {
     "id": 199,
@@ -4605,7 +4699,7 @@
     "statement": "Tạo dãy p[i] = a[1]+...+a[i]. In N giá trị tổng tiền tố trên một dòng.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Day tong tien to la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDay tong tien to la: -5 -5 0 -5 5 0",
     "tests": [
@@ -4691,7 +4785,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_prefix"
+    "kind": "array_prefix",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 200,
@@ -4701,7 +4797,7 @@
     "statement": "Sau dãy có Q truy vấn L R (đánh số từ 1). Với mỗi truy vấn, tính tổng a[L] đến a[R], rồi in Q đáp án trên một dòng.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên của dãy. Sau đó là Q và Q cặp L R (chỉ số bắt đầu từ 1), mỗi cặp xác định một đoạn cần tính tổng.",
     "output": "In một dòng kết quả, dùng nhãn `Cac tong doan la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N, Q <= 200000; 1 <= L <= R <= N; mỗi phần tử thuộc [-1000000,1000000]. Dùng long long cho tổng. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N, Q <= 2 × 10⁵; 1 <= L <= R <= N; mỗi phần tử thuộc [-10⁶,10⁶]. Dùng long long cho tổng. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n5\n1 4 2 3 1 4 5 6 3 4",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap Q = 5\nNhap cac cap L R = 1 4 2 3 1 4 5 6 3 4\nCac tong doan la: -5 5 -5 5 0",
     "tests": [
@@ -4802,7 +4898,9 @@
       }
     ],
     "difficulty_rank": 3,
-    "kind": "array_rangeQueries"
+    "kind": "array_rangeQueries",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 201,
@@ -4812,7 +4910,7 @@
     "statement": "Vị trí i cân bằng nếu tổng bên trái bằng tổng bên phải; không tính a[i] vào hai phía. In mọi vị trí từ 1; nếu không có, in -1.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Cac vi tri can bang la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nCac vi tri can bang la: 5",
     "tests": [
@@ -4898,7 +4996,9 @@
       }
     ],
     "difficulty_rank": 3,
-    "kind": "array_equilibrium"
+    "kind": "array_equilibrium",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 202,
@@ -4908,7 +5008,7 @@
     "statement": "Tìm tổng lớn nhất của một đoạn con không rỗng gồm các phần tử liên tiếp. Dãy có thể toàn số âm.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Tong lon nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nTong lon nhat la: 10",
     "tests": [
@@ -5010,7 +5110,8 @@
     ],
     "difficulty_rank": 3,
     "kind": "array_maxSub",
-    "knowledge_note": "Thuật toán Kadane cập nhật tổng tốt nhất kết thúc tại từng vị trí trong O(N)."
+    "knowledge_note": "Thuật toán Kadane cập nhật tổng tốt nhất kết thúc tại từng vị trí trong O(N).",
+    "presentation_rules": ""
   },
   {
     "id": 203,
@@ -5020,7 +5121,7 @@
     "statement": "Tìm tổng nhỏ nhất của một đoạn con không rỗng gồm các phần tử liên tiếp.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Tong nho nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nTong nho nhat la: -5",
     "tests": [
@@ -5121,7 +5222,9 @@
       }
     ],
     "difficulty_rank": 3,
-    "kind": "array_minSub"
+    "kind": "array_minSub",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 204,
@@ -5131,7 +5234,7 @@
     "statement": "Tìm tổng lớn nhất trong các đoạn liên tiếp có đúng K phần tử. Ràng buộc bảo đảm 1 <= K <= N.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là K.",
     "output": "In một dòng kết quả, dùng nhãn `Tong lon nhat cua doan la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. 1 <= K <= N. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. 1 <= K <= N. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n1",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap K = 1\nTong lon nhat cua doan la: 10",
     "tests": [
@@ -5233,7 +5336,8 @@
     ],
     "difficulty_rank": 2,
     "kind": "array_maxWindow",
-    "knowledge_note": "Cửa sổ trượt cập nhật tổng bằng cách bỏ phần tử đầu và thêm phần tử mới."
+    "knowledge_note": "Cửa sổ trượt cập nhật tổng bằng cách bỏ phần tử đầu và thêm phần tử mới.",
+    "presentation_rules": ""
   },
   {
     "id": 205,
@@ -5243,7 +5347,7 @@
     "statement": "Tìm tổng nhỏ nhất trong các đoạn liên tiếp có đúng K phần tử.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là K.",
     "output": "In một dòng kết quả, dùng nhãn `Tong nho nhat cua doan la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. 1 <= K <= N. Dùng long long cho giá trị trung gian/kết quả có thể lớn.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. 1 <= K <= N. Dùng long long cho giá trị trung gian/kết quả có thể lớn.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n1",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap K = 1\nTong nho nhat cua doan la: -5",
     "tests": [
@@ -5329,7 +5433,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_minWindow"
+    "kind": "array_minWindow",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 206,
@@ -5339,7 +5445,7 @@
     "statement": "Mọi phần tử đều dương. Tìm độ dài nhỏ nhất của đoạn liên tiếp có tổng >= S; in 0 nếu không có đoạn phù hợp.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là S.",
     "output": "In một dòng kết quả, dùng nhãn `Do dai ngan nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên dương trong [1, 1000000]. 1 <= S <= 10^12. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên dương trong [1, 10⁶]. 1 <= S <= 10^12. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n6 1 6 6 11 6\n6",
     "sample_output": "Nhap N = 6\nNhap day so = 6 1 6 6 11 6\nNhap S = 6\nDo dai ngan nhat la: 1",
     "tests": [
@@ -5441,7 +5547,8 @@
     ],
     "difficulty_rank": 3,
     "kind": "array_shortestPositive",
-    "knowledge_note": "Với số dương, cửa sổ trượt hai con trỏ tìm đoạn ngắn nhất trong O(N)."
+    "knowledge_note": "Với số dương, cửa sổ trượt hai con trỏ tìm đoạn ngắn nhất trong O(N).",
+    "presentation_rules": ""
   },
   {
     "id": 207,
@@ -5451,7 +5558,7 @@
     "statement": "Đếm số đoạn con liên tiếp không rỗng có tổng đúng bằng T. Dãy có thể chứa số âm và số 0.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `So doan con thoa man la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. -10^9 <= T <= 10^9. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nSo doan con thoa man la: 5",
     "tests": [
@@ -5558,7 +5665,8 @@
     ],
     "difficulty_rank": 3,
     "kind": "array_subCount",
-    "knowledge_note": "Dùng tần suất tổng tiền tố để đếm trong O(N), kể cả khi có số âm."
+    "knowledge_note": "Dùng tần suất tổng tiền tố để đếm trong O(N), kể cả khi có số âm.",
+    "presentation_rules": ""
   },
   {
     "id": 208,
@@ -5568,7 +5676,7 @@
     "statement": "Tìm độ dài lớn nhất của đoạn con liên tiếp có tổng bằng T. In 0 nếu không tồn tại.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `Do dai lon nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. -10^9 <= T <= 10^9.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nDo dai lon nhat la: 4",
     "tests": [
@@ -5654,7 +5762,9 @@
       }
     ],
     "difficulty_rank": 3,
-    "kind": "array_longestTarget"
+    "kind": "array_longestTarget",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 209,
@@ -5664,7 +5774,7 @@
     "statement": "Đếm đoạn con liên tiếp có tổng chia hết cho K, với K dương. Số âm được phép; phần dư phải được chuẩn hóa không âm.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là K.",
     "output": "In một dòng kết quả, dùng nhãn `So doan con chia het la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. 1 <= K <= N. Dùng long long cho giá trị trung gian/kết quả có thể lớn.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. 1 <= K <= N. Dùng long long cho giá trị trung gian/kết quả có thể lớn.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n1",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap K = 1\nSo doan con chia het la: 21",
     "tests": [
@@ -5750,7 +5860,9 @@
       }
     ],
     "difficulty_rank": 3,
-    "kind": "array_divisible"
+    "kind": "array_divisible",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 210,
@@ -5760,7 +5872,7 @@
     "statement": "Xác định có đoạn con liên tiếp không rỗng nào có tổng bằng 0 hay không.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Co doan tong 0 hay khong:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nCo doan tong 0 hay khong: YES",
     "tests": [
@@ -5846,7 +5958,9 @@
       }
     ],
     "difficulty_rank": 2,
-    "kind": "array_zeroSum"
+    "kind": "array_zeroSum",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 211,
@@ -5856,7 +5970,7 @@
     "statement": "Tìm độ dài lớn nhất của đoạn con liên tiếp có tổng bằng 0. Nếu không có, in 0.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Do dai doan tong 0 dai nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶].",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDo dai doan tong 0 dai nhat la: 6",
     "tests": [
@@ -5942,7 +6056,9 @@
       }
     ],
     "difficulty_rank": 3,
-    "kind": "array_longestZero"
+    "kind": "array_longestZero",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 212,
@@ -5952,7 +6068,7 @@
     "statement": "Dãy chỉ gồm 0 và 1. Tìm độ dài đoạn liên tiếp có số lượng 0 bằng số lượng 1 lớn nhất.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Do dai la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử chỉ là 0 hoặc 1.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử chỉ là 0 hoặc 1.",
     "sample_input": "6\n1 0 1 1 0 1",
     "sample_output": "Nhap N = 6\nNhap day so = 1 0 1 1 0 1\nDo dai la: 4",
     "tests": [
@@ -6039,7 +6155,8 @@
     ],
     "difficulty_rank": 3,
     "kind": "array_balanced01",
-    "knowledge_note": "Đổi 0 thành -1; đoạn cân bằng trở thành đoạn có tổng bằng 0."
+    "knowledge_note": "Đổi 0 thành -1; đoạn cân bằng trở thành đoạn có tổng bằng 0.",
+    "presentation_rules": ""
   },
   {
     "id": 213,
@@ -6135,7 +6252,9 @@
       }
     ],
     "difficulty_rank": 3,
-    "kind": "array_productExcept"
+    "kind": "array_productExcept",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 214,
@@ -6231,7 +6350,9 @@
       }
     ],
     "difficulty_rank": 3,
-    "kind": "array_maxProduct"
+    "kind": "array_maxProduct",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 215,
@@ -6241,7 +6362,7 @@
     "statement": "Dãy được xem là vòng: một đoạn có thể nối phần cuối với phần đầu nhưng không được dùng một phần tử quá một lần. Tìm tổng lớn nhất không rỗng.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Tong lon nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nTong lon nhat la: 10",
     "tests": [
@@ -6343,7 +6464,8 @@
     ],
     "difficulty_rank": 4,
     "kind": "array_circular",
-    "knowledge_note": "So sánh Kadane thường với tổng dãy trừ đoạn con nhỏ nhất; xử lý riêng trường hợp toàn âm."
+    "knowledge_note": "So sánh Kadane thường với tổng dãy trừ đoạn con nhỏ nhất; xử lý riêng trường hợp toàn âm.",
+    "presentation_rules": ""
   },
   {
     "id": 216,
@@ -6353,7 +6475,7 @@
     "statement": "Mỗi phần tử là chiều cao cột không âm, bề rộng mỗi cột bằng 1. Tính tổng đơn vị nước giữ được sau mưa.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Luong nuoc toi da la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên không âm trong [0, 1000000]. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên không âm trong [0, 10⁶]. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n5 0 5 5 10 5",
     "sample_output": "Nhap N = 6\nNhap day so = 5 0 5 5 10 5\nLuong nuoc toi da la: 5",
     "tests": [
@@ -6455,7 +6577,8 @@
     ],
     "difficulty_rank": 3,
     "kind": "array_trap",
-    "knowledge_note": "Hai con trỏ và chiều cao lớn nhất đã gặp cho phép tính O(N), O(1) bộ nhớ phụ."
+    "knowledge_note": "Hai con trỏ và chiều cao lớn nhất đã gặp cho phép tính O(N), O(1) bộ nhớ phụ.",
+    "presentation_rules": ""
   },
   {
     "id": 217,
@@ -6465,7 +6588,7 @@
     "statement": "Mỗi phần tử là chiều cao cột không âm; chọn hai cột i<j, diện tích bằng min(h[i],h[j])*(j-i). Tìm diện tích lớn nhất.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Dien tich lon nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "2 <= N <= 200000; mỗi phần tử là số nguyên không âm trong [0, 1000000]. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "2 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên không âm trong [0, 10⁶]. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n5 0 5 5 10 5",
     "sample_output": "Nhap N = 6\nNhap day so = 5 0 5 5 10 5\nDien tich lon nhat la: 25",
     "tests": [
@@ -6567,7 +6690,8 @@
     ],
     "difficulty_rank": 3,
     "kind": "array_container",
-    "knowledge_note": "Sau khi xét hai đầu, dịch con trỏ ở phía thấp hơn để tìm diện tích tốt hơn trong O(N)."
+    "knowledge_note": "Sau khi xét hai đầu, dịch con trỏ ở phía thấp hơn để tìm diện tích tốt hơn trong O(N).",
+    "presentation_rules": ""
   },
   {
     "id": 218,
@@ -6577,7 +6701,7 @@
     "statement": "Tìm độ dài lớn nhất của một tập giá trị liên tiếp nguyên, không yêu cầu các giá trị nằm cạnh nhau trong mảng. Mỗi giá trị chỉ cần tồn tại; trùng lặp không tăng độ dài.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `Do dai la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nDo dai la: 1",
     "tests": [
@@ -6679,7 +6803,8 @@
     ],
     "difficulty_rank": 3,
     "kind": "array_consecutive",
-    "knowledge_note": "Dùng tập băm và chỉ bắt đầu đếm từ đầu mút nhỏ nhất của mỗi dãy để đạt O(N) trung bình."
+    "knowledge_note": "Dùng tập băm và chỉ bắt đầu đếm từ đầu mút nhỏ nhất của mỗi dãy để đạt O(N) trung bình.",
+    "presentation_rules": ""
   },
   {
     "id": 219,
@@ -6689,7 +6814,7 @@
     "statement": "Cặp i<j là nghịch thế nếu a[i]>a[j]. Đếm tất cả cặp như vậy; kết quả dùng kiểu số đủ lớn.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `So cap nghich the la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; mỗi phần tử là số nguyên trong [-1000000, 1000000]. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nSo cap nghich the la: 5",
     "tests": [
@@ -6796,7 +6921,8 @@
     ],
     "difficulty_rank": 4,
     "kind": "array_inversions",
-    "knowledge_note": "Trộn hai nửa đã sắp xếp: khi lấy phần tử nửa phải trước, cộng số phần tử còn lại ở nửa trái; độ phức tạp O(N log N)."
+    "knowledge_note": "Trộn hai nửa đã sắp xếp: khi lấy phần tử nửa phải trước, cộng số phần tử còn lại ở nửa trái; độ phức tạp O(N log N).",
+    "presentation_rules": ""
   },
   {
     "id": 220,
@@ -6806,7 +6932,7 @@
     "statement": "Các phần tử đôi một khác nhau. Mỗi phép đổi chỗ được đổi hai vị trí bất kỳ. Tìm số phép đổi ít nhất để dãy tăng dần.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên.",
     "output": "In một dòng kết quả, dùng nhãn `So phep doi cho it nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 200000; các phần tử đôi một khác nhau và thuộc [-1000000, 1000000].",
+    "constraints": "1 <= N <= 2 × 10⁵; các phần tử đôi một khác nhau và thuộc [-10⁶, 10⁶].",
     "sample_input": "6\n-7 -1 5 -4 -10 2",
     "sample_output": "Nhap N = 6\nNhap day so = -7 -1 5 -4 -10 2\nSo phep doi cho it nhat la: 5",
     "tests": [
@@ -6892,7 +7018,9 @@
       }
     ],
     "difficulty_rank": 4,
-    "kind": "array_minSwaps"
+    "kind": "array_minSwaps",
+    "knowledge_note": "",
+    "presentation_rules": ""
   },
   {
     "id": 221,
@@ -6903,7 +7031,7 @@
     "statement": "Tính tổng toàn bộ phần tử.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Tong ma tran la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000]. Dùng long long cho tổng có thể lớn.",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶]. Dùng long long cho tổng có thể lớn.",
     "sample_input": "2 3\n4 -2 -8\n-6 5 -1",
     "sample_output": "Tong ma tran la: -8",
     "presentation_rules": "[OUTPUT]\nTong ma tran la: ",
@@ -7001,7 +7129,7 @@
     "statement": "Tìm giá trị lớn nhất.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Gia tri lon nhat la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n-8 3 -3\n-1 -7 4",
     "sample_output": "Gia tri lon nhat la: 4",
     "presentation_rules": "[OUTPUT]\nGia tri lon nhat la: ",
@@ -7094,7 +7222,7 @@
     "statement": "Tìm giá trị nhỏ nhất.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Gia tri nho nhat la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n-3 8 2\n4 -2 -8",
     "sample_output": "Gia tri nho nhat la: -8",
     "presentation_rules": "[OUTPUT]\nGia tri nho nhat la: ",
@@ -7187,7 +7315,7 @@
     "statement": "Đếm các phần tử lớn hơn 0.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"So phan tu duong la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n2 -4 7\n-8 3 -3",
     "sample_output": "So phan tu duong la: 3",
     "presentation_rules": "[OUTPUT]\nSo phan tu duong la: ",
@@ -7280,7 +7408,7 @@
     "statement": "Đếm các phần tử bằng 0.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"So phan tu 0 la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n7 1 -5\n-3 8 2",
     "sample_output": "So phan tu 0 la: 0",
     "presentation_rules": "[OUTPUT]\nSo phan tu 0 la: ",
@@ -7373,7 +7501,7 @@
     "statement": "In tổng các hàng theo thứ tự từ trên xuống.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Tong cac hang la: \" rồi in các giá trị trên cùng một dòng, theo thứ tự đã nêu, cách nhau đúng một dấu cách. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n-5 6 0\n2 -4 7",
     "sample_output": "Tong cac hang la: 1 5",
     "presentation_rules": "[OUTPUT]\nTong cac hang la: ",
@@ -7466,7 +7594,7 @@
     "statement": "In tổng các cột theo thứ tự trái sang phải.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Tong cac cot la: \" rồi in các giá trị trên cùng một dòng, theo thứ tự đã nêu, cách nhau đúng một dấu cách. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n0 -6 5\n7 1 -5",
     "sample_output": "Tong cac cot la: 7 -5 0",
     "presentation_rules": "[OUTPUT]\nTong cac cot la: ",
@@ -7559,7 +7687,7 @@
     "statement": "In giá trị lớn nhất của từng hàng theo thứ tự.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Max tung hang la: \" rồi in các giá trị trên cùng một dòng, theo thứ tự đã nêu, cách nhau đúng một dấu cách. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n5 -1 -7\n-5 6 0",
     "sample_output": "Max tung hang la: 5 6",
     "presentation_rules": "[OUTPUT]\nMax tung hang la: ",
@@ -7652,7 +7780,7 @@
     "statement": "In giá trị nhỏ nhất của từng cột theo thứ tự.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Min tung cot la: \" rồi in các giá trị trên cùng một dòng, theo thứ tự đã nêu, cách nhau đúng một dấu cách. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n-7 4 -2\n0 -6 5",
     "sample_output": "Min tung cot la: -7 -6 -2",
     "presentation_rules": "[OUTPUT]\nMin tung cot la: ",
@@ -7745,7 +7873,7 @@
     "statement": "Tìm vị trí theo thứ tự duyệt hàng rồi cột; chỉ số bắt đầu từ 1.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Vi tri la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n-2 -8 3\n5 -1 -7",
     "sample_output": "Vi tri la: 2 1",
     "presentation_rules": "[OUTPUT]\nVi tri la: ",
@@ -7838,7 +7966,7 @@
     "statement": "Với ma trận vuông, tính tổng các ô có chỉ số hàng bằng chỉ số cột.",
     "input": "Dòng đầu gồm M và N. Ma trận vuông có M = N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Tong cheo chinh la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "3 3\n-8 3 -3\n-1 -7 4\n6 0 -6",
     "sample_output": "Tong cheo chinh la: -21",
     "presentation_rules": "[OUTPUT]\nTong cheo chinh la: ",
@@ -7931,7 +8059,7 @@
     "statement": "Với ma trận vuông, tính tổng đường chéo từ góc phải trên đến trái dưới.",
     "input": "Dòng đầu gồm M và N. Ma trận vuông có M = N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Tong cheo phu la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "3 3\n-3 8 2\n4 -2 -8\n-6 5 -1",
     "sample_output": "Tong cheo phu la: -6",
     "presentation_rules": "[OUTPUT]\nTong cheo phu la: ",
@@ -8024,7 +8152,7 @@
     "statement": "Tính trị tuyệt đối hiệu tổng đường chéo chính và phụ. Ô giữa của ma trận bậc lẻ thuộc cả hai đường.",
     "input": "Dòng đầu gồm M và N. Ma trận vuông có M = N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Do chenh lech la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "3 3\n2 -4 7\n-8 3 -3\n-1 -7 4",
     "sample_output": "Do chenh lech la: 0",
     "presentation_rules": "[OUTPUT]\nDo chenh lech la: ",
@@ -8117,7 +8245,7 @@
     "statement": "Cộng mỗi ô nằm trên đường biên đúng một lần, kể cả ma trận một hàng hoặc một cột.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Tong bien la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n1 -5 6\n8 2 -4",
     "sample_output": "Tong bien la: 8",
     "presentation_rules": "[OUTPUT]\nTong bien la: ",
@@ -8210,7 +8338,7 @@
     "statement": "Đổi hàng thành cột. In đúng N hàng, mỗi hàng M số.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Ma tran chuyen vi: \" rồi in hàng đầu của ma trận ngay sau nhãn, các hàng tiếp theo trên từng dòng mới; mỗi hàng có đúng số cột của kết quả, các số cách nhau đúng một dấu cách. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n6 0 -6\n-4 7 1",
     "sample_output": "Ma tran chuyen vi: 6 -4\n0 7\n-6 1",
     "presentation_rules": "[OUTPUT]\nMa tran chuyen vi: ",
@@ -8303,7 +8431,7 @@
     "statement": "Đảo thứ tự các phần tử trong từng hàng; không đổi thứ tự các hàng.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Ma tran ket qua: \" rồi in hàng đầu của ma trận ngay sau nhãn, các hàng tiếp theo trên từng dòng mới; mỗi hàng có đúng số cột của kết quả, các số cách nhau đúng một dấu cách. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n-6 5 -1\n1 -5 6",
     "sample_output": "Ma tran ket qua: -1 5 -6\n6 -5 1",
     "presentation_rules": "[OUTPUT]\nMa tran ket qua: ",
@@ -8396,7 +8524,7 @@
     "statement": "Xoay ma trận vuông 90 độ theo chiều kim đồng hồ.",
     "input": "Dòng đầu gồm M và N. Ma trận vuông có M = N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Ma tran sau xoay: \" rồi in hàng đầu của ma trận ngay sau nhãn, các hàng tiếp theo trên từng dòng mới; mỗi hàng có đúng số cột của kết quả, các số cách nhau đúng một dấu cách. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "3 3\n5 -1 -7\n-5 6 0\n2 -4 7",
     "sample_output": "Ma tran sau xoay: 2 -5 5\n-4 6 -1\n7 0 -7",
     "presentation_rules": "[OUTPUT]\nMa tran sau xoay: ",
@@ -8489,7 +8617,7 @@
     "statement": "Sắp xếp mỗi hàng không giảm, giữ nguyên thứ tự các hàng.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Ma tran da sap xep: \" rồi in hàng đầu của ma trận ngay sau nhãn, các hàng tiếp theo trên từng dòng mới; mỗi hàng có đúng số cột của kết quả, các số cách nhau đúng một dấu cách. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n4 -2 -8\n-6 5 -1",
     "sample_output": "Ma tran da sap xep: -8 -2 4\n-6 -1 5",
     "presentation_rules": "[OUTPUT]\nMa tran da sap xep: ",
@@ -8582,7 +8710,7 @@
     "statement": "Sắp xếp mỗi cột không giảm, giữ nguyên thứ tự các cột.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Ma tran da sap xep: \" rồi in hàng đầu của ma trận ngay sau nhãn, các hàng tiếp theo trên từng dòng mới; mỗi hàng có đúng số cột của kết quả, các số cách nhau đúng một dấu cách. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n-8 3 -3\n-1 -7 4",
     "sample_output": "Ma tran da sap xep: -8 -7 -3\n-1 3 4",
     "presentation_rules": "[OUTPUT]\nMa tran da sap xep: ",
@@ -8675,7 +8803,7 @@
     "statement": "In chỉ số hàng có tổng lớn nhất, từ 1; nếu hòa chọn hàng đầu tiên.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Hang can tim la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n-3 8 2\n4 -2 -8",
     "sample_output": "Hang can tim la: 1",
     "presentation_rules": "[OUTPUT]\nHang can tim la: ",
@@ -8768,7 +8896,7 @@
     "statement": "In chỉ số cột có tổng nhỏ nhất, từ 1; nếu hòa chọn cột đầu tiên.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Cot can tim la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n2 -4 7\n-8 3 -3",
     "sample_output": "Cot can tim la: 1",
     "presentation_rules": "[OUTPUT]\nCot can tim la: ",
@@ -8861,7 +8989,7 @@
     "statement": "Ma trận vuông đối xứng nếu a[i][j] bằng a[j][i] với mọi i,j. In YES hoặc NO.",
     "input": "Dòng đầu gồm M và N. Ma trận vuông có M = N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Doi xung hay khong: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "3 3\n-4 1 2\n1 -3 1\n2 1 -2",
     "sample_output": "Doi xung hay khong: YES",
     "presentation_rules": "[OUTPUT]\nDoi xung hay khong: ",
@@ -8954,7 +9082,7 @@
     "statement": "Ma trận vuông đơn vị có đường chéo chính bằng 1 và mọi ô khác bằng 0. In YES hoặc NO.",
     "input": "Dòng đầu gồm M và N. Ma trận vuông có M = N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Don vi hay khong: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "3 3\n1 0 0\n0 1 0\n0 0 1",
     "sample_output": "Don vi hay khong: YES",
     "presentation_rules": "[OUTPUT]\nDon vi hay khong: ",
@@ -9047,7 +9175,7 @@
     "statement": "Ma trận vuông là tam giác trên nếu mọi ô dưới đường chéo chính bằng 0. In YES hoặc NO.",
     "input": "Dòng đầu gồm M và N. Ma trận vuông có M = N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Tam giac tren hay khong: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; M = N; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "3 3\n6 1 2\n0 7 1\n0 0 8",
     "sample_output": "Tam giac tren hay khong: YES",
     "presentation_rules": "[OUTPUT]\nTam giac tren hay khong: ",
@@ -9140,7 +9268,7 @@
     "statement": "Đọc hàng thứ nhất từ trái sang phải, hàng thứ hai từ phải sang trái rồi luân phiên.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Day theo duong ran la: \" rồi in các giá trị trên cùng một dòng, theo thứ tự đã nêu, cách nhau đúng một dấu cách. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n5 -1 -7\n-5 6 0",
     "sample_output": "Day theo duong ran la: 5 -1 -7 0 6 -5",
     "presentation_rules": "[OUTPUT]\nDay theo duong ran la: ",
@@ -9233,7 +9361,7 @@
     "statement": "Bắt đầu từ góc trái trên, đi sang phải rồi xoay theo chiều kim đồng hồ vào tâm.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Day xoan oc la: \" rồi in các giá trị trên cùng một dòng, theo thứ tự đã nêu, cách nhau đúng một dấu cách. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n-7 4 -2\n0 -6 5",
     "sample_output": "Day xoan oc la: -7 4 -2 5 -6 0",
     "presentation_rules": "[OUTPUT]\nDay xoan oc la: ",
@@ -9326,7 +9454,7 @@
     "statement": "Ô (i,j) của kết quả là tổng hình chữ nhật từ góc trái trên đến chính ô đó.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Bang tong tien to: \" rồi in hàng đầu của ma trận ngay sau nhãn, các hàng tiếp theo trên từng dòng mới; mỗi hàng có đúng số cột của kết quả, các số cách nhau đúng một dấu cách. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000]. Dùng long long cho tổng có thể lớn.",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶]. Dùng long long cho tổng có thể lớn.",
     "sample_input": "2 3\n-2 -8 3\n5 -1 -7",
     "sample_output": "Bang tong tien to: -2 -10 -7\n3 -6 -10",
     "presentation_rules": "[OUTPUT]\nBang tong tien to: ",
@@ -9424,7 +9552,7 @@
     "statement": "Tìm tổng lớn nhất của hình chữ nhật con không rỗng gồm các ô liên tiếp theo hàng và cột.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Tong lon nhat la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 100; mỗi phần tử thuộc [-1000000, 1000000]. Dùng long long cho tổng có thể lớn.",
+    "constraints": "1 ≤ M, N ≤ 100; mỗi phần tử thuộc [-10⁶, 10⁶]. Dùng long long cho tổng có thể lớn.",
     "sample_input": "2 3\n3 -3 8\n-7 4 -2",
     "sample_output": "Tong lon nhat la: 8",
     "presentation_rules": "[OUTPUT]\nTong lon nhat la: ",
@@ -9522,7 +9650,7 @@
     "statement": "Từ góc trái trên đến góc phải dưới, mỗi bước chỉ đi sang phải hoặc xuống dưới; tìm tổng lớn nhất.",
     "input": "Dòng đầu gồm M và N. M dòng tiếp theo, mỗi dòng gồm N số nguyên theo thứ tự cột.",
     "output": "In nhãn \"Tong duong di la: \" rồi in giá trị kết quả ngay sau nhãn trên cùng một dòng. Không có dấu cách cuối dòng hoặc dòng trống thừa.",
-    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-1000000, 1000000].",
+    "constraints": "1 ≤ M, N ≤ 200; mỗi phần tử thuộc [-10⁶, 10⁶].",
     "sample_input": "2 3\n8 2 -4\n-2 -8 3",
     "sample_output": "Tong duong di la: 9",
     "presentation_rules": "[OUTPUT]\nTong duong di la: ",

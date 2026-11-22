@@ -1,7 +1,17 @@
 import { taskPresentation } from "./problem-presentation.js";
 
 // VI: Đối chiếu stdout. EN: Input echo belongs only to the displayed transcript.
-const normalize = value => String(value ?? "").replace(/\r\n?/g, "\n").replace(/\n$/, "");
+// Keep every trailing newline: one final line break is still extra stdout
+// for this project's strict presentation rules (only CRLF is normalized).
+const normalize = value => String(value ?? "").replace(/\r\n?/g, "\n");
+// Tail whitespace is a formatting rule for every problem. Interior spaces and
+// line breaks stay significant so shapes and tables cannot drift.
+const stripOutputTailWhitespace = value => String(value ?? "")
+  .replace(/\r\n?/g, "\n")
+  .split("\n")
+  .map(line => line.replace(/[ \t]+$/g, ""))
+  .join("\n")
+  .replace(/\n+$/g, "");
 const foldLabel = text => text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/đ/g, "d");
 const strictLayout = new Set([65,66,67,68,69,70,71,72,73,74,75,91,92,
   133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150]);
@@ -132,6 +142,10 @@ export function classifyTestResult(result, task, test, presentation) {
   const actual = normalize(result.output);
   const expected = normalize(presentation.expectedProgramOutput(test.output));
   if (actual === expected) return { status: "PASS", message: "ĐÚNG", penalty: 0 };
+  if (stripOutputTailWhitespace(actual) === stripOutputTailWhitespace(expected)) {
+    return { status: "PRESENTATION", message: "ĐÚNG THUẬT TOÁN · LỖI TRÌNH BÀY",
+      penalty: presentationSeverity(actual, expected, presentation) };
+  }
   if (semanticMatch(actual, normalize(test.output), task, presentation)) {
     return { status: "PRESENTATION", message: "ĐÚNG THUẬT TOÁN · LỖI TRÌNH BÀY",
       penalty: presentationSeverity(actual, expected, presentation) };

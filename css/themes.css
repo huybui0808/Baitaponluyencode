@@ -67,6 +67,11 @@
   margin-top: 4px;
   transform: rotate(225deg);
 }
+@media (prefers-reduced-motion: reduce) {
+  .theme-trigger .menu-chevron {
+    transition: none;
+  }
+}
 .theme-options {
   position: absolute;
   top: calc(100% + 8px);
@@ -83,6 +88,12 @@
 }
 .theme-options[hidden] {
   display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .theme-options:not([hidden]) {
+    transform-origin: top right;
+    animation: nav-menu-enter 170ms cubic-bezier(.2, .75, .25, 1) both;
+  }
 }
 .theme-menu-head {
   display: grid;
@@ -114,6 +125,14 @@
 }
 .theme-options .theme-choice:hover {
   background: var(--hover-bg);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .theme-options .theme-choice {
+    transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+  }
+  .theme-options .theme-choice:hover {
+    transform: translateX(2px);
+  }
 }
 .theme-options .theme-choice.selected {
   border-color: var(--accent);

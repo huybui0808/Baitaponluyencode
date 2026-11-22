@@ -136,6 +136,22 @@ header .top {
 .user-chip {
   max-width: 160px;
 }
+.menu-trigger[aria-expanded="true"] {
+  border-color: var(--accent);
+  background: var(--active-bg);
+}
+.menu-trigger .menu-chevron {
+  display: inline-block;
+  transition: transform 160ms ease;
+}
+.menu-trigger[aria-expanded="true"] .menu-chevron {
+  transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-trigger .menu-chevron {
+    transition: none;
+  }
+}
 .user-dropdown {
   position: absolute;
   right: 0;
@@ -150,6 +166,16 @@ header .top {
 }
 .user-dropdown[hidden] {
   display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .user-dropdown:not([hidden]) {
+    transform-origin: top right;
+    animation: nav-menu-enter 170ms cubic-bezier(.2, .75, .25, 1) both;
+  }
+}
+@keyframes nav-menu-enter {
+  from { opacity: 0; transform: translateY(-7px) scale(.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .user-dropdown button {
   display: block;
@@ -166,6 +192,14 @@ header .top {
 }
 .user-dropdown button:hover {
   background: var(--hover-bg);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .user-dropdown button {
+    transition: background-color 150ms ease, color 150ms ease, padding-left 150ms ease;
+  }
+  .user-dropdown button:hover {
+    padding-left: 16px;
+  }
 }
 .user-dropdown button.danger {
   color: var(--bad);
