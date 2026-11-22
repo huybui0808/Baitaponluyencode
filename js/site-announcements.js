@@ -19,6 +19,12 @@ function noticeDialog(notice, onClose) {
   overlay.setAttribute('aria-labelledby', 'siteAnnouncementTitle');
   const card = document.createElement('div');
   card.className = 'site-announcement-card';
+  const close = document.createElement('button');
+  close.type = 'button';
+  close.className = 'site-announcement-close';
+  close.textContent = '×';
+  close.setAttribute('aria-label', 'Đóng thông báo và tải lại trang');
+  close.addEventListener('click', () => window.location.reload(), { once: true });
   const eyebrow = document.createElement('div');
   eyebrow.className = 'site-announcement-eyebrow';
   eyebrow.textContent = 'Thông báo cập nhật';
@@ -27,17 +33,10 @@ function noticeDialog(notice, onClose) {
   title.textContent = notice.title;
   const body = document.createElement('p');
   body.textContent = notice.body;
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.textContent = 'Đã hiểu';
-  button.addEventListener('click', () => {
-    overlay.remove();
-    onClose();
-  }, { once: true });
-  card.append(eyebrow, title, body, button);
+  card.append(close, eyebrow, title, body);
   overlay.append(card);
   document.body.append(overlay);
-  button.focus();
+  close.focus();
 }
 
 export function initSiteAnnouncements(getClient, getUser) {
