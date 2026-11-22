@@ -1627,161 +1627,154 @@
   {
     "id": 44,
     "section": "Phần 3 - Vòng lặp cơ bản và số học",
-    "title": "Kiểm tra dãy tăng nghiêm ngặt",
-    "level": "Cơ bản",
-    "statement": "Cho N số nguyên theo thứ tự. Hãy dùng vòng lặp để kiểm tra mỗi phần tử sau có lớn hơn phần tử đứng ngay trước nó hay không.",
-    "input": "Dòng đầu là số nguyên N. Dòng tiếp theo gồm N số nguyên.",
-    "output": "In YES nếu dãy tăng nghiêm ngặt; ngược lại in NO. Dãy có một phần tử được xem là tăng nghiêm ngặt.",
-    "constraints": "1 <= N <= 10⁵ ; -10⁹ <= ai <= 10⁹.",
-    "kind": "sequence_increasing",
-    "gen": "sequence",
+    "title": "Tổng các thừa số nguyên tố phân biệt",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên N ≥ 2. Phân tích N thành thừa số nguyên tố rồi tính tổng các thừa số khác nhau; mỗi giá trị chỉ cộng một lần.",
+    "input": "Một số nguyên N.",
+    "output": "In tổng các thừa số nguyên tố phân biệt của N.",
+    "constraints": "2 ≤ N ≤ 10⁹.",
+    "kind": "calculation_44",
+    "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "1\n5",
-        "output": "YES"
+        "input": "2",
+        "output": "2"
       },
       {
         "no": 2,
-        "input": "2\n1 2",
-        "output": "YES"
+        "input": "3",
+        "output": "3"
       },
       {
         "no": 3,
-        "input": "2\n2 1",
-        "output": "NO"
+        "input": "4",
+        "output": "2"
       },
       {
         "no": 4,
-        "input": "3\n-2 0 7",
-        "output": "YES"
+        "input": "6",
+        "output": "5"
       },
       {
         "no": 5,
-        "input": "3\n4 4 5",
-        "output": "NO"
+        "input": "8",
+        "output": "2"
       },
       {
         "no": 6,
-        "input": "4\n1 3 2 4",
-        "output": "NO"
+        "input": "12",
+        "output": "5"
       },
       {
         "no": 7,
-        "input": "4\n-8 -5 -1 6",
-        "output": "YES"
+        "input": "18",
+        "output": "5"
       },
       {
         "no": 8,
-        "input": "5\n9 7 5 3 1",
-        "output": "NO"
+        "input": "30",
+        "output": "10"
       },
       {
         "no": 9,
-        "input": "5\n0 0 0 0 0",
-        "output": "NO"
+        "input": "49",
+        "output": "7"
       },
       {
         "no": 10,
-        "input": "6\n-3 -2 -1 0 1 2",
-        "output": "YES"
+        "input": "60",
+        "output": "10"
       },
       {
         "no": 11,
-        "input": "6\n1 2 3 3 4 5",
-        "output": "NO"
+        "input": "97",
+        "output": "97"
       },
       {
         "no": 12,
-        "input": "7\n10 20 30 40 50 60 70",
-        "output": "YES"
+        "input": "1000000000",
+        "output": "7"
       }
     ],
-    "sample_input": "4\n-8 -5 -1 6",
-    "sample_output": "YES",
-    "difficulty_rank": 1,
-    "legacyId": 49,
-    "knowledge_note": "",
+    "sample_input": "12",
+    "sample_output": "5",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Nếu một thừa số nguyên tố xuất hiện nhiều lần, chỉ cộng nó một lần. Ví dụ 12 = 2² × 3 nên tổng là 5.",
     "presentation_rules": ""
   },
   {
     "id": 45,
     "section": "Phần 3 - Vòng lặp cơ bản và số học",
-    "title": "Phân loại thứ tự của dãy",
+    "title": "Đếm các ước chung dương",
     "level": "Trung bình",
-    "statement": "Cho N số nguyên. Hãy xác định dãy là hằng, tăng nghiêm ngặt, giảm nghiêm ngặt hay không thuộc ba dạng đó.",
-    "input": "Dòng đầu là số nguyên N. Dòng tiếp theo gồm N số nguyên.",
-    "output": "In CONSTANT nếu mọi phần tử bằng nhau; nếu không, in INCREASING khi mọi cặp kề nhau tăng; in DECREASING khi mọi cặp kề nhau giảm; các trường hợp còn lại in UNSORTED. Xét CONSTANT trước.",
-    "constraints": "1 <= N <= 10⁵ ; -10⁹ <= ai <= 10⁹.",
-    "kind": "sequence_classify",
-    "gen": "sequence",
+    "statement": "Cho hai số nguyên dương A và B. Đếm các số nguyên dương cùng là ước của A và B.",
+    "input": "Hai số nguyên dương A và B.",
+    "output": "In số lượng ước chung dương của A và B.",
+    "constraints": "1 ≤ A, B ≤ 10⁹.",
+    "kind": "calculation_45",
+    "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "1\n5",
-        "output": "CONSTANT"
+        "input": "1 1",
+        "output": "1"
       },
       {
         "no": 2,
-        "input": "2\n1 2",
-        "output": "INCREASING"
+        "input": "1 12",
+        "output": "1"
       },
       {
         "no": 3,
-        "input": "2\n2 1",
-        "output": "DECREASING"
+        "input": "2 3",
+        "output": "1"
       },
       {
         "no": 4,
-        "input": "3\n1 1 1",
-        "output": "CONSTANT"
+        "input": "6 9",
+        "output": "2"
       },
       {
         "no": 5,
-        "input": "3\n1 2 1",
-        "output": "UNSORTED"
+        "input": "12 18",
+        "output": "4"
       },
       {
         "no": 6,
-        "input": "4\n-3 -2 -1 0",
-        "output": "INCREASING"
+        "input": "12 12",
+        "output": "6"
       },
       {
         "no": 7,
-        "input": "4\n8 6 4 2",
-        "output": "DECREASING"
+        "input": "36 48",
+        "output": "6"
       },
       {
         "no": 8,
-        "input": "5\n1 2 2 3 4",
-        "output": "UNSORTED"
+        "input": "49 98",
+        "output": "3"
       },
       {
         "no": 9,
-        "input": "5\n9 7 7 5 3",
-        "output": "UNSORTED"
+        "input": "100 75",
+        "output": "3"
       },
       {
         "no": 10,
-        "input": "6\n-5 -5 -5 -5 -5 -5",
-        "output": "CONSTANT"
+        "input": "99991 99991",
+        "output": "2"
       },
       {
         "no": 11,
-        "input": "6\n1 3 5 7 9 11",
-        "output": "INCREASING"
-      },
-      {
-        "no": 12,
-        "input": "7\n20 15 10 8 3 1 0",
-        "output": "DECREASING"
+        "input": "1000000000 500000000",
+        "output": "90"
       }
     ],
-    "sample_input": "5\n1 2 2 3 4",
-    "sample_output": "UNSORTED",
+    "sample_input": "12 18",
+    "sample_output": "4",
     "difficulty_rank": 2,
-    "legacyId": 50,
-    "knowledge_note": "",
+    "knowledge_note": "Kiến thức cần nhớ: Các ước chung dương của A và B chính là các ước dương của gcd(A, B).",
     "presentation_rules": ""
   },
   {
@@ -4167,141 +4160,85 @@
   {
     "id": 63,
     "section": "Phần 3 - Vòng lặp cơ bản và số học",
-    "title": "Đếm bước biến đổi Collatz",
-    "level": "Khá",
-    "statement": "Bắt đầu từ n dương. Nếu n chẵn, thay n bằng n/2; nếu n lẻ, thay n bằng 3*n+1. Lặp đến khi n=1. Đếm số bước đã thực hiện.",
-    "input": "Một số nguyên dương n là giá trị bắt đầu của dãy Collatz.",
-    "output": "In số bước biến đổi để giá trị về 1. Nếu bắt đầu từ 1, in 0.",
-    "constraints": "1 ≤ n ≤ 10⁹. Giá trị trung gian của 3n + 1 có thể vượt kiểu int. Dùng long long.",
-    "kind": "collatz",
-    "gen": "collatz",
+    "title": "Số hoàn hảo nhỏ nhất không dưới N",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên dương N. Tìm số hoàn hảo nhỏ nhất lớn hơn hoặc bằng N trong phạm vi 10000; nếu không có, in -1.",
+    "input": "Một số nguyên dương N.",
+    "output": "In số hoàn hảo nhỏ nhất thỏa mãn hoặc -1.",
+    "constraints": "1 ≤ N ≤ 10000.",
+    "kind": "calculation_63",
+    "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "342",
-        "output": "125"
+        "input": "1",
+        "output": "6"
       },
       {
         "no": 2,
-        "input": "106",
-        "output": "12"
+        "input": "5",
+        "output": "6"
       },
       {
         "no": 3,
-        "input": "937",
-        "output": "173"
+        "input": "6",
+        "output": "6"
       },
       {
         "no": 4,
-        "input": "554",
-        "output": "17"
+        "input": "7",
+        "output": "28"
       },
       {
         "no": 5,
-        "input": "927",
-        "output": "116"
+        "input": "27",
+        "output": "28"
       },
       {
         "no": 6,
-        "input": "810",
+        "input": "28",
         "output": "28"
       },
       {
         "no": 7,
-        "input": "105",
-        "output": "38"
+        "input": "29",
+        "output": "496"
       },
       {
         "no": 8,
-        "input": "417",
-        "output": "133"
+        "input": "495",
+        "output": "496"
       },
       {
         "no": 9,
-        "input": "259",
-        "output": "122"
+        "input": "496",
+        "output": "496"
       },
       {
         "no": 10,
-        "input": "356",
-        "output": "32"
+        "input": "497",
+        "output": "8128"
       },
       {
         "no": 11,
-        "input": "644",
-        "output": "100"
+        "input": "8128",
+        "output": "8128"
       },
       {
         "no": 12,
-        "input": "950",
-        "output": "28"
+        "input": "8129",
+        "output": "-1"
       },
       {
         "no": 13,
-        "input": "190",
-        "output": "106"
-      },
-      {
-        "no": 14,
-        "input": "395",
-        "output": "76"
-      },
-      {
-        "no": 15,
-        "input": "161",
-        "output": "98"
-      },
-      {
-        "no": 16,
-        "input": "230",
-        "output": "34"
-      },
-      {
-        "no": 17,
-        "input": "399",
-        "output": "120"
-      },
-      {
-        "no": 18,
-        "input": "460",
-        "output": "35"
-      },
-      {
-        "no": 19,
-        "input": "788",
-        "output": "28"
-      },
-      {
-        "no": 20,
-        "input": "368",
-        "output": "19"
-      },
-      {
-        "no": 21,
-        "input": "38",
-        "output": "21"
-      },
-      {
-        "no": 22,
-        "input": "549",
-        "output": "92"
-      },
-      {
-        "no": 23,
-        "input": "746",
-        "output": "20"
-      },
-      {
-        "no": 24,
-        "input": "1000000000",
-        "output": "100"
+        "input": "10000",
+        "output": "-1"
       }
     ],
-    "sample_input": "342",
-    "sample_output": "125",
-    "difficulty_rank": 3,
-    "legacyId": 68,
-    "knowledge_note": "Kiến thức cần nhớ: Quy tắc Collatz: n chẵn thì chia 2; n lẻ thì đổi thành 3n + 1. Đếm số lần biến đổi cho đến khi đạt 1, không tính giá trị ban đầu là một bước.",
+    "sample_input": "27",
+    "sample_output": "28",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Số hoàn hảo bằng tổng các ước dương nhỏ hơn chính nó. Kiểm tra lần lượt từ N đến 10000.",
     "presentation_rules": ""
   },
   {

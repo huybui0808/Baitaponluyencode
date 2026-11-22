@@ -13,8 +13,8 @@ const stripOutputTailWhitespace = value => String(value ?? "")
   .join("\n")
   .replace(/\n+$/g, "");
 const foldLabel = text => text.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/đ/g, "d");
-const strictLayout = new Set([65,66,67,68,69,70,71,72,73,74,75,91,92,
-  133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150]);
+const strictLayout = new Set([65,66,67,68,72,74,92,
+  139,142,143,149]);
 
 function labelPattern(presentation) {
   const labels = [...presentation.prompts, ...(presentation.lineLabels || [presentation.resultLabel])];

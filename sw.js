@@ -1,6 +1,6 @@
 // VI: Cập nhật giao diện và tái sử dụng compiler đã cache, tránh tải lại khoảng 95 MB. EN: Refresh the app shell while reusing cached compiler assets to avoid another ~95 MB download.
 // Bump the patch for static UI/cache revisions; minor/major for app-level changes.
-const CACHE_NAME = "onluyencpp-offline-v2.1.8";
+const CACHE_NAME = "onluyencpp-offline-v2.1.15";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -19,6 +19,7 @@ const APP_FILES = [
   "./js/task-pdf.js",
   "./js/checker.js",
   "./js/problem-presentation.js",
+  "./js/site-announcements.js",
   "./js/streak-core.js",
   "./js/streak-sync.js",
   "./js/streak.js",

@@ -5,6 +5,7 @@ import { shiftStudyDate, streakFlameSvg, streakTier, summarizeStreak } from './s
 import { bundledPartUrls } from './task-parts.js';
 import { renderCppHighlight } from './code-highlight.js';
 import { buildTaskPdfHtml } from './task-pdf.js';
+import { initSiteAnnouncements } from './site-announcements.js';
 // Logic giao dien, chay code, cham diem va luu tien do.
 // VI: Lấy bài đã xuất bản từ Supabase; dùng bản đã đồng bộ hoặc JSON khi offline.
 // EN: Load published tasks from Supabase, then cached tasks or bundled JSON offline.
@@ -293,6 +294,7 @@ for (const [id, value] of Object.entries(oldLatestScores)) {
 let accountSuspended = false;
 let confirmSignupOnce = false;
 let currentUser = null; // Người dùng Supabase đang đăng nhập (null = khách)
+const checkSiteAnnouncements = initSiteAnnouncements(() => supabase, () => currentUser);
 function scoreStoreKey(key, userId = currentUser?.id) {
   return userId ? `${key}:${userId}` : key;
 }
@@ -322,6 +324,7 @@ async function reconcileProblemLearningResets() {
         localStorage.setItem(key, JSON.stringify(values));
       }
     }
+    localStorage.removeItem(`cppcode_v2_${id}`);
     const history = readStore(SCORE_HISTORY_KEY);
     for (const key of Object.keys(history)) {
       if (key.startsWith(`${id}:`)) delete history[key];
@@ -726,6 +729,7 @@ async function handleSession(session) {
       refreshScoreViews();
     }
     renderAuthBox();
+    void checkSiteAnnouncements();
     return;
   }
   currentUser = user;
@@ -735,6 +739,7 @@ async function handleSession(session) {
   closeOverlay("authOverlay");
   if (loadedForUser === user.id) {
     renderAuthBox();
+    void checkSiteAnnouncements();
     return;
   }
   bestScores = readStore(scoreStoreKey(SCORE_KEY, user.id));
@@ -747,6 +752,7 @@ async function handleSession(session) {
   await loadMyRole();
   renderAuthBox();
   refreshScoreViews();
+  void checkSiteAnnouncements();
 }
 // Gọi sau khi chấm toàn bộ test của bài. Trả về dòng ghi chú để hiện trong kết quả.
 async function syncScoreAfterGrading(taskId, passed, points, testsTotal, version) {
@@ -1581,6 +1587,7 @@ function loadSavedCode(task) {
   const key = "cppcode_" + storageId(task);
   const currentValue = localStorage.getItem(key);
   if (currentValue !== null) return currentValue;
+  if (Number(readStore(PROBLEM_RESET_VERSION_KEY)[task.id] || 0) > 0) return null;
   const legacyId = task.legacyId || task.id;
   const legacyKey = "cppcode_" + legacyId;
   const legacyValue = localStorage.getItem(legacyKey);

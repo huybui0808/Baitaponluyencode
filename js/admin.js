@@ -18,6 +18,7 @@ const PRIMARY = [
   ["users", "👥", "Người dùng"],
 ];
 const SECONDARY = [
+  ["announcements", "📣", "Thông báo thay đổi", false],
   ["stats", "📊", "Thống kê", false],
   ["admins", "🛡", "Quản trị viên", true],
   ["audit", "🕘", "Nhật ký hoạt động", true],
@@ -195,10 +196,44 @@ const VIEWS = {
   dash: viewDash,
   stats: viewStats,
   problems: viewProblems,
+  announcements: viewAnnouncements,
   users: viewUsers,
   admins: viewAdmins,
   audit: viewAudit,
 };
+
+// VI: Quản trị viên quyết định thời điểm phát một thông báo sau khi sửa nội dung.
+// EN: Publishing is an explicit admin action, separate from saving a task.
+async function viewAnnouncements(body) {
+  const rows = await rpc("admin_list_site_announcements");
+  body.innerHTML = `
+    <div class="adm-page-head"><div><h1>Thông báo thay đổi</h1><p>Viết một thông báo sau mỗi đợt sửa. Người học chỉ thấy mỗi thông báo một lần.</p></div></div>
+    <div class="adm-card" style="max-width:760px">
+      <label class="adm-field">Tiêu đề<input id="admAnnouncementTitle" maxlength="120" placeholder="Ví dụ: Đã cập nhật bài tập vòng lặp"></label>
+      <label class="adm-field">Nội dung<textarea id="admAnnouncementBody" maxlength="2000" rows="5" placeholder="Nêu các thay đổi mà người học cần biết."></textarea></label>
+      <button class="adm-btn primary" id="admPublishAnnouncement" type="button">📣 Phát thông báo cho mọi người</button>
+    </div>
+    <div class="adm-card" style="max-width:760px;margin-top:18px"><h2>Thông báo đã phát</h2>
+      ${rows.length ? rows.map((row) => `<div style="border-top:1px solid var(--line);padding:14px 0"><b>${esc(row.title)}</b><small style="display:block;color:var(--muted)">${fmt(row.published_at)} · ${Number(row.read_count || 0)} tài khoản đã nhận</small><p style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(row.body)}</p></div>`).join("") : `<p class="mut">Chưa có thông báo nào.</p>`}
+    </div>`;
+  $("#admPublishAnnouncement", body).onclick = async () => {
+    const title = $("#admAnnouncementTitle", body).value.trim();
+    const message = $("#admAnnouncementBody", body).value.trim();
+    if (!title || !message) return toast("Nhập tiêu đề và nội dung thông báo.", "err");
+    if (!(await confirmBox(`Phát thông báo “${title}” cho mọi người? Mỗi người sẽ thấy thông báo này một lần.`, { okText: "Phát thông báo" }))) return;
+    const button = $("#admPublishAnnouncement", body);
+    button.disabled = true;
+    try {
+      await rpc("admin_publish_site_announcement", { p_title: title, p_body: message });
+      window.dispatchEvent(new Event("site-announcement-published"));
+      toast("Đã phát thông báo.", "ok");
+      await viewAnnouncements(body);
+    } catch (error) {
+      toast(error.message, "err");
+      button.disabled = false;
+    }
+  };
+}
 async function show(view) {
   if ((view === "admins" || view === "audit") && !isSuper) view = "dash";
   state.view = view;
@@ -341,7 +376,7 @@ async function viewProblems(body) {
     head(
       "Quản lý bài tập",
       "Thêm, sửa, xóa, sắp xếp thứ tự, quản lý test case",
-      `<button class="adm-btn" data-act="export" title="Tải ZIP chứa manifest và mọi phần đã xuất bản">⇩ Xuất JSON</button> <button class="adm-btn" data-act="upload">⇧ Tải nhiều JSON lên</button> <button class="adm-btn" data-act="import">⇪ Nhập JSON trên web</button> <button class="adm-btn primary" data-act="new">＋ Thêm bài</button>`,
+      `<button class="adm-btn" data-act="export" title="Tải ZIP chứa manifest và mọi phần đã xuất bản">⇩ Xuất JSON</button> <button class="adm-btn" data-act="upload">⇧ Tải nhiều JSON lên</button> <button class="adm-btn" data-act="import">⇪ Nhập JSON trên web</button> <button class="adm-btn" data-act="announce">📣 Thông báo</button> <button class="adm-btn primary" data-act="new">＋ Thêm bài</button>`,
     ) +
     `<input id="admImportFiles" type="file" accept=".json,application/json" multiple hidden>` +
     `<div class="adm-toolbar"><input class="adm-input" id="pfText" placeholder="Tìm theo số hoặc tên bài…" value="${esc(state.pf.text)}">
@@ -417,6 +452,7 @@ async function onProblemsClick(e) {
   const act = b.dataset.act;
   try {
     if (act === "new") return openProblemEditor(null);
+    if (act === "announce") return show("announcements");
     if (act === "upload") return $("#admImportFiles").click();
     if (act === "export") {
       b.disabled = true;
@@ -893,9 +929,13 @@ async function importFromJson(selectedFiles = null) {
     await loadProblems();
     const existingById = new Map(state.problems.map((problem) => [problem.id, problem]));
     const overlap = tasks.filter((task) => existingById.has(task.id)).length;
+    const replacedTasks = tasks.filter((task) =>
+      /^(?:number_theory|factorial|calculation)_/.test(String(task.kind || "")) &&
+      existingById.has(task.id) &&
+      existingById.get(task.id).title !== task.title);
     const label = selectedFiles?.length ? `${selectedFiles.length} file đã chọn` : "JSON trên web";
     if (!(await confirmBox(
-      `Nhập ${tasks.length} bài từ ${label}? ${overlap} bài trùng ID sẽ bị ghi đè nội dung và test. Điểm đã lưu được giữ theo cơ chế hiện tại.`,
+      `Nhập ${tasks.length} bài từ ${label}? ${overlap} bài trùng ID sẽ bị ghi đè nội dung và test. ${replacedTasks.length} bài đã đổi thành đề khác sẽ được xóa điểm, lịch sử nộp và thống kê học viên của riêng các bài đó; các bài khác giữ nguyên.`,
       { okText: "Bắt đầu nhập" },
     ))) return;
 
@@ -940,6 +980,11 @@ async function importFromJson(selectedFiles = null) {
           p_tests: tasks[i].tests.map((test) => ({ input: test.input, output: test.output })),
         });
       }
+      for (let i = 0; i < replacedTasks.length; i++) {
+        msg(`Đang đặt lại tiến độ bài đã đổi ${replacedTasks[i].id}… (${i + 1}/${replacedTasks.length})`, 95);
+        await rpc("admin_reset_problem_learning_data", { p_problem: replacedTasks[i].id });
+      }
+      if (replacedTasks.length) window.dispatchEvent(new Event("problem-learning-reset"));
       for (let i = 0; i < tasks.length; i += 100) {
         await q(sb.from("problems").update({ is_published: true })
           .in("id", tasks.slice(i, i + 100).map((task) => task.id)));

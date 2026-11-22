@@ -322,134 +322,162 @@
   {
     "id": 69,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Tam giác vuông giảm dần",
+    "title": "Kiểm tra số chính phương",
     "level": "Cơ bản",
-    "statement": "Nhập n. In tam giác vuông căn trái gồm n hàng; hàng đầu có n dấu * và mỗi hàng kế tiếp ít hơn một dấu *. Yêu cầu trình bày: In đủ n hàng, hàng đầu có n dấu * và mỗi hàng sau giảm một dấu *; giữa hai dấu * có đúng một dấu cách; không có dấu cách thừa cuối dòng.",
-    "input": "Một số nguyên dương n là chiều cao và số dấu sao của hàng đầu.",
-    "output": "In n hàng căn trái. Bắt đầu với n dấu * rồi bớt một dấu mỗi hàng đến khi còn một dấu. Giữa hai dấu * có một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= n <= 30.",
-    "kind": "inverted_stars",
-    "gen": "pattern_n",
+    "statement": "Cho số nguyên không âm N. Kiểm tra N có là bình phương của một số nguyên không âm hay không. Số 0 cũng là số chính phương.",
+    "input": "Một số nguyên không âm N.",
+    "output": "In YES nếu N là số chính phương, ngược lại in NO.",
+    "constraints": "0 ≤ N ≤ 10⁹.",
+    "kind": "number_theory_69",
+    "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "1",
-        "output": "*"
+        "input": "0",
+        "output": "YES"
       },
       {
         "no": 2,
-        "input": "2",
-        "output": "* *\n*"
+        "input": "1",
+        "output": "YES"
       },
       {
         "no": 3,
-        "input": "3",
-        "output": "* * *\n* *\n*"
+        "input": "2",
+        "output": "NO"
       },
       {
         "no": 4,
-        "input": "4",
-        "output": "* * * *\n* * *\n* *\n*"
+        "input": "3",
+        "output": "NO"
       },
       {
         "no": 5,
-        "input": "5",
-        "output": "* * * * *\n* * * *\n* * *\n* *\n*"
+        "input": "4",
+        "output": "YES"
       },
       {
         "no": 6,
-        "input": "6",
-        "output": "* * * * * *\n* * * * *\n* * * *\n* * *\n* *\n*"
+        "input": "15",
+        "output": "NO"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "* * * * * * * *\n* * * * * * *\n* * * * * *\n* * * * *\n* * * *\n* * *\n* *\n*"
+        "input": "16",
+        "output": "YES"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "* * * * * * * * * *\n* * * * * * * * *\n* * * * * * * *\n* * * * * * *\n* * * * * *\n* * * * *\n* * * *\n* * *\n* *\n*"
+        "input": "25",
+        "output": "YES"
+      },
+      {
+        "no": 9,
+        "input": "26",
+        "output": "NO"
+      },
+      {
+        "no": 10,
+        "input": "99980001",
+        "output": "YES"
+      },
+      {
+        "no": 11,
+        "input": "1000000000",
+        "output": "NO"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "* * * *\n* * *\n* *\n*",
+    "sample_input": "16",
+    "sample_output": "YES",
     "difficulty_rank": 1,
-    "legacyId": 74,
-    "knowledge_note": "",
+    "knowledge_note": "Kiến thức cần nhớ: Số chính phương có dạng k × k với k là số nguyên không âm. Kiểm tra cả hai giá trị quanh căn bậc hai để tránh sai số.",
     "presentation_rules": ""
   },
   {
     "id": 70,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Tam giác số tăng dần",
+    "title": "Tổng các số hoàn hảo trong đoạn",
     "level": "Trung bình",
-    "statement": "Nhập n. In n hàng số; hàng i gồm các số từ 1 đến i. Yêu cầu trình bày: In đủ n hàng; hàng i gồm các số từ 1 đến i theo đúng thứ tự; các số cách nhau đúng một dấu cách và không có dấu cách thừa cuối dòng.",
-    "input": "Một số nguyên dương n là số hàng của tam giác số tăng dần.",
-    "output": "In n hàng. Hàng thứ i chứa các số từ 1 đến i theo thứ tự, cách nhau một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= n <= 20.",
-    "kind": "number_triangle",
-    "gen": "pattern_n",
+    "statement": "Cho đoạn [L, R]. Tính tổng các số hoàn hảo trong đoạn. Số hoàn hảo bằng tổng các ước dương thực sự của nó.",
+    "input": "Hai số nguyên dương L và R.",
+    "output": "In tổng các số hoàn hảo trong [L, R]; nếu không có số nào, in 0.",
+    "constraints": "1 ≤ L ≤ R ≤ 10000.",
+    "kind": "number_theory_70",
+    "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "1",
-        "output": "1"
+        "input": "1 1",
+        "output": "0"
       },
       {
         "no": 2,
-        "input": "2",
-        "output": "1\n1 2"
+        "input": "1 5",
+        "output": "0"
       },
       {
         "no": 3,
-        "input": "3",
-        "output": "1\n1 2\n1 2 3"
+        "input": "1 6",
+        "output": "6"
       },
       {
         "no": 4,
-        "input": "4",
-        "output": "1\n1 2\n1 2 3\n1 2 3 4"
+        "input": "6 6",
+        "output": "6"
       },
       {
         "no": 5,
-        "input": "5",
-        "output": "1\n1 2\n1 2 3\n1 2 3 4\n1 2 3 4 5"
+        "input": "7 27",
+        "output": "0"
       },
       {
         "no": 6,
-        "input": "6",
-        "output": "1\n1 2\n1 2 3\n1 2 3 4\n1 2 3 4 5\n1 2 3 4 5 6"
+        "input": "1 28",
+        "output": "34"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "1\n1 2\n1 2 3\n1 2 3 4\n1 2 3 4 5\n1 2 3 4 5 6\n1 2 3 4 5 6 7\n1 2 3 4 5 6 7 8"
+        "input": "29 495",
+        "output": "0"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "1\n1 2\n1 2 3\n1 2 3 4\n1 2 3 4 5\n1 2 3 4 5 6\n1 2 3 4 5 6 7\n1 2 3 4 5 6 7 8\n1 2 3 4 5 6 7 8 9\n1 2 3 4 5 6 7 8 9 10"
+        "input": "490 500",
+        "output": "496"
+      },
+      {
+        "no": 9,
+        "input": "1 500",
+        "output": "530"
+      },
+      {
+        "no": 10,
+        "input": "1 10000",
+        "output": "8658"
+      },
+      {
+        "no": 11,
+        "input": "1 30",
+        "output": "34"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "1\n1 2\n1 2 3\n1 2 3 4",
+    "sample_input": "1 30",
+    "sample_output": "34",
     "difficulty_rank": 2,
-    "legacyId": 75,
-    "knowledge_note": "",
+    "knowledge_note": "Kiến thức cần nhớ: Các ước dương thực sự của N nhỏ hơn N. Số 1 không phải số hoàn hảo.",
     "presentation_rules": ""
   },
   {
     "id": 71,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Tam giác lặp số hàng",
-    "level": "Trung bình",
-    "statement": "Nhập n. In n hàng số; hàng i gồm i lần số i. Yêu cầu trình bày: In đủ n hàng; hàng i gồm đúng i lần số i; các số cách nhau đúng một dấu cách và không có dấu cách thừa cuối dòng.",
-    "input": "Một số nguyên dương n là số hàng của tam giác lặp số.",
-    "output": "In n hàng. Hàng thứ i có đúng i bản sao của số i, cách nhau một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= n <= 20.",
-    "kind": "repeat_triangle",
-    "gen": "pattern_n",
+    "title": "Liệt kê các ước dương",
+    "level": "Cơ bản",
+    "statement": "Cho số nguyên dương N. Liệt kê tất cả ước dương của N theo thứ tự tăng dần.",
+    "input": "Một số nguyên dương N.",
+    "output": "In các ước dương theo thứ tự tăng dần, cách nhau đúng một dấu cách.",
+    "constraints": "1 ≤ N ≤ 10⁹.",
+    "kind": "number_theory_71",
+    "gen": "custom",
     "tests": [
       {
         "no": 1,
@@ -459,44 +487,63 @@
       {
         "no": 2,
         "input": "2",
-        "output": "1\n2 2"
+        "output": "1 2"
       },
       {
         "no": 3,
         "input": "3",
-        "output": "1\n2 2\n3 3 3"
+        "output": "1 3"
       },
       {
         "no": 4,
         "input": "4",
-        "output": "1\n2 2\n3 3 3\n4 4 4 4"
+        "output": "1 2 4"
       },
       {
         "no": 5,
-        "input": "5",
-        "output": "1\n2 2\n3 3 3\n4 4 4 4\n5 5 5 5 5"
+        "input": "6",
+        "output": "1 2 3 6"
       },
       {
         "no": 6,
-        "input": "6",
-        "output": "1\n2 2\n3 3 3\n4 4 4 4\n5 5 5 5 5\n6 6 6 6 6 6"
+        "input": "12",
+        "output": "1 2 3 4 6 12"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "1\n2 2\n3 3 3\n4 4 4 4\n5 5 5 5 5\n6 6 6 6 6 6\n7 7 7 7 7 7 7\n8 8 8 8 8 8 8 8"
+        "input": "36",
+        "output": "1 2 3 4 6 9 12 18 36"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "1\n2 2\n3 3 3\n4 4 4 4\n5 5 5 5 5\n6 6 6 6 6 6\n7 7 7 7 7 7 7\n8 8 8 8 8 8 8 8\n9 9 9 9 9 9 9 9 9\n10 10 10 10 10 10 10 10 10 10"
+        "input": "49",
+        "output": "1 7 49"
+      },
+      {
+        "no": 9,
+        "input": "97",
+        "output": "1 97"
+      },
+      {
+        "no": 10,
+        "input": "100",
+        "output": "1 2 4 5 10 20 25 50 100"
+      },
+      {
+        "no": 11,
+        "input": "99991",
+        "output": "1 99991"
+      },
+      {
+        "no": 12,
+        "input": "1000000000",
+        "output": "1 2 4 5 8 10 16 20 25 32 40 50 64 80 100 125 128 160 200 250 256 320 400 500 512 625 640 800 1000 1250 1280 1600 2000 2500 2560 3125 3200 4000 5000 6250 6400 8000 10000 12500 12800 15625 16000 20000 25000 31250 32000 40000 50000 62500 64000 78125 80000 100000 125000 156250 160000 200000 250000 312500 320000 390625 400000 500000 625000 781250 800000 1000000 1250000 1562500 1600000 1953125 2000000 2500000 3125000 3906250 4000000 5000000 6250000 7812500 8000000 10000000 12500000 15625000 20000000 25000000 31250000 40000000 50000000 62500000 100000000 125000000 200000000 250000000 500000000 1000000000"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "1\n2 2\n3 3 3\n4 4 4 4",
-    "difficulty_rank": 2,
-    "legacyId": 76,
-    "knowledge_note": "",
+    "sample_input": "12",
+    "sample_output": "1 2 3 4 6 12",
+    "difficulty_rank": 1,
+    "knowledge_note": "Kiến thức cần nhớ: Nếu d chia hết N thì N/d cũng là một ước. Với số chính phương, chỉ ghi căn bậc hai một lần.",
     "presentation_rules": ""
   },
   {
@@ -562,61 +609,75 @@
   {
     "id": 73,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Kim tự tháp ngược",
+    "title": "Tìm số nguyên tố thứ K",
     "level": "Trung bình",
-    "statement": "Nhập chiều cao n. In kim tự tháp cân ngược; hàng đầu có 2*n-1 dấu * và mỗi hàng kế tiếp giảm hai dấu *. Yêu cầu trình bày: In đủ n hàng của kim tự tháp ngược; hàng đầu có 2*n-1 dấu * và mỗi hàng sau giảm hai dấu; giữ căn giữa, cách các ô đúng một dấu cách, không để dấu cách thừa cuối dòng hoặc dòng trống sau hình.",
-    "input": "Một số nguyên dương n là chiều cao của kim tự tháp ngược.",
-    "output": "In n hàng. Hàng đầu gồm 2 × n − 1 dấu *. Qua mỗi hàng, bớt hai dấu * và thêm hai dấu cách đầu hàng. Các dấu * cùng hàng cách nhau một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= n <= 20.",
-    "kind": "inverted_pyramid",
-    "gen": "pattern_n",
+    "statement": "Đánh số các số nguyên tố từ nhỏ đến lớn, bắt đầu từ 2 là số thứ nhất. Tìm số nguyên tố ở vị trí K.",
+    "input": "Một số nguyên dương K.",
+    "output": "In số nguyên tố thứ K.",
+    "constraints": "1 ≤ K ≤ 1000.",
+    "kind": "number_theory_73",
+    "gen": "custom",
     "tests": [
       {
         "no": 1,
         "input": "1",
-        "output": "*"
+        "output": "2"
       },
       {
         "no": 2,
         "input": "2",
-        "output": "* * *\n  *"
+        "output": "3"
       },
       {
         "no": 3,
         "input": "3",
-        "output": "* * * * *\n  * * *\n    *"
+        "output": "5"
       },
       {
         "no": 4,
         "input": "4",
-        "output": "* * * * * * *\n  * * * * *\n    * * *\n      *"
+        "output": "7"
       },
       {
         "no": 5,
         "input": "5",
-        "output": "* * * * * * * * *\n  * * * * * * *\n    * * * * *\n      * * *\n        *"
+        "output": "11"
       },
       {
         "no": 6,
         "input": "6",
-        "output": "* * * * * * * * * * *\n  * * * * * * * * *\n    * * * * * * *\n      * * * * *\n        * * *\n          *"
+        "output": "13"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "* * * * * * * * * * * * * * *\n  * * * * * * * * * * * * *\n    * * * * * * * * * * *\n      * * * * * * * * *\n        * * * * * * *\n          * * * * *\n            * * *\n              *"
+        "input": "10",
+        "output": "29"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "* * * * * * * * * * * * * * * * * * *\n  * * * * * * * * * * * * * * * * *\n    * * * * * * * * * * * * * * *\n      * * * * * * * * * * * * *\n        * * * * * * * * * * *\n          * * * * * * * * *\n            * * * * * * *\n              * * * * *\n                * * *\n                  *"
+        "input": "25",
+        "output": "97"
+      },
+      {
+        "no": 9,
+        "input": "100",
+        "output": "541"
+      },
+      {
+        "no": 10,
+        "input": "500",
+        "output": "3571"
+      },
+      {
+        "no": 11,
+        "input": "1000",
+        "output": "7919"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "* * * * * * *\n  * * * * *\n    * * *\n      *",
+    "sample_input": "5",
+    "sample_output": "11",
     "difficulty_rank": 2,
-    "legacyId": 78,
-    "knowledge_note": "",
+    "knowledge_note": "Kiến thức cần nhớ: Duyệt các số từ 2, chỉ tăng bộ đếm khi gặp số nguyên tố; dừng ở số thứ K.",
     "presentation_rules": ""
   },
   {
@@ -682,61 +743,75 @@
   {
     "id": 75,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Bảng sọc ký tự",
-    "level": "Trung bình",
-    "statement": "Nhập n hàng và m cột. In n hàng giống nhau; cột lẻ là #, cột chẵn là . tạo thành các sọc dọc. Yêu cầu trình bày: In đủ n hàng và m cột theo đúng mẫu sọc; giữa hai ô có đúng một dấu cách; không có dấu cách thừa cuối dòng hoặc dòng trống sau hình.",
-    "input": "Một dòng gồm hai số nguyên dương n và m, lần lượt là số hàng và số cột của bảng sọc.",
-    "output": "In n hàng giống nhau. Mỗi hàng có m ô, cột lẻ in #, cột chẵn in dấu chấm. Hai ô liền nhau cách một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= n, m <= 30.",
-    "kind": "checkerboard",
-    "gen": "pattern_nm",
+    "title": "Số chính phương nhỏ nhất không nhỏ hơn N",
+    "level": "Cơ bản",
+    "statement": "Cho số nguyên không âm N. Tìm số chính phương nhỏ nhất lớn hơn hoặc bằng N.",
+    "input": "Một số nguyên không âm N.",
+    "output": "In số chính phương nhỏ nhất không nhỏ hơn N.",
+    "constraints": "0 ≤ N ≤ 10⁹.",
+    "kind": "number_theory_75",
+    "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "1 1",
-        "output": "#"
+        "input": "0",
+        "output": "0"
       },
       {
         "no": 2,
-        "input": "1 3",
-        "output": "# . #"
+        "input": "1",
+        "output": "1"
       },
       {
         "no": 3,
-        "input": "3 1",
-        "output": "#\n#\n#"
+        "input": "2",
+        "output": "4"
       },
       {
         "no": 4,
-        "input": "2 4",
-        "output": "# . # .\n# . # ."
+        "input": "3",
+        "output": "4"
       },
       {
         "no": 5,
-        "input": "4 2",
-        "output": "# .\n# .\n# .\n# ."
+        "input": "4",
+        "output": "4"
       },
       {
         "no": 6,
-        "input": "3 5",
-        "output": "# . # . #\n# . # . #\n# . # . #"
+        "input": "8",
+        "output": "9"
       },
       {
         "no": 7,
-        "input": "6 4",
-        "output": "# . # .\n# . # .\n# . # .\n# . # .\n# . # .\n# . # ."
+        "input": "9",
+        "output": "9"
       },
       {
         "no": 8,
-        "input": "10 10",
-        "output": "# . # . # . # . # .\n# . # . # . # . # .\n# . # . # . # . # .\n# . # . # . # . # .\n# . # . # . # . # .\n# . # . # . # . # .\n# . # . # . # . # .\n# . # . # . # . # .\n# . # . # . # . # .\n# . # . # . # . # ."
+        "input": "10",
+        "output": "16"
+      },
+      {
+        "no": 9,
+        "input": "15",
+        "output": "16"
+      },
+      {
+        "no": 10,
+        "input": "16",
+        "output": "16"
+      },
+      {
+        "no": 11,
+        "input": "1000000000",
+        "output": "1000014129"
       }
     ],
-    "sample_input": "2 4",
-    "sample_output": "# . # .\n# . # .",
-    "difficulty_rank": 2,
-    "legacyId": 80,
-    "knowledge_note": "",
+    "sample_input": "10",
+    "sample_output": "16",
+    "difficulty_rank": 1,
+    "knowledge_note": "Kiến thức cần nhớ: Tìm số nguyên nhỏ nhất k sao cho k × k ≥ N rồi in k × k.",
     "presentation_rules": ""
   },
   {
@@ -1378,38 +1453,38 @@
       },
       {
         "no": 24,
-        "input": "99709440 99709496",
-        "output": "0"
+        "input": "1 20",
+        "output": "10"
       },
       {
         "no": 25,
-        "input": "661260306 661260399",
-        "output": "0"
+        "input": "999999999 1000000000",
+        "output": "1"
       },
       {
         "no": 26,
-        "input": "703140886 703140942",
-        "output": "0"
+        "input": "0 1000000000",
+        "output": "109999"
       },
       {
         "no": 27,
-        "input": "719703122 719703158",
-        "output": "0"
+        "input": "1000 1100",
+        "output": "1"
       },
       {
         "no": 28,
-        "input": "301580239 301580272",
-        "output": "0"
+        "input": "99 101",
+        "output": "2"
       },
       {
         "no": 29,
-        "input": "900924452 900924454",
-        "output": "0"
+        "input": "1 200",
+        "output": "28"
       },
       {
         "no": 30,
-        "input": "343059637 343059703",
-        "output": "0"
+        "input": "0 20",
+        "output": "11"
       }
     ],
     "sample_input": "1 20",
@@ -1553,33 +1628,33 @@
       },
       {
         "no": 25,
-        "input": "328186279 328186351",
-        "output": "0"
+        "input": "0 1000000000",
+        "output": "32"
       },
       {
         "no": 26,
-        "input": "108601791 108601872",
-        "output": "0"
+        "input": "146511208 146511208",
+        "output": "1"
       },
       {
         "no": 27,
-        "input": "780859078 780859113",
-        "output": "0"
+        "input": "548834 548834",
+        "output": "1"
       },
       {
         "no": 28,
-        "input": "687562685 687562717",
-        "output": "0"
+        "input": "1 10000",
+        "output": "16"
       },
       {
         "no": 29,
-        "input": "393247683 393247775",
-        "output": "0"
+        "input": "0 500",
+        "output": "14"
       },
       {
         "no": 30,
-        "input": "790926842 790926897",
-        "output": "0"
+        "input": "0 9",
+        "output": "10"
       }
     ],
     "sample_input": "0 500",
@@ -1713,43 +1788,43 @@
       },
       {
         "no": 23,
-        "input": "262705514 262705587",
-        "output": "0"
+        "input": "8128 8128",
+        "output": "1"
       },
       {
         "no": 24,
-        "input": "438104415 438104425",
+        "input": "29 495",
         "output": "0"
       },
       {
         "no": 25,
-        "input": "978624769 978624775",
-        "output": "0"
+        "input": "1 1000000000",
+        "output": "5"
       },
       {
         "no": 26,
-        "input": "876270294 876270298",
-        "output": "0"
+        "input": "33550336 33550336",
+        "output": "1"
       },
       {
         "no": 27,
-        "input": "189880962 189881059",
-        "output": "0"
+        "input": "1 10000",
+        "output": "4"
       },
       {
         "no": 28,
-        "input": "869016902 869016929",
-        "output": "0"
+        "input": "1 500",
+        "output": "3"
       },
       {
         "no": 29,
-        "input": "649763481 649763490",
-        "output": "0"
+        "input": "1 28",
+        "output": "2"
       },
       {
         "no": 30,
-        "input": "554962670 554962746",
-        "output": "0"
+        "input": "1 6",
+        "output": "1"
       }
     ],
     "sample_input": "1 10000",
@@ -3258,28 +3333,28 @@
       },
       {
         "no": 26,
-        "input": "763839282 763839352",
-        "output": "0"
+        "input": "100 1000",
+        "output": "7"
       },
       {
         "no": 27,
-        "input": "158489825 158489924",
-        "output": "0"
+        "input": "1 1000000000",
+        "output": "3401"
       },
       {
         "no": 28,
-        "input": "210115389 210115440",
-        "output": "0"
+        "input": "9 25",
+        "output": "2"
       },
       {
         "no": 29,
-        "input": "965712034 965712115",
-        "output": "0"
+        "input": "4 4",
+        "output": "1"
       },
       {
         "no": 30,
-        "input": "980057919 980057956",
-        "output": "0"
+        "input": "1 100",
+        "output": "4"
       }
     ],
     "sample_input": "1 100",
@@ -3292,61 +3367,85 @@
   {
     "id": 91,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Tam giác vuông rỗng",
-    "level": "Khó",
-    "statement": "Nhập n. In tam giác vuông rỗng căn trái gồm n hàng; hai cạnh bên là dấu * và hàng đáy được in kín. Yêu cầu trình bày: In đủ n hàng của tam giác rỗng căn trái; giữ các ô rỗng bên trong để đúng hình, giữa hai ô có một dấu cách và không có dấu cách thừa cuối dòng.",
-    "input": "Một số nguyên dương n là chiều cao tam giác vuông rỗng căn trái.",
-    "output": "In n hàng. Hàng thứ i có i ô. In * ở ô đầu, ô cuối và toàn bộ hàng đáy. Ô còn lại trong lòng hình là dấu cách. Hai ô cách nhau một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= n <= 20.",
-    "kind": "hollow_right",
-    "gen": "pattern_n",
+    "title": "Số hoàn hảo lớn nhất không vượt quá N",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên dương N. Tìm số hoàn hảo lớn nhất không vượt quá N.",
+    "input": "Một số nguyên dương N.",
+    "output": "In số hoàn hảo lớn nhất ≤ N; nếu không có, in -1.",
+    "constraints": "1 ≤ N ≤ 10000.",
+    "kind": "number_theory_91",
+    "gen": "custom",
     "tests": [
       {
         "no": 1,
         "input": "1",
-        "output": "*"
+        "output": "-1"
       },
       {
         "no": 2,
-        "input": "2",
-        "output": "*\n* *"
+        "input": "5",
+        "output": "-1"
       },
       {
         "no": 3,
-        "input": "3",
-        "output": "*\n* *\n* * *"
+        "input": "6",
+        "output": "6"
       },
       {
         "no": 4,
-        "input": "4",
-        "output": "*\n* *\n*   *\n* * * *"
+        "input": "7",
+        "output": "6"
       },
       {
         "no": 5,
-        "input": "5",
-        "output": "*\n* *\n*   *\n*     *\n* * * * *"
+        "input": "27",
+        "output": "6"
       },
       {
         "no": 6,
-        "input": "6",
-        "output": "*\n* *\n*   *\n*     *\n*       *\n* * * * * *"
+        "input": "28",
+        "output": "28"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "*\n* *\n*   *\n*     *\n*       *\n*         *\n*           *\n* * * * * * * *"
+        "input": "29",
+        "output": "28"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "*\n* *\n*   *\n*     *\n*       *\n*         *\n*           *\n*             *\n*               *\n* * * * * * * * * *"
+        "input": "495",
+        "output": "28"
+      },
+      {
+        "no": 9,
+        "input": "496",
+        "output": "496"
+      },
+      {
+        "no": 10,
+        "input": "1000",
+        "output": "496"
+      },
+      {
+        "no": 11,
+        "input": "8128",
+        "output": "8128"
+      },
+      {
+        "no": 12,
+        "input": "10000",
+        "output": "8128"
+      },
+      {
+        "no": 13,
+        "input": "30",
+        "output": "28"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "*\n* *\n*   *\n* * * *",
-    "difficulty_rank": 4,
-    "legacyId": 96,
-    "knowledge_note": "",
+    "sample_input": "30",
+    "sample_output": "28",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Một số hoàn hảo bằng tổng các ước dương nhỏ hơn nó. Số 1 không thỏa mãn.",
     "presentation_rules": ""
   },
   {
@@ -3708,38 +3807,38 @@
       },
       {
         "no": 24,
-        "input": "946952112 946952203",
-        "output": "0"
+        "input": "1 100",
+        "output": "5"
       },
       {
         "no": 25,
-        "input": "330786310 330786313",
-        "output": "0"
+        "input": "2 11",
+        "output": "5"
       },
       {
         "no": 26,
-        "input": "375715024 375715066",
-        "output": "0"
+        "input": "0 1000000000",
+        "output": "5953"
       },
       {
         "no": 27,
-        "input": "650804451 650804472",
-        "output": "0"
+        "input": "100 1000",
+        "output": "15"
       },
       {
         "no": 28,
-        "input": "24486272 24486315",
-        "output": "0"
+        "input": "101 101",
+        "output": "1"
       },
       {
         "no": 29,
-        "input": "690338846 690338861",
-        "output": "0"
+        "input": "1 1000",
+        "output": "20"
       },
       {
         "no": 30,
-        "input": "741667453 741667464",
-        "output": "0"
+        "input": "0 100",
+        "output": "5"
       }
     ],
     "sample_input": "1 100",
@@ -3888,28 +3987,28 @@
       },
       {
         "no": 26,
-        "input": "412289771 412289812",
-        "output": "0"
+        "input": "99980001 99980001",
+        "output": "1"
       },
       {
         "no": 27,
-        "input": "439481404 439481476",
-        "output": "0"
+        "input": "0 1000000000",
+        "output": "31623"
       },
       {
         "no": 28,
-        "input": "704267823 704267874",
-        "output": "0"
+        "input": "16 16",
+        "output": "1"
       },
       {
         "no": 29,
-        "input": "995454760 995454784",
-        "output": "0"
+        "input": "1 100",
+        "output": "10"
       },
       {
         "no": 30,
-        "input": "756050659 756050754",
-        "output": "0"
+        "input": "0 100",
+        "output": "11"
       }
     ],
     "sample_input": "1 100",
@@ -4598,1015 +4697,485 @@
   {
     "id": 100,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Đếm chữ số 0",
-    "level": "Khó",
-    "statement": "Cho số nguyên không âm N. Đếm số lần chữ số 0 xuất hiện trong N. Không tính các chữ số 0 ở phần viết thêm trước số.",
-    "input": "Một số nguyên không âm N cần đếm chữ số 0.",
-    "output": "In số lần 0 xuất hiện trong biểu diễn thập phân của N. Nếu N bằng 0, in 1.",
-    "constraints": "0 <= N <= 10^18.",
-    "kind": "new_5",
+    "title": "Số chính phương lớn nhất không vượt N",
+    "level": "Cơ bản",
+    "statement": "Cho số nguyên không âm N. Tìm số chính phương lớn nhất không vượt quá N.",
+    "input": "Một số nguyên không âm N.",
+    "output": "In số chính phương lớn nhất ≤ N.",
+    "constraints": "0 ≤ N ≤ 10⁹.",
+    "kind": "calculation_100",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
         "input": "0",
-        "output": "1"
+        "output": "0"
       },
       {
         "no": 2,
         "input": "1",
-        "output": "0"
+        "output": "1"
       },
       {
         "no": 3,
-        "input": "10",
+        "input": "2",
         "output": "1"
       },
       {
         "no": 4,
-        "input": "20",
+        "input": "3",
         "output": "1"
       },
       {
         "no": 5,
-        "input": "101",
-        "output": "1"
+        "input": "4",
+        "output": "4"
       },
       {
         "no": 6,
-        "input": "10001",
-        "output": "3"
+        "input": "8",
+        "output": "4"
       },
       {
         "no": 7,
-        "input": "90009",
-        "output": "3"
+        "input": "9",
+        "output": "9"
       },
       {
         "no": 8,
-        "input": "123456",
-        "output": "0"
+        "input": "10",
+        "output": "9"
       },
       {
         "no": 9,
-        "input": "20200",
-        "output": "3"
+        "input": "15",
+        "output": "9"
       },
       {
         "no": 10,
-        "input": "405060",
-        "output": "3"
+        "input": "16",
+        "output": "16"
       },
       {
         "no": 11,
-        "input": "80008",
-        "output": "3"
+        "input": "100",
+        "output": "100"
       },
       {
         "no": 12,
-        "input": "1000000000000000000",
-        "output": "18"
-      },
-      {
-        "no": 13,
-        "input": "615",
-        "output": "0"
-      },
-      {
-        "no": 14,
-        "input": "197",
-        "output": "0"
-      },
-      {
-        "no": 15,
-        "input": "88",
-        "output": "0"
-      },
-      {
-        "no": 16,
-        "input": "39",
-        "output": "0"
-      },
-      {
-        "no": 17,
-        "input": "851",
-        "output": "0"
-      },
-      {
-        "no": 18,
-        "input": "550",
-        "output": "1"
-      },
-      {
-        "no": 19,
-        "input": "194",
-        "output": "0"
-      },
-      {
-        "no": 20,
-        "input": "93",
-        "output": "0"
-      },
-      {
-        "no": 21,
-        "input": "520",
-        "output": "1"
-      },
-      {
-        "no": 22,
-        "input": "529",
-        "output": "0"
-      },
-      {
-        "no": 23,
-        "input": "706",
-        "output": "1"
-      },
-      {
-        "no": 24,
-        "input": "794",
-        "output": "0"
-      },
-      {
-        "no": 25,
-        "input": "201",
-        "output": "1"
-      },
-      {
-        "no": 26,
-        "input": "784",
-        "output": "0"
-      },
-      {
-        "no": 27,
-        "input": "203",
-        "output": "1"
-      },
-      {
-        "no": 28,
-        "input": "600",
-        "output": "2"
-      },
-      {
-        "no": 29,
-        "input": "405",
-        "output": "1"
-      },
-      {
-        "no": 30,
-        "input": "193",
-        "output": "0"
+        "input": "1000000000",
+        "output": "999950884"
       }
     ],
-    "sample_input": "102030",
-    "sample_output": "3",
-    "difficulty_rank": 3,
-    "knowledge_note": "",
+    "sample_input": "15",
+    "sample_output": "9",
+    "difficulty_rank": 1,
+    "knowledge_note": "Kiến thức cần nhớ: Tìm k = ⌊√N⌋ rồi in k × k. Số 0 là số chính phương.",
     "presentation_rules": ""
   },
   {
     "id": 101,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Tìm chữ số đầu tiên",
-    "level": "Khó",
-    "statement": "Cho số nguyên không âm N. Hãy tìm chữ số đầu tiên (bên trái) của N.",
-    "input": "Một số nguyên không âm N cần tìm chữ số đầu.",
-    "output": "In chữ số bên trái nhất của N.",
-    "constraints": "0 <= N <= 10^18.",
-    "kind": "new_6",
+    "title": "Số nguyên tố gần N nhất",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên không âm N. Tìm số nguyên tố có khoảng cách đến N nhỏ nhất. Nếu hai số cách đều, chọn số nhỏ hơn.",
+    "input": "Một số nguyên không âm N.",
+    "output": "In số nguyên tố gần N nhất.",
+    "constraints": "0 ≤ N ≤ 10⁶.",
+    "kind": "calculation_101",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
         "input": "0",
-        "output": "0"
+        "output": "2"
       },
       {
         "no": 2,
         "input": "1",
-        "output": "1"
+        "output": "2"
       },
       {
         "no": 3,
-        "input": "9",
-        "output": "9"
+        "input": "2",
+        "output": "2"
       },
       {
         "no": 4,
-        "input": "10",
-        "output": "1"
+        "input": "3",
+        "output": "3"
       },
       {
         "no": 5,
-        "input": "19",
-        "output": "1"
+        "input": "4",
+        "output": "3"
       },
       {
         "no": 6,
-        "input": "25",
-        "output": "2"
+        "input": "6",
+        "output": "5"
       },
       {
         "no": 7,
-        "input": "100",
-        "output": "1"
+        "input": "8",
+        "output": "7"
       },
       {
         "no": 8,
-        "input": "101",
-        "output": "1"
+        "input": "10",
+        "output": "11"
       },
       {
         "no": 9,
-        "input": "456",
-        "output": "4"
+        "input": "12",
+        "output": "11"
       },
       {
         "no": 10,
-        "input": "1000",
-        "output": "1"
+        "input": "20",
+        "output": "19"
       },
       {
         "no": 11,
-        "input": "9876",
-        "output": "9"
+        "input": "100",
+        "output": "101"
       },
       {
         "no": 12,
-        "input": "1000000000000000000",
-        "output": "1"
+        "input": "999999",
+        "output": "1000003"
       },
       {
         "no": 13,
-        "input": "72",
-        "output": "7"
-      },
-      {
-        "no": 14,
-        "input": "488",
-        "output": "4"
-      },
-      {
-        "no": 15,
-        "input": "951",
-        "output": "9"
-      },
-      {
-        "no": 16,
-        "input": "252",
-        "output": "2"
-      },
-      {
-        "no": 17,
-        "input": "225",
-        "output": "2"
-      },
-      {
-        "no": 18,
-        "input": "163",
-        "output": "1"
-      },
-      {
-        "no": 19,
-        "input": "967",
-        "output": "9"
-      },
-      {
-        "no": 20,
-        "input": "791",
-        "output": "7"
-      },
-      {
-        "no": 21,
-        "input": "12",
-        "output": "1"
-      },
-      {
-        "no": 22,
-        "input": "994",
-        "output": "9"
-      },
-      {
-        "no": 23,
-        "input": "260",
-        "output": "2"
-      },
-      {
-        "no": 24,
-        "input": "940",
-        "output": "9"
-      },
-      {
-        "no": 25,
-        "input": "475",
-        "output": "4"
-      },
-      {
-        "no": 26,
-        "input": "234",
-        "output": "2"
-      },
-      {
-        "no": 27,
-        "input": "328",
-        "output": "3"
-      },
-      {
-        "no": 28,
-        "input": "384",
-        "output": "3"
-      },
-      {
-        "no": 29,
-        "input": "85",
-        "output": "8"
-      },
-      {
-        "no": 30,
-        "input": "648",
-        "output": "6"
+        "input": "1000000",
+        "output": "1000003"
       }
     ],
-    "sample_input": "23456",
-    "sample_output": "2",
-    "difficulty_rank": 3,
-    "knowledge_note": "",
+    "sample_input": "12",
+    "sample_output": "11",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Duyệt khoảng cách 0, 1, 2, ...; ở mỗi khoảng cách xét phía dưới trước để xử lý trường hợp bằng nhau.",
     "presentation_rules": ""
   },
   {
     "id": 102,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Kiểm tra mọi chữ số đều chẵn",
-    "level": "Khó",
-    "statement": "Cho số nguyên không âm N. In YES nếu tất cả chữ số của N đều là số chẵn, ngược lại in NO.",
-    "input": "Một số nguyên không âm N cần kiểm tra từng chữ số.",
-    "output": "In YES nếu tất cả chữ số của N đều chẵn. Chỉ cần có một chữ số lẻ thì in NO.",
-    "constraints": "0 <= N <= 10^18.",
-    "kind": "new_7",
+    "title": "Tổng bình phương các số hoàn hảo",
+    "level": "Trung bình",
+    "statement": "Cho đoạn [L, R]. Tính tổng bình phương của mọi số hoàn hảo thuộc đoạn; nếu không có, in 0.",
+    "input": "Hai số nguyên dương L và R.",
+    "output": "In tổng các bình phương số hoàn hảo trong [L, R].",
+    "constraints": "1 ≤ L ≤ R ≤ 10000. Dùng long long cho kết quả.",
+    "kind": "calculation_102",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "0",
-        "output": "YES"
+        "input": "1 1",
+        "output": "0"
       },
       {
         "no": 2,
-        "input": "2",
-        "output": "YES"
+        "input": "1 5",
+        "output": "0"
       },
       {
         "no": 3,
-        "input": "4",
-        "output": "YES"
+        "input": "1 6",
+        "output": "36"
       },
       {
         "no": 4,
-        "input": "6",
-        "output": "YES"
+        "input": "6 6",
+        "output": "36"
       },
       {
         "no": 5,
-        "input": "20",
-        "output": "YES"
+        "input": "7 27",
+        "output": "0"
       },
       {
         "no": 6,
-        "input": "68",
-        "output": "YES"
+        "input": "1 28",
+        "output": "820"
       },
       {
         "no": 7,
-        "input": "8888",
-        "output": "YES"
+        "input": "29 495",
+        "output": "0"
       },
       {
         "no": 8,
-        "input": "1",
-        "output": "NO"
+        "input": "490 500",
+        "output": "246016"
       },
       {
         "no": 9,
-        "input": "12",
-        "output": "NO"
+        "input": "1 500",
+        "output": "246836"
       },
       {
         "no": 10,
-        "input": "204",
-        "output": "YES"
+        "input": "8000 8200",
+        "output": "66064384"
       },
       {
         "no": 11,
-        "input": "222222",
-        "output": "YES"
+        "input": "1 10000",
+        "output": "66311220"
       },
       {
         "no": 12,
-        "input": "888888888888888888",
-        "output": "YES"
-      },
-      {
-        "no": 13,
-        "input": "179",
-        "output": "NO"
-      },
-      {
-        "no": 14,
-        "input": "101",
-        "output": "NO"
-      },
-      {
-        "no": 15,
-        "input": "444",
-        "output": "YES"
-      },
-      {
-        "no": 16,
-        "input": "906",
-        "output": "NO"
-      },
-      {
-        "no": 17,
-        "input": "109",
-        "output": "NO"
-      },
-      {
-        "no": 18,
-        "input": "223",
-        "output": "NO"
-      },
-      {
-        "no": 19,
-        "input": "973",
-        "output": "NO"
-      },
-      {
-        "no": 20,
-        "input": "854",
-        "output": "NO"
-      },
-      {
-        "no": 21,
-        "input": "711",
-        "output": "NO"
-      },
-      {
-        "no": 22,
-        "input": "389",
-        "output": "NO"
-      },
-      {
-        "no": 23,
-        "input": "304",
-        "output": "NO"
-      },
-      {
-        "no": 24,
-        "input": "685",
-        "output": "NO"
-      },
-      {
-        "no": 25,
-        "input": "536",
-        "output": "NO"
-      },
-      {
-        "no": 26,
-        "input": "546",
-        "output": "NO"
-      },
-      {
-        "no": 27,
-        "input": "208",
-        "output": "YES"
-      },
-      {
-        "no": 28,
-        "input": "803",
-        "output": "NO"
-      },
-      {
-        "no": 29,
-        "input": "28",
-        "output": "YES"
-      },
-      {
-        "no": 30,
-        "input": "394",
-        "output": "NO"
+        "input": "1 30",
+        "output": "820"
       }
     ],
-    "sample_input": "0",
-    "sample_output": "YES",
-    "difficulty_rank": 3,
-    "knowledge_note": "",
+    "sample_input": "1 30",
+    "sample_output": "820",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Chỉ bình phương các số bằng tổng các ước dương thực sự của chính nó.",
     "presentation_rules": ""
   },
   {
     "id": 103,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Kiểm tra dãy chữ số không giảm",
-    "level": "Khó",
-    "statement": "Cho số nguyên không âm N. Kiểm tra các chữ số từ trái sang phải có tạo thành một dãy không giảm hay không (chữ số sau không nhỏ hơn chữ số trước).",
-    "input": "Một số nguyên không âm N cần kiểm tra thứ tự chữ số.",
-    "output": "In YES nếu từ trái sang phải không có chữ số nào nhỏ hơn chữ số ngay trước nó. Nếu có, in NO.",
-    "constraints": "0 <= N <= 10^18.",
-    "kind": "new_8",
+    "title": "Đếm số ước dương của N!",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên không âm N. Đếm số ước dương của N!. Quy ước 0! = 1.",
+    "input": "Một số nguyên không âm N.",
+    "output": "In số lượng ước dương của N!.",
+    "constraints": "0 ≤ N ≤ 30. Kết quả nằm trong phạm vi long long.",
+    "kind": "calculation_103",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
         "input": "0",
-        "output": "YES"
+        "output": "1"
       },
       {
         "no": 2,
         "input": "1",
-        "output": "YES"
+        "output": "1"
       },
       {
         "no": 3,
-        "input": "11",
-        "output": "YES"
+        "input": "2",
+        "output": "2"
       },
       {
         "no": 4,
-        "input": "12",
-        "output": "YES"
+        "input": "3",
+        "output": "4"
       },
       {
         "no": 5,
-        "input": "124",
-        "output": "YES"
+        "input": "4",
+        "output": "8"
       },
       {
         "no": 6,
-        "input": "13579",
-        "output": "YES"
+        "input": "5",
+        "output": "16"
       },
       {
         "no": 7,
-        "input": "321",
-        "output": "NO"
+        "input": "6",
+        "output": "30"
       },
       {
         "no": 8,
-        "input": "987",
-        "output": "NO"
+        "input": "10",
+        "output": "270"
       },
       {
         "no": 9,
-        "input": "2234",
-        "output": "YES"
+        "input": "15",
+        "output": "4032"
       },
       {
         "no": 10,
-        "input": "1357",
-        "output": "YES"
+        "input": "20",
+        "output": "41040"
       },
       {
         "no": 11,
-        "input": "987789",
-        "output": "NO"
+        "input": "25",
+        "output": "340032"
       },
       {
         "no": 12,
-        "input": "111122223333444455",
-        "output": "YES"
-      },
-      {
-        "no": 13,
-        "input": "984",
-        "output": "NO"
-      },
-      {
-        "no": 14,
-        "input": "363",
-        "output": "NO"
-      },
-      {
-        "no": 15,
-        "input": "973",
-        "output": "NO"
-      },
-      {
-        "no": 16,
-        "input": "926",
-        "output": "NO"
-      },
-      {
-        "no": 17,
-        "input": "73",
-        "output": "NO"
-      },
-      {
-        "no": 18,
-        "input": "59",
-        "output": "YES"
-      },
-      {
-        "no": 19,
-        "input": "538",
-        "output": "NO"
-      },
-      {
-        "no": 20,
-        "input": "200",
-        "output": "NO"
-      },
-      {
-        "no": 21,
-        "input": "834",
-        "output": "NO"
-      },
-      {
-        "no": 22,
-        "input": "580",
-        "output": "NO"
-      },
-      {
-        "no": 23,
-        "input": "53",
-        "output": "NO"
-      },
-      {
-        "no": 24,
-        "input": "472",
-        "output": "NO"
-      },
-      {
-        "no": 25,
-        "input": "465",
-        "output": "NO"
-      },
-      {
-        "no": 26,
-        "input": "817",
-        "output": "NO"
-      },
-      {
-        "no": 27,
-        "input": "699",
-        "output": "YES"
-      },
-      {
-        "no": 28,
-        "input": "556",
-        "output": "YES"
-      },
-      {
-        "no": 29,
-        "input": "420",
-        "output": "NO"
-      },
-      {
-        "no": 30,
-        "input": "303",
-        "output": "NO"
+        "input": "30",
+        "output": "2332800"
       }
     ],
-    "sample_input": "0",
-    "sample_output": "YES",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "5",
+    "sample_output": "16",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Nếu N! = p₁^e₁ × ... × pₖ^eₖ thì số ước dương bằng (e₁+1) × ... × (eₖ+1).",
     "presentation_rules": ""
   },
   {
     "id": 104,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Kiểm tra chữ số liên tiếp khác tính chẵn lẻ",
-    "level": "Khó",
-    "statement": "Cho số nguyên không âm N. In YES nếu hai chữ số đứng cạnh nhau luôn khác tính chẵn lẻ (một chẵn, một lẻ), ngược lại in NO.",
-    "input": "Một số nguyên không âm N cần kiểm tra tính chẵn lẻ của các cặp chữ số liền nhau.",
-    "output": "In YES nếu mọi cặp chữ số liền nhau đều gồm một chữ số chẵn và một chữ số lẻ. Các trường hợp khác in NO. Số một chữ số cho kết quả YES.",
-    "constraints": "0 <= N <= 10^18.",
-    "kind": "new_9",
+    "title": "Liệt kê các ước chung dương",
+    "level": "Trung bình",
+    "statement": "Cho hai số nguyên dương A và B. Liệt kê mọi ước chung dương theo thứ tự tăng dần.",
+    "input": "Hai số nguyên dương A và B.",
+    "output": "In các ước chung dương cách nhau đúng một dấu cách.",
+    "constraints": "1 ≤ A, B ≤ 10⁹.",
+    "kind": "calculation_104",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "0",
-        "output": "YES"
+        "input": "1 1",
+        "output": "1"
       },
       {
         "no": 2,
-        "input": "1",
-        "output": "YES"
+        "input": "1 12",
+        "output": "1"
       },
       {
         "no": 3,
-        "input": "12",
-        "output": "YES"
+        "input": "2 3",
+        "output": "1"
       },
       {
         "no": 4,
-        "input": "21",
-        "output": "YES"
+        "input": "6 9",
+        "output": "1 3"
       },
       {
         "no": 5,
-        "input": "214",
-        "output": "YES"
+        "input": "12 18",
+        "output": "1 2 3 6"
       },
       {
         "no": 6,
-        "input": "1212",
-        "output": "YES"
+        "input": "12 12",
+        "output": "1 2 3 4 6 12"
       },
       {
         "no": 7,
-        "input": "2468",
-        "output": "NO"
+        "input": "36 48",
+        "output": "1 2 3 4 6 12"
       },
       {
         "no": 8,
-        "input": "9876",
-        "output": "YES"
+        "input": "49 98",
+        "output": "1 7 49"
       },
       {
         "no": 9,
-        "input": "808",
-        "output": "NO"
+        "input": "100 75",
+        "output": "1 5 25"
       },
       {
         "no": 10,
-        "input": "1122",
-        "output": "NO"
+        "input": "99991 99991",
+        "output": "1 99991"
       },
       {
         "no": 11,
-        "input": "10101",
-        "output": "YES"
-      },
-      {
-        "no": 12,
-        "input": "101010101010101010",
-        "output": "YES"
-      },
-      {
-        "no": 13,
-        "input": "750",
-        "output": "NO"
-      },
-      {
-        "no": 14,
-        "input": "166",
-        "output": "NO"
-      },
-      {
-        "no": 15,
-        "input": "378",
-        "output": "NO"
-      },
-      {
-        "no": 16,
-        "input": "728",
-        "output": "NO"
-      },
-      {
-        "no": 17,
-        "input": "279",
-        "output": "NO"
-      },
-      {
-        "no": 18,
-        "input": "372",
-        "output": "NO"
-      },
-      {
-        "no": 19,
-        "input": "452",
-        "output": "YES"
-      },
-      {
-        "no": 20,
-        "input": "577",
-        "output": "NO"
-      },
-      {
-        "no": 21,
-        "input": "487",
-        "output": "NO"
-      },
-      {
-        "no": 22,
-        "input": "327",
-        "output": "YES"
-      },
-      {
-        "no": 23,
-        "input": "457",
-        "output": "NO"
-      },
-      {
-        "no": 24,
-        "input": "714",
-        "output": "NO"
-      },
-      {
-        "no": 25,
-        "input": "732",
-        "output": "NO"
-      },
-      {
-        "no": 26,
-        "input": "673",
-        "output": "NO"
-      },
-      {
-        "no": 27,
-        "input": "205",
-        "output": "NO"
-      },
-      {
-        "no": 28,
-        "input": "934",
-        "output": "NO"
-      },
-      {
-        "no": 29,
-        "input": "401",
-        "output": "NO"
-      },
-      {
-        "no": 30,
-        "input": "722",
-        "output": "NO"
+        "input": "1000000000 500000000",
+        "output": "1 2 4 5 8 10 16 20 25 32 40 50 64 80 100 125 128 160 200 250 256 320 400 500 625 640 800 1000 1250 1280 1600 2000 2500 3125 3200 4000 5000 6250 6400 8000 10000 12500 15625 16000 20000 25000 31250 32000 40000 50000 62500 78125 80000 100000 125000 156250 160000 200000 250000 312500 390625 400000 500000 625000 781250 800000 1000000 1250000 1562500 1953125 2000000 2500000 3125000 3906250 4000000 5000000 6250000 7812500 10000000 12500000 15625000 20000000 25000000 31250000 50000000 62500000 100000000 125000000 250000000 500000000"
       }
     ],
-    "sample_input": "1234",
-    "sample_output": "YES",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "12 18",
+    "sample_output": "1 2 3 6",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Liệt kê các ước dương của gcd(A, B); mỗi ước chỉ in một lần.",
     "presentation_rules": ""
   },
   {
     "id": 105,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Đếm chữ số lớn hơn D",
-    "level": "Khó",
-    "statement": "Cho số nguyên không âm N và chữ số D. Đếm số chữ số trong N có giá trị lớn hơn D.",
-    "input": "Một dòng gồm số nguyên không âm N và chữ số ngưỡng D từ 0 đến 9.",
-    "output": "In số lượng chữ số của N lớn hơn D, bỏ qua những chữ số bằng D.",
-    "constraints": "0 <= N <= 10^18; 0 <= D <= 9.",
-    "kind": "new_10",
+    "title": "Đếm cặp số chính phương có tổng bằng N",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên không âm N. Đếm các cặp (A, B) với A và B là số chính phương không âm, A ≤ B và A+B=N. Mỗi cặp chỉ tính một lần.",
+    "input": "Một số nguyên không âm N.",
+    "output": "In số cặp thỏa mãn.",
+    "constraints": "0 ≤ N ≤ 10⁶.",
+    "kind": "calculation_105",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "12345 3",
-        "output": "2"
+        "input": "0",
+        "output": "1"
       },
       {
         "no": 2,
-        "input": "0 0",
-        "output": "0"
+        "input": "1",
+        "output": "1"
       },
       {
         "no": 3,
-        "input": "999 9",
-        "output": "0"
+        "input": "2",
+        "output": "1"
       },
       {
         "no": 4,
-        "input": "987654 5",
-        "output": "4"
+        "input": "3",
+        "output": "0"
       },
       {
         "no": 5,
-        "input": "24680 4",
-        "output": "2"
+        "input": "4",
+        "output": "1"
       },
       {
         "no": 6,
-        "input": "13579 6",
-        "output": "2"
+        "input": "5",
+        "output": "1"
       },
       {
         "no": 7,
-        "input": "55555 4",
-        "output": "5"
+        "input": "8",
+        "output": "1"
       },
       {
         "no": 8,
-        "input": "123456789 7",
-        "output": "2"
+        "input": "9",
+        "output": "1"
       },
       {
         "no": 9,
-        "input": "9081726354 8",
+        "input": "10",
         "output": "1"
       },
       {
         "no": 10,
-        "input": "111 1",
-        "output": "0"
+        "input": "13",
+        "output": "1"
       },
       {
         "no": 11,
-        "input": "314159 5",
-        "output": "1"
+        "input": "25",
+        "output": "2"
       },
       {
         "no": 12,
-        "input": "999999999999999999 8",
-        "output": "18"
+        "input": "50",
+        "output": "2"
       },
       {
         "no": 13,
-        "input": "675337273941998080 2",
-        "output": "14"
+        "input": "100",
+        "output": "2"
       },
       {
         "no": 14,
-        "input": "28779149534543580 3",
-        "output": "12"
-      },
-      {
-        "no": 15,
-        "input": "368075820788776448 9",
-        "output": "0"
-      },
-      {
-        "no": 16,
-        "input": "389745593252473344 3",
-        "output": "12"
-      },
-      {
-        "no": 17,
-        "input": "799836366809828352 2",
-        "output": "15"
-      },
-      {
-        "no": 18,
-        "input": "924091486690608640 4",
-        "output": "9"
-      },
-      {
-        "no": 19,
-        "input": "986881762736887552 9",
-        "output": "0"
-      },
-      {
-        "no": 20,
-        "input": "126229142828951200 9",
-        "output": "0"
-      },
-      {
-        "no": 21,
-        "input": "53060604749741312 8",
-        "output": "1"
-      },
-      {
-        "no": 22,
-        "input": "15847960960049162 2",
-        "output": "11"
-      },
-      {
-        "no": 23,
-        "input": "83331235257597280 6",
-        "output": "5"
-      },
-      {
-        "no": 24,
-        "input": "473028367605539264 4",
-        "output": "9"
-      },
-      {
-        "no": 25,
-        "input": "573076677775511872 2",
-        "output": "14"
-      },
-      {
-        "no": 26,
-        "input": "743865360852268160 1",
-        "output": "15"
-      },
-      {
-        "no": 27,
-        "input": "848070338763329408 3",
-        "output": "10"
-      },
-      {
-        "no": 28,
-        "input": "266371611164124512 5",
-        "output": "5"
-      },
-      {
-        "no": 29,
-        "input": "416016984459020608 9",
-        "output": "0"
-      },
-      {
-        "no": 30,
-        "input": "880962630678416512 1",
-        "output": "14"
+        "input": "1000000",
+        "output": "4"
       }
     ],
-    "sample_input": "12345 3",
+    "sample_input": "25",
     "sample_output": "2",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Duyệt A = k² đến khi A ≤ N/2; kiểm tra N−A có là số chính phương hay không.",
     "presentation_rules": ""
   },
   {
@@ -7100,8 +6669,8 @@
       },
       {
         "no": 26,
-        "input": "6926 5929 6733",
-        "output": "0"
+        "input": "360 10 100",
+        "output": "13"
       },
       {
         "no": 27,
@@ -7110,18 +6679,18 @@
       },
       {
         "no": 28,
-        "input": "336 309 335",
-        "output": "0"
+        "input": "1 1 1",
+        "output": "1"
       },
       {
         "no": 29,
-        "input": "4426 3113 3156",
-        "output": "0"
+        "input": "360 1 360",
+        "output": "24"
       },
       {
         "no": 30,
-        "input": "2082 1784 1976",
-        "output": "0"
+        "input": "360 1 30",
+        "output": "15"
       }
     ],
     "sample_input": "360 1 30",
@@ -7940,12 +7509,12 @@
       },
       {
         "no": 25,
-        "input": "785 732",
-        "output": "0"
+        "input": "100000 50000",
+        "output": "1"
       },
       {
         "no": 26,
-        "input": "573 297",
+        "input": "10 10",
         "output": "0"
       },
       {
@@ -7955,13 +7524,13 @@
       },
       {
         "no": 28,
-        "input": "578 418",
-        "output": "0"
+        "input": "10 2",
+        "output": "9"
       },
       {
         "no": 29,
-        "input": "644 410",
-        "output": "0"
+        "input": "10 1",
+        "output": "31"
       },
       {
         "no": 30,
@@ -8147,170 +7716,90 @@
   {
     "id": 121,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Đếm số có các chữ số không lặp",
-    "level": "Khó",
-    "statement": "Cho đoạn [L, R]. Đếm các số mà trong biểu diễn thập phân không có chữ số nào xuất hiện quá một lần.",
-    "input": "Một dòng gồm L rồi R, lần lượt là cận trái và cận phải của đoạn đóng cần đếm.",
-    "output": "In số lượng số trong đoạn [L, R] không có chữ số nào lặp lại.",
-    "constraints": "0 <= L <= R <= 2000.",
-    "kind": "new_26",
+    "title": "Số chính phương thứ K trong đoạn",
+    "level": "Trung bình",
+    "statement": "Cho đoạn [L, R] và số nguyên dương K. Tìm số chính phương thứ K trong đoạn khi sắp tăng dần; nếu có ít hơn K số, in -1.",
+    "input": "Ba số nguyên L, R, K.",
+    "output": "In số chính phương thứ K hoặc -1.",
+    "constraints": "0 ≤ L ≤ R ≤ 10⁹; 1 ≤ K ≤ 100000.",
+    "kind": "calculation_121",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "0 0",
-        "output": "1"
-      },
-      {
-        "no": 2,
-        "input": "1 10",
-        "output": "10"
-      },
-      {
-        "no": 3,
-        "input": "1 20",
-        "output": "19"
-      },
-      {
-        "no": 4,
-        "input": "1 50",
-        "output": "46"
-      },
-      {
-        "no": 5,
-        "input": "1 100",
-        "output": "90"
-      },
-      {
-        "no": 6,
-        "input": "10 99",
-        "output": "81"
-      },
-      {
-        "no": 7,
-        "input": "100 200",
-        "output": "72"
-      },
-      {
-        "no": 8,
-        "input": "200 300",
-        "output": "72"
-      },
-      {
-        "no": 9,
-        "input": "500 600",
-        "output": "72"
-      },
-      {
-        "no": 10,
-        "input": "900 1000",
-        "output": "72"
-      },
-      {
-        "no": 11,
-        "input": "7 7",
-        "output": "1"
-      },
-      {
-        "no": 12,
-        "input": "8 8",
-        "output": "1"
-      },
-      {
-        "no": 13,
-        "input": "9 9",
-        "output": "1"
-      },
-      {
-        "no": 14,
-        "input": "10 10",
-        "output": "1"
-      },
-      {
-        "no": 15,
-        "input": "11 11",
+        "input": "0 0 1",
         "output": "0"
       },
       {
-        "no": 16,
-        "input": "12 12",
+        "no": 2,
+        "input": "0 1 1",
+        "output": "0"
+      },
+      {
+        "no": 3,
+        "input": "0 1 2",
         "output": "1"
       },
       {
-        "no": 17,
-        "input": "13 13",
-        "output": "1"
+        "no": 4,
+        "input": "0 10 3",
+        "output": "4"
       },
       {
-        "no": 18,
-        "input": "14 14",
-        "output": "1"
+        "no": 5,
+        "input": "2 8 1",
+        "output": "4"
       },
       {
-        "no": 19,
-        "input": "0 2000",
-        "output": "1243"
+        "no": 6,
+        "input": "2 8 2",
+        "output": "-1"
       },
       {
-        "no": 20,
-        "input": "1900 2000",
-        "output": "56"
+        "no": 7,
+        "input": "9 9 1",
+        "output": "9"
       },
       {
-        "no": 21,
-        "input": "0 248",
-        "output": "194"
+        "no": 8,
+        "input": "10 24 1",
+        "output": "16"
       },
       {
-        "no": 22,
-        "input": "0 1939",
-        "output": "1208"
+        "no": 9,
+        "input": "10 25 1",
+        "output": "16"
       },
       {
-        "no": 23,
-        "input": "0 185",
-        "output": "152"
+        "no": 10,
+        "input": "10 25 2",
+        "output": "25"
       },
       {
-        "no": 24,
-        "input": "0 836",
-        "output": "625"
+        "no": 11,
+        "input": "100 200 5",
+        "output": "196"
       },
       {
-        "no": 25,
-        "input": "0 1489",
-        "output": "956"
+        "no": 12,
+        "input": "999000000 1000000000 1",
+        "output": "999002449"
       },
       {
-        "no": 26,
-        "input": "0 1397",
-        "output": "906"
+        "no": 13,
+        "input": "0 30 4",
+        "output": "9"
       },
       {
-        "no": 27,
-        "input": "0 1102",
-        "output": "795"
-      },
-      {
-        "no": 28,
-        "input": "0 1193",
-        "output": "795"
-      },
-      {
-        "no": 29,
-        "input": "0 925",
-        "output": "688"
-      },
-      {
-        "no": 30,
-        "input": "0 785",
-        "output": "585"
+        "no": 14,
+        "input": "0 1000000000 100000",
+        "output": "-1"
       }
     ],
-    "sample_input": "10 30",
-    "sample_output": "19",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "0 30 4",
+    "sample_output": "9",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Số chính phương đầu tiên trong đoạn là ceil(√L)². Dịch căn lên K−1 rồi kiểm tra có vượt R không.",
     "presentation_rules": ""
   },
   {
@@ -8485,170 +7974,75 @@
   {
     "id": 123,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Đếm số có đúng K chữ số lẻ",
-    "level": "Khó",
-    "statement": "Cho đoạn [L, R] và số nguyên K. Đếm các số có đúng K chữ số lẻ.",
-    "input": "Một dòng gồm ba số nguyên L, R và K. Hai số đầu giới hạn đoạn, K là số chữ số lẻ cần có.",
-    "output": "In số lượng số trong đoạn [L, R] có đúng K chữ số lẻ.",
-    "constraints": "0 <= L <= R <= 2000; 0 <= K <= 4.",
-    "kind": "new_28",
+    "title": "Tính tổ hợp bằng công thức giai thừa",
+    "level": "Khá",
+    "statement": "Cho N và K. Tính tổ hợp C(N,K) = N! / (K! × (N−K)!), là số cách chọn K phần tử trong N phần tử.",
+    "input": "Hai số nguyên không âm N và K.",
+    "output": "In giá trị C(N,K) dưới dạng số nguyên thập phân.",
+    "constraints": "0 ≤ K ≤ N ≤ 60. Kết quả nằm trong phạm vi long long.",
+    "kind": "calculation_123",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "0 20 0",
-        "output": "6"
+        "input": "0 0",
+        "output": "1"
       },
       {
         "no": 2,
-        "input": "0 50 1",
-        "output": "26"
+        "input": "1 0",
+        "output": "1"
       },
       {
         "no": 3,
-        "input": "0 100 2",
-        "output": "25"
+        "input": "1 1",
+        "output": "1"
       },
       {
         "no": 4,
-        "input": "10 100 1",
-        "output": "46"
+        "input": "2 1",
+        "output": "2"
       },
       {
         "no": 5,
-        "input": "10 100 2",
-        "output": "25"
+        "input": "5 2",
+        "output": "10"
       },
       {
         "no": 6,
-        "input": "10 100 3",
-        "output": "0"
+        "input": "5 5",
+        "output": "1"
       },
       {
         "no": 7,
-        "input": "100 200 1",
-        "output": "25"
+        "input": "10 3",
+        "output": "120"
       },
       {
         "no": 8,
-        "input": "100 200 2",
-        "output": "50"
+        "input": "20 10",
+        "output": "184756"
       },
       {
         "no": 9,
-        "input": "100 200 3",
-        "output": "25"
+        "input": "30 15",
+        "output": "155117520"
       },
       {
         "no": 10,
-        "input": "200 300 2",
-        "output": "25"
+        "input": "50 25",
+        "output": "126410606437752"
       },
       {
         "no": 11,
-        "input": "1 1 1",
-        "output": "1"
-      },
-      {
-        "no": 12,
-        "input": "2 2 1",
-        "output": "0"
-      },
-      {
-        "no": 13,
-        "input": "3 3 1",
-        "output": "1"
-      },
-      {
-        "no": 14,
-        "input": "4 4 0",
-        "output": "1"
-      },
-      {
-        "no": 15,
-        "input": "5 5 1",
-        "output": "1"
-      },
-      {
-        "no": 16,
-        "input": "6 6 1",
-        "output": "0"
-      },
-      {
-        "no": 17,
-        "input": "7 7 1",
-        "output": "1"
-      },
-      {
-        "no": 18,
-        "input": "8 8 0",
-        "output": "1"
-      },
-      {
-        "no": 19,
-        "input": "9 9 1",
-        "output": "1"
-      },
-      {
-        "no": 20,
-        "input": "0 2000 4",
-        "output": "125"
-      },
-      {
-        "no": 21,
-        "input": "0 1195 3",
-        "output": "198"
-      },
-      {
-        "no": 22,
-        "input": "0 245 4",
-        "output": "0"
-      },
-      {
-        "no": 23,
-        "input": "0 736 2",
-        "output": "269"
-      },
-      {
-        "no": 24,
-        "input": "0 1160 4",
-        "output": "15"
-      },
-      {
-        "no": 25,
-        "input": "0 334 4",
-        "output": "0"
-      },
-      {
-        "no": 26,
-        "input": "0 1546 3",
-        "output": "323"
-      },
-      {
-        "no": 27,
-        "input": "0 103 2",
-        "output": "27"
-      },
-      {
-        "no": 28,
-        "input": "0 29 4",
-        "output": "0"
-      },
-      {
-        "no": 29,
-        "input": "0 167 0",
-        "output": "25"
-      },
-      {
-        "no": 30,
-        "input": "0 732 1",
-        "output": "285"
+        "input": "60 30",
+        "output": "118264581564861424"
       }
     ],
-    "sample_input": "0 20 0",
-    "sample_output": "6",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "5 2",
+    "sample_output": "10",
+    "difficulty_rank": 3,
+    "knowledge_note": "Kiến thức cần nhớ: Tận dụng tính đối xứng C(N,K)=C(N,N−K). Có thể nhân và chia lần lượt để tránh tính riêng N! rồi bị tràn.",
     "presentation_rules": ""
   },
   {
@@ -10175,355 +9569,475 @@
   {
     "id": 133,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "In hình vuông rỗng",
-    "level": "Khó",
-    "statement": "Nhập N. In hình vuông rỗng N x N; chỉ các ô ở đường biên có dấu *. Yêu cầu trình bày: In đúng N hàng và N cột; giữ nguyên vị trí các ô rỗng trong lòng hình vuông, giữa hai ô có một dấu cách và không có dấu cách thừa cuối dòng.",
-    "input": "Một số nguyên dương N là kích thước cạnh hình vuông rỗng.",
-    "output": "In viền hình vuông N × N bằng dấu *. Giữ ô trống trong lòng hình. Hai ô liền nhau cách một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N <= 12.",
-    "kind": "new_38",
+    "title": "Tổng K số nguyên tố đầu tiên",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên dương K. Tính tổng K số nguyên tố đầu tiên, bắt đầu từ 2.",
+    "input": "Một số nguyên dương K.",
+    "output": "In tổng K số nguyên tố đầu tiên.",
+    "constraints": "1 ≤ K ≤ 1000.",
+    "kind": "calculation_133",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
         "input": "1",
-        "output": "*"
+        "output": "2"
       },
       {
         "no": 2,
         "input": "2",
-        "output": "* *\n* *"
+        "output": "5"
       },
       {
         "no": 3,
         "input": "3",
-        "output": "* * *\n*   *\n* * *"
+        "output": "10"
       },
       {
         "no": 4,
         "input": "4",
-        "output": "* * * *\n*     *\n*     *\n* * * *"
+        "output": "17"
       },
       {
         "no": 5,
         "input": "5",
-        "output": "* * * * *\n*       *\n*       *\n*       *\n* * * * *"
+        "output": "28"
       },
       {
         "no": 6,
         "input": "6",
-        "output": "* * * * * *\n*         *\n*         *\n*         *\n*         *\n* * * * * *"
+        "output": "41"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "* * * * * * * *\n*             *\n*             *\n*             *\n*             *\n*             *\n*             *\n* * * * * * * *"
+        "input": "10",
+        "output": "129"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "* * * * * * * * * *\n*                 *\n*                 *\n*                 *\n*                 *\n*                 *\n*                 *\n*                 *\n*                 *\n* * * * * * * * * *"
+        "input": "25",
+        "output": "1060"
+      },
+      {
+        "no": 9,
+        "input": "100",
+        "output": "24133"
+      },
+      {
+        "no": 10,
+        "input": "500",
+        "output": "824693"
+      },
+      {
+        "no": 11,
+        "input": "1000",
+        "output": "3682913"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "* * * *\n*     *\n*     *\n* * * *",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "5",
+    "sample_output": "28",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Kiểm tra lần lượt các số từ 2; chỉ cộng và tăng bộ đếm khi gặp số nguyên tố.",
     "presentation_rules": ""
   },
   {
     "id": 134,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "In hình chữ X",
-    "level": "Khó",
-    "statement": "Nhập số lẻ N. In hình chữ X kích thước N x N bằng dấu * trên hai đường chéo. Yêu cầu trình bày: In đủ N hàng và N cột của hình X; giữ các ô trống giữa hai đường chéo, cách các ô đúng một dấu cách và không có dấu cách thừa cuối dòng.",
-    "input": "Một số nguyên dương lẻ N là cạnh của lưới vuông dùng để in hai đường chéo.",
-    "output": "In N hàng. Chỉ in dấu * ở hai đường chéo. Giữ khoảng trống trước và giữa các dấu sao theo lưới có một dấu cách giữa hai ô, bỏ dấu cách cuối hàng. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N <= 15; N lẻ.",
-    "kind": "new_39",
+    "title": "Tổng các giai thừa từ 1! đến N!",
+    "level": "Cơ bản",
+    "statement": "Cho số nguyên dương N. Tính S = 1! + 2! + ... + N!.",
+    "input": "Một số nguyên dương N.",
+    "output": "In giá trị S dưới dạng số nguyên thập phân.",
+    "constraints": "1 ≤ N ≤ 20. Kết quả nằm trong phạm vi số nguyên có dấu 64 bit.",
+    "kind": "factorial_134",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
         "input": "1",
-        "output": "*"
+        "output": "1"
       },
       {
         "no": 2,
-        "input": "3",
-        "output": "*   *\n  *\n*   *"
+        "input": "2",
+        "output": "3"
       },
       {
         "no": 3,
-        "input": "5",
-        "output": "*       *\n  *   *\n    *\n  *   *\n*       *"
+        "input": "3",
+        "output": "9"
       },
       {
         "no": 4,
-        "input": "7",
-        "output": "*           *\n  *       *\n    *   *\n      *\n    *   *\n  *       *\n*           *"
+        "input": "4",
+        "output": "33"
       },
       {
         "no": 5,
-        "input": "9",
-        "output": "*               *\n  *           *\n    *       *\n      *   *\n        *\n      *   *\n    *       *\n  *           *\n*               *"
+        "input": "5",
+        "output": "153"
       },
       {
         "no": 6,
-        "input": "11",
-        "output": "*                   *\n  *               *\n    *           *\n      *       *\n        *   *\n          *\n        *   *\n      *       *\n    *           *\n  *               *\n*                   *"
+        "input": "6",
+        "output": "873"
       },
       {
         "no": 7,
-        "input": "13",
-        "output": "*                       *\n  *                   *\n    *               *\n      *           *\n        *       *\n          *   *\n            *\n          *   *\n        *       *\n      *           *\n    *               *\n  *                   *\n*                       *"
+        "input": "7",
+        "output": "5913"
       },
       {
         "no": 8,
+        "input": "10",
+        "output": "4037913"
+      },
+      {
+        "no": 9,
         "input": "15",
-        "output": "*                           *\n  *                       *\n    *                   *\n      *               *\n        *           *\n          *       *\n            *   *\n              *\n            *   *\n          *       *\n        *           *\n      *               *\n    *                   *\n  *                       *\n*                           *"
+        "output": "1401602636313"
+      },
+      {
+        "no": 10,
+        "input": "19",
+        "output": "128425485935180313"
+      },
+      {
+        "no": 11,
+        "input": "20",
+        "output": "2561327494111820313"
       }
     ],
-    "sample_input": "7",
-    "sample_output": "*           *\n  *       *\n    *   *\n      *\n    *   *\n  *       *\n*           *",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "4",
+    "sample_output": "33",
+    "difficulty_rank": 1,
+    "knowledge_note": "Kiến thức cần nhớ: Tính dần giai thừa: từ (i−1)! nhân thêm i để có i!, rồi cộng vào tổng. Dùng kiểu long long.",
     "presentation_rules": ""
   },
   {
     "id": 135,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "In dấu cộng",
-    "level": "Khó",
-    "statement": "Nhập số lẻ N. In dấu cộng cao và rộng N; hàng giữa và cột giữa gồm dấu *. Yêu cầu trình bày: In đủ N hàng và N cột của dấu cộng; giữ các ô trống quanh nét cộng, cách các ô đúng một dấu cách và không có dấu cách thừa cuối dòng.",
-    "input": "Một số nguyên dương lẻ N là chiều cao và chiều rộng của dấu cộng.",
-    "output": "In N hàng. Hàng giữa in đủ N dấu *, cách nhau một dấu cách. Các hàng còn lại chỉ có một dấu * thẳng cột giữa. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N <= 15; N lẻ.",
-    "kind": "new_40",
+    "title": "Số mũ của P trong N!",
+    "level": "Trung bình",
+    "statement": "Cho N và số nguyên tố P. Tìm số mũ lớn nhất E sao cho P^E là ước của N!. Quy ước 0! = 1.",
+    "input": "Hai số nguyên N và P; P luôn là số nguyên tố.",
+    "output": "In số mũ E.",
+    "constraints": "0 ≤ N ≤ 10⁹; 2 ≤ P ≤ 10000 và P là số nguyên tố.",
+    "kind": "factorial_135",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "1",
-        "output": "*"
+        "input": "0 2",
+        "output": "0"
       },
       {
         "no": 2,
-        "input": "3",
-        "output": "  *\n* * *\n  *"
+        "input": "1 2",
+        "output": "0"
       },
       {
         "no": 3,
-        "input": "5",
-        "output": "    *\n    *\n* * * * *\n    *\n    *"
+        "input": "2 2",
+        "output": "1"
       },
       {
         "no": 4,
-        "input": "7",
-        "output": "      *\n      *\n      *\n* * * * * * *\n      *\n      *\n      *"
+        "input": "5 2",
+        "output": "3"
       },
       {
         "no": 5,
-        "input": "9",
-        "output": "        *\n        *\n        *\n        *\n* * * * * * * * *\n        *\n        *\n        *\n        *"
+        "input": "10 2",
+        "output": "8"
       },
       {
         "no": 6,
-        "input": "11",
-        "output": "          *\n          *\n          *\n          *\n          *\n* * * * * * * * * * *\n          *\n          *\n          *\n          *\n          *"
+        "input": "10 3",
+        "output": "4"
       },
       {
         "no": 7,
-        "input": "13",
-        "output": "            *\n            *\n            *\n            *\n            *\n            *\n* * * * * * * * * * * * *\n            *\n            *\n            *\n            *\n            *\n            *"
+        "input": "10 5",
+        "output": "2"
       },
       {
         "no": 8,
-        "input": "15",
-        "output": "              *\n              *\n              *\n              *\n              *\n              *\n              *\n* * * * * * * * * * * * * * *\n              *\n              *\n              *\n              *\n              *\n              *\n              *"
+        "input": "20 2",
+        "output": "18"
+      },
+      {
+        "no": 9,
+        "input": "25 5",
+        "output": "6"
+      },
+      {
+        "no": 10,
+        "input": "100 7",
+        "output": "16"
+      },
+      {
+        "no": 11,
+        "input": "1000000000 2",
+        "output": "999999987"
+      },
+      {
+        "no": 12,
+        "input": "1000000000 9973",
+        "output": "100280"
       }
     ],
-    "sample_input": "7",
-    "sample_output": "      *\n      *\n      *\n* * * * * * *\n      *\n      *\n      *",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "10 2",
+    "sample_output": "8",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Công thức Legendre: E = ⌊N/P⌋ + ⌊N/P²⌋ + ... . Có thể liên tiếp chia N cho P để tránh tính P^k quá lớn.",
     "presentation_rules": ""
   },
   {
     "id": 136,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "In kim tự tháp rỗng",
-    "level": "Khó",
-    "statement": "Nhập N. In kim tự tháp rỗng cao N hàng; hai cạnh bên và hàng đáy là dấu *. Yêu cầu trình bày: In đủ N hàng của kim tự tháp rỗng; giữ ô trống giữa hai cạnh, căn giữa bằng khoảng trắng đầu dòng; giữa các ô có một dấu cách, không thêm dòng trống cuối.",
-    "input": "Một số nguyên dương N là chiều cao của kim tự tháp rỗng.",
-    "output": "In N hàng căn giữa. In * ở hai cạnh bên và toàn bộ đáy, giữ trống phần giữa hai cạnh. Hai ô liền nhau cách một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N <= 10.",
-    "kind": "new_41",
+    "title": "Tổng tất cả ước dương của N",
+    "level": "Cơ bản",
+    "statement": "Cho số nguyên dương N. Tính tổng tất cả các ước dương của N, kể cả 1 và chính N.",
+    "input": "Một số nguyên dương N.",
+    "output": "In tổng các ước dương của N.",
+    "constraints": "1 ≤ N ≤ 10⁹.",
+    "kind": "number_theory_136",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
         "input": "1",
-        "output": "*"
+        "output": "1"
       },
       {
         "no": 2,
         "input": "2",
-        "output": "  *\n* * *"
+        "output": "3"
       },
       {
         "no": 3,
-        "input": "3",
-        "output": "    *\n  *   *\n* * * * *"
+        "input": "4",
+        "output": "7"
       },
       {
         "no": 4,
-        "input": "4",
-        "output": "      *\n    *   *\n  *       *\n* * * * * * *"
+        "input": "6",
+        "output": "12"
       },
       {
         "no": 5,
-        "input": "5",
-        "output": "        *\n      *   *\n    *       *\n  *           *\n* * * * * * * * *"
+        "input": "12",
+        "output": "28"
       },
       {
         "no": 6,
-        "input": "6",
-        "output": "          *\n        *   *\n      *       *\n    *           *\n  *               *\n* * * * * * * * * * *"
+        "input": "28",
+        "output": "56"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "              *\n            *   *\n          *       *\n        *           *\n      *               *\n    *                   *\n  *                       *\n* * * * * * * * * * * * * * *"
+        "input": "36",
+        "output": "91"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "                  *\n                *   *\n              *       *\n            *           *\n          *               *\n        *                   *\n      *                       *\n    *                           *\n  *                               *\n* * * * * * * * * * * * * * * * * * *"
+        "input": "49",
+        "output": "57"
+      },
+      {
+        "no": 9,
+        "input": "97",
+        "output": "98"
+      },
+      {
+        "no": 10,
+        "input": "100",
+        "output": "217"
+      },
+      {
+        "no": 11,
+        "input": "1000000000",
+        "output": "2497558338"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "      *\n    *   *\n  *       *\n* * * * * * *",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "12",
+    "sample_output": "28",
+    "difficulty_rank": 1,
+    "knowledge_note": "Kiến thức cần nhớ: Duyệt đến căn bậc hai của N và cộng theo cặp d, N/d. Không cộng trùng khi hai ước bằng nhau.",
     "presentation_rules": ""
   },
   {
     "id": 137,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "In đồng hồ cát bằng dấu sao",
-    "level": "Khó",
-    "statement": "Nhập N. In đồng hồ cát cao 2*N-1 hàng; số dấu * giảm dần đến một dấu rồi tăng đối xứng. Yêu cầu trình bày: In đủ 2*N-1 hàng của đồng hồ cát; căn giữa các hàng đặc, cách ô đúng một dấu cách; không có dấu cách thừa cuối dòng hoặc dòng trống cuối.",
-    "input": "Một số nguyên dương N là số hàng từ miệng trên đến eo đồng hồ cát, tính cả hàng eo.",
-    "output": "In đồng hồ cát đặc có 2 × N − 1 hàng. Hàng trên cùng có 2 × N − 1 dấu *, giảm hai dấu mỗi hàng đến eo một dấu rồi tăng đối xứng. Căn giữa và cách các dấu * bằng một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N <= 10.",
-    "kind": "new_42",
+    "title": "Đếm cặp số nguyên tố sinh đôi",
+    "level": "Trung bình",
+    "statement": "Cho đoạn [L, R]. Đếm các cặp (p, p+2) mà cả hai số đều là số nguyên tố và cùng thuộc đoạn. Mỗi cặp chỉ tính một lần.",
+    "input": "Hai số nguyên dương L và R.",
+    "output": "In số cặp nguyên tố sinh đôi trong [L, R].",
+    "constraints": "1 ≤ L ≤ R ≤ 10000.",
+    "kind": "number_theory_137",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "1",
-        "output": "*"
+        "input": "1 2",
+        "output": "0"
       },
       {
         "no": 2,
-        "input": "2",
-        "output": "* * *\n  *\n* * *"
+        "input": "1 5",
+        "output": "1"
       },
       {
         "no": 3,
-        "input": "3",
-        "output": "* * * * *\n  * * *\n    *\n  * * *\n* * * * *"
+        "input": "3 7",
+        "output": "2"
       },
       {
         "no": 4,
-        "input": "4",
-        "output": "* * * * * * *\n  * * * * *\n    * * *\n      *\n    * * *\n  * * * * *\n* * * * * * *"
+        "input": "5 7",
+        "output": "1"
       },
       {
         "no": 5,
-        "input": "5",
-        "output": "* * * * * * * * *\n  * * * * * * *\n    * * * * *\n      * * *\n        *\n      * * *\n    * * * * *\n  * * * * * * *\n* * * * * * * * *"
+        "input": "6 10",
+        "output": "0"
       },
       {
         "no": 6,
-        "input": "6",
-        "output": "* * * * * * * * * * *\n  * * * * * * * * *\n    * * * * * * *\n      * * * * *\n        * * *\n          *\n        * * *\n      * * * * *\n    * * * * * * *\n  * * * * * * * * *\n* * * * * * * * * * *"
+        "input": "10 20",
+        "output": "2"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "* * * * * * * * * * * * * * *\n  * * * * * * * * * * * * *\n    * * * * * * * * * * *\n      * * * * * * * * *\n        * * * * * * *\n          * * * * *\n            * * *\n              *\n            * * *\n          * * * * *\n        * * * * * * *\n      * * * * * * * * *\n    * * * * * * * * * * *\n  * * * * * * * * * * * * *\n* * * * * * * * * * * * * * *"
+        "input": "11 13",
+        "output": "1"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "* * * * * * * * * * * * * * * * * * *\n  * * * * * * * * * * * * * * * * *\n    * * * * * * * * * * * * * * *\n      * * * * * * * * * * * * *\n        * * * * * * * * * * *\n          * * * * * * * * *\n            * * * * * * *\n              * * * * *\n                * * *\n                  *\n                * * *\n              * * * * *\n            * * * * * * *\n          * * * * * * * * *\n        * * * * * * * * * * *\n      * * * * * * * * * * * * *\n    * * * * * * * * * * * * * * *\n  * * * * * * * * * * * * * * * * *\n* * * * * * * * * * * * * * * * * * *"
+        "input": "17 19",
+        "output": "1"
+      },
+      {
+        "no": 9,
+        "input": "1 100",
+        "output": "8"
+      },
+      {
+        "no": 10,
+        "input": "100 200",
+        "output": "7"
+      },
+      {
+        "no": 11,
+        "input": "1 10000",
+        "output": "205"
+      },
+      {
+        "no": 12,
+        "input": "1 20",
+        "output": "4"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "* * * * * * *\n  * * * * *\n    * * *\n      *\n    * * *\n  * * * * *\n* * * * * * *",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "1 20",
+    "sample_output": "4",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Ví dụ (3,5), (5,7) là hai cặp khác nhau. Cả hai đầu cặp phải nằm trong đoạn.",
     "presentation_rules": ""
   },
   {
     "id": 138,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "In hình cánh bướm",
-    "level": "Khó",
-    "statement": "Nhập N. In hình cánh bướm cao 2*N-1 hàng; hai cánh tăng dần đến hàng giữa rồi giảm đối xứng. Yêu cầu trình bày: In đủ 2*N-1 hàng và đúng hai cánh đối xứng; giữ các ô trống ở giữa, cách ô đúng một dấu cách; không có dấu cách thừa cuối dòng hoặc dòng trống cuối.",
-    "input": "Một số nguyên dương N là số hàng từ đỉnh đến giữa hình cánh bướm.",
-    "output": "In 2 × N − 1 hàng với hai cánh đối xứng, mỗi cánh tăng từ 1 đến N dấu * rồi giảm lại. Giữ khoảng trống giữa hai cánh theo mẫu. Hai ô liền nhau cách một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N <= 10.",
-    "kind": "new_43",
+    "title": "Phân loại số thiếu, hoàn hảo, dư thừa",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên dương N. So sánh tổng các ước dương thực sự với N để phân loại: THIEU nếu tổng nhỏ hơn N, HOAN_HAO nếu bằng N, DU_THUA nếu lớn hơn N.",
+    "input": "Một số nguyên dương N.",
+    "output": "In đúng một trong ba nhãn THIEU, HOAN_HAO, DU_THUA.",
+    "constraints": "1 ≤ N ≤ 10⁹.",
+    "kind": "calculation_138",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
         "input": "1",
-        "output": "* *"
+        "output": "THIEU"
       },
       {
         "no": 2,
         "input": "2",
-        "output": "*     *\n* * * *\n*     *"
+        "output": "THIEU"
       },
       {
         "no": 3,
         "input": "3",
-        "output": "*         *\n* *     * *\n* * * * * *\n* *     * *\n*         *"
+        "output": "THIEU"
       },
       {
         "no": 4,
         "input": "4",
-        "output": "*             *\n* *         * *\n* * *     * * *\n* * * * * * * *\n* * *     * * *\n* *         * *\n*             *"
+        "output": "THIEU"
       },
       {
         "no": 5,
-        "input": "5",
-        "output": "*                 *\n* *             * *\n* * *         * * *\n* * * *     * * * *\n* * * * * * * * * *\n* * * *     * * * *\n* * *         * * *\n* *             * *\n*                 *"
+        "input": "6",
+        "output": "HOAN_HAO"
       },
       {
         "no": 6,
-        "input": "6",
-        "output": "*                     *\n* *                 * *\n* * *             * * *\n* * * *         * * * *\n* * * * *     * * * * *\n* * * * * * * * * * * *\n* * * * *     * * * * *\n* * * *         * * * *\n* * *             * * *\n* *                 * *\n*                     *"
+        "input": "8",
+        "output": "THIEU"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "*                             *\n* *                         * *\n* * *                     * * *\n* * * *                 * * * *\n* * * * *             * * * * *\n* * * * * *         * * * * * *\n* * * * * * *     * * * * * * *\n* * * * * * * * * * * * * * * *\n* * * * * * *     * * * * * * *\n* * * * * *         * * * * * *\n* * * * *             * * * * *\n* * * *                 * * * *\n* * *                     * * *\n* *                         * *\n*                             *"
+        "input": "12",
+        "output": "DU_THUA"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "*                                     *\n* *                                 * *\n* * *                             * * *\n* * * *                         * * * *\n* * * * *                     * * * * *\n* * * * * *                 * * * * * *\n* * * * * * *             * * * * * * *\n* * * * * * * *         * * * * * * * *\n* * * * * * * * *     * * * * * * * * *\n* * * * * * * * * * * * * * * * * * * *\n* * * * * * * * *     * * * * * * * * *\n* * * * * * * *         * * * * * * * *\n* * * * * * *             * * * * * * *\n* * * * * *                 * * * * * *\n* * * * *                     * * * * *\n* * * *                         * * * *\n* * *                             * * *\n* *                                 * *\n*                                     *"
+        "input": "18",
+        "output": "DU_THUA"
+      },
+      {
+        "no": 9,
+        "input": "20",
+        "output": "DU_THUA"
+      },
+      {
+        "no": 10,
+        "input": "28",
+        "output": "HOAN_HAO"
+      },
+      {
+        "no": 11,
+        "input": "100",
+        "output": "DU_THUA"
+      },
+      {
+        "no": 12,
+        "input": "496",
+        "output": "HOAN_HAO"
+      },
+      {
+        "no": 13,
+        "input": "8128",
+        "output": "HOAN_HAO"
+      },
+      {
+        "no": 14,
+        "input": "1000000000",
+        "output": "DU_THUA"
+      },
+      {
+        "no": 15,
+        "input": "999999937",
+        "output": "THIEU"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "*             *\n* *         * *\n* * *     * * *\n* * * * * * * *\n* * *     * * *\n* *         * *\n*             *",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "28",
+    "sample_output": "HOAN_HAO",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Ước thực sự là ước dương nhỏ hơn N; với N=1, tổng bằng 0 nên N là số thiếu.",
     "presentation_rules": ""
   },
   {
@@ -10588,119 +10102,154 @@
   {
     "id": 140,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "In tam giác nhị phân",
-    "level": "Khó",
-    "statement": "Nhập N. In tam giác N hàng gồm các số 0 và 1 xen kẽ; hàng lẻ bắt đầu bằng 1, hàng chẵn bắt đầu bằng 0. Yêu cầu trình bày: In đủ N hàng theo quy luật 0/1 của đề bài; các số cách nhau đúng một dấu cách, không có dấu cách thừa cuối dòng hoặc dòng trống cuối.",
-    "input": "Một số nguyên dương N là số hàng của tam giác nhị phân.",
-    "output": "In N hàng, hàng thứ i có i số 0 và 1 xen kẽ. Hàng lẻ bắt đầu bằng 1, hàng chẵn bắt đầu bằng 0. Các số cách nhau một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N <= 15.",
-    "kind": "new_45",
+    "title": "Tổng các số chính phương trong đoạn",
+    "level": "Trung bình",
+    "statement": "Cho đoạn [L, R]. Tính tổng tất cả số chính phương trong đoạn, kể cả 0 nếu thuộc đoạn.",
+    "input": "Hai số nguyên không âm L và R.",
+    "output": "In tổng các số chính phương thuộc [L, R]; nếu không có, in 0.",
+    "constraints": "0 ≤ L ≤ R ≤ 10⁶.",
+    "kind": "number_theory_140",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "1",
-        "output": "1"
+        "input": "0 0",
+        "output": "0"
       },
       {
         "no": 2,
-        "input": "2",
-        "output": "1\n0 1"
+        "input": "0 1",
+        "output": "1"
       },
       {
         "no": 3,
-        "input": "3",
-        "output": "1\n0 1\n1 0 1"
+        "input": "2 3",
+        "output": "0"
       },
       {
         "no": 4,
-        "input": "4",
-        "output": "1\n0 1\n1 0 1\n0 1 0 1"
+        "input": "1 4",
+        "output": "5"
       },
       {
         "no": 5,
-        "input": "5",
-        "output": "1\n0 1\n1 0 1\n0 1 0 1\n1 0 1 0 1"
+        "input": "5 8",
+        "output": "0"
       },
       {
         "no": 6,
-        "input": "6",
-        "output": "1\n0 1\n1 0 1\n0 1 0 1\n1 0 1 0 1\n0 1 0 1 0 1"
+        "input": "9 9",
+        "output": "9"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "1\n0 1\n1 0 1\n0 1 0 1\n1 0 1 0 1\n0 1 0 1 0 1\n1 0 1 0 1 0 1\n0 1 0 1 0 1 0 1"
+        "input": "10 24",
+        "output": "16"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "1\n0 1\n1 0 1\n0 1 0 1\n1 0 1 0 1\n0 1 0 1 0 1\n1 0 1 0 1 0 1\n0 1 0 1 0 1 0 1\n1 0 1 0 1 0 1 0 1\n0 1 0 1 0 1 0 1 0 1"
+        "input": "0 100",
+        "output": "385"
+      },
+      {
+        "no": 9,
+        "input": "99 101",
+        "output": "100"
+      },
+      {
+        "no": 10,
+        "input": "1000 2000",
+        "output": "18954"
+      },
+      {
+        "no": 11,
+        "input": "0 1000000",
+        "output": "333833500"
+      },
+      {
+        "no": 12,
+        "input": "1 10",
+        "output": "14"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "1\n0 1\n1 0 1\n0 1 0 1",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "1 10",
+    "sample_output": "14",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Số chính phương có dạng k². Chỉ cộng các k² nằm trong đoạn đã cho.",
     "presentation_rules": ""
   },
   {
     "id": 141,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "In bảng chữ nhật theo số dòng",
-    "level": "Khá",
-    "statement": "Nhập N và M. In N hàng; hàng i gồm M lần số i. Yêu cầu trình bày: In đúng N hàng và M số mỗi hàng; hàng i chỉ gồm M lần số i, các số cách nhau một dấu cách và không có dấu cách thừa cuối dòng.",
-    "input": "Một dòng gồm hai số nguyên dương N và M là số hàng và số lần lặp trên mỗi hàng.",
-    "output": "In N hàng. Hàng thứ i gồm M lần số i, cách nhau một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N, M <= 10.",
-    "kind": "new_46",
+    "title": "Liệt kê số hoàn hảo trong đoạn",
+    "level": "Trung bình",
+    "statement": "Cho đoạn [L, R]. Liệt kê các số hoàn hảo trong đoạn theo thứ tự tăng dần.",
+    "input": "Hai số nguyên dương L và R.",
+    "output": "In các số hoàn hảo cách nhau đúng một dấu cách; nếu không có, in -1.",
+    "constraints": "1 ≤ L ≤ R ≤ 10000.",
+    "kind": "number_theory_141",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
         "input": "1 1",
-        "output": "1"
+        "output": "-1"
       },
       {
         "no": 2,
-        "input": "1 3",
-        "output": "1 1 1"
+        "input": "1 5",
+        "output": "-1"
       },
       {
         "no": 3,
-        "input": "3 1",
-        "output": "1\n2\n3"
+        "input": "1 6",
+        "output": "6"
       },
       {
         "no": 4,
-        "input": "2 4",
-        "output": "1 1 1 1\n2 2 2 2"
+        "input": "6 6",
+        "output": "6"
       },
       {
         "no": 5,
-        "input": "4 2",
-        "output": "1 1\n2 2\n3 3\n4 4"
+        "input": "7 27",
+        "output": "-1"
       },
       {
         "no": 6,
-        "input": "3 5",
-        "output": "1 1 1 1 1\n2 2 2 2 2\n3 3 3 3 3"
+        "input": "1 28",
+        "output": "6 28"
       },
       {
         "no": 7,
-        "input": "6 4",
-        "output": "1 1 1 1\n2 2 2 2\n3 3 3 3\n4 4 4 4\n5 5 5 5\n6 6 6 6"
+        "input": "29 495",
+        "output": "-1"
       },
       {
         "no": 8,
-        "input": "10 10",
-        "output": "1 1 1 1 1 1 1 1 1 1\n2 2 2 2 2 2 2 2 2 2\n3 3 3 3 3 3 3 3 3 3\n4 4 4 4 4 4 4 4 4 4\n5 5 5 5 5 5 5 5 5 5\n6 6 6 6 6 6 6 6 6 6\n7 7 7 7 7 7 7 7 7 7\n8 8 8 8 8 8 8 8 8 8\n9 9 9 9 9 9 9 9 9 9\n10 10 10 10 10 10 10 10 10 10"
+        "input": "490 500",
+        "output": "496"
+      },
+      {
+        "no": 9,
+        "input": "1 500",
+        "output": "6 28 496"
+      },
+      {
+        "no": 10,
+        "input": "1 10000",
+        "output": "6 28 496 8128"
+      },
+      {
+        "no": 11,
+        "input": "1 30",
+        "output": "6 28"
       }
     ],
-    "sample_input": "2 4",
-    "sample_output": "1 1 1 1\n2 2 2 2",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "1 30",
+    "sample_output": "6 28",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Số hoàn hảo bằng tổng các ước dương thực sự của nó. Không in số 1.",
     "presentation_rules": ""
   },
   {
@@ -10824,13 +10373,13 @@
   {
     "id": 144,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "In kim tự tháp số đối xứng ngược",
-    "level": "Khó",
-    "statement": "Nhập N. In kim tự tháp số đối xứng ngược cao N hàng; đỉnh có giá trị N và mỗi hàng sau giảm một bậc. Yêu cầu trình bày: In đủ N hàng của kim tự tháp số ngược; giữ đúng thứ tự số và căn giữa bằng khoảng trắng đầu dòng, cách số đúng một dấu cách; không có dòng trống cuối.",
-    "input": "Một số nguyên dương N là số hàng và là giá trị đỉnh của dãy số trên hàng đầu.",
-    "output": "In N hàng. Đỉnh của dãy giảm từ N đến 1 theo từng hàng. Mỗi hàng in dãy tăng từ 1 đến đỉnh rồi giảm về 1, cách nhau một dấu cách. Thêm một dấu cách đầu hàng sau mỗi bậc. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N <= 15.",
-    "kind": "new_49",
+    "title": "Đếm các ước lẻ của N",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên dương N. Đếm số ước dương của N là số lẻ.",
+    "input": "Một số nguyên dương N.",
+    "output": "In số lượng ước dương lẻ của N.",
+    "constraints": "1 ≤ N ≤ 10⁹.",
+    "kind": "number_theory_144",
     "gen": "custom",
     "tests": [
       {
@@ -10841,279 +10390,399 @@
       {
         "no": 2,
         "input": "2",
-        "output": "1 2 1\n 1"
+        "output": "1"
       },
       {
         "no": 3,
         "input": "3",
-        "output": "1 2 3 2 1\n 1 2 1\n  1"
+        "output": "2"
       },
       {
         "no": 4,
         "input": "4",
-        "output": "1 2 3 4 3 2 1\n 1 2 3 2 1\n  1 2 1\n   1"
+        "output": "1"
       },
       {
         "no": 5,
-        "input": "5",
-        "output": "1 2 3 4 5 4 3 2 1\n 1 2 3 4 3 2 1\n  1 2 3 2 1\n   1 2 1\n    1"
+        "input": "6",
+        "output": "2"
       },
       {
         "no": 6,
-        "input": "6",
-        "output": "1 2 3 4 5 6 5 4 3 2 1\n 1 2 3 4 5 4 3 2 1\n  1 2 3 4 3 2 1\n   1 2 3 2 1\n    1 2 1\n     1"
+        "input": "12",
+        "output": "2"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "1 2 3 4 5 6 7 8 7 6 5 4 3 2 1\n 1 2 3 4 5 6 7 6 5 4 3 2 1\n  1 2 3 4 5 6 5 4 3 2 1\n   1 2 3 4 5 4 3 2 1\n    1 2 3 4 3 2 1\n     1 2 3 2 1\n      1 2 1\n       1"
+        "input": "15",
+        "output": "4"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "1 2 3 4 5 6 7 8 9 10 9 8 7 6 5 4 3 2 1\n 1 2 3 4 5 6 7 8 9 8 7 6 5 4 3 2 1\n  1 2 3 4 5 6 7 8 7 6 5 4 3 2 1\n   1 2 3 4 5 6 7 6 5 4 3 2 1\n    1 2 3 4 5 6 5 4 3 2 1\n     1 2 3 4 5 4 3 2 1\n      1 2 3 4 3 2 1\n       1 2 3 2 1\n        1 2 1\n         1"
+        "input": "36",
+        "output": "3"
+      },
+      {
+        "no": 9,
+        "input": "49",
+        "output": "3"
+      },
+      {
+        "no": 10,
+        "input": "64",
+        "output": "1"
+      },
+      {
+        "no": 11,
+        "input": "100",
+        "output": "3"
+      },
+      {
+        "no": 12,
+        "input": "99991",
+        "output": "2"
+      },
+      {
+        "no": 13,
+        "input": "1000000000",
+        "output": "10"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "1 2 3 4 3 2 1\n 1 2 3 2 1\n  1 2 1\n   1",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "12",
+    "sample_output": "2",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Một ước lẻ không chia hết cho 2. Số 1 luôn là một ước lẻ.",
     "presentation_rules": ""
   },
   {
     "id": 145,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "In hình thoi rỗng",
+    "title": "Giai thừa nhỏ nhất chia hết cho K",
     "level": "Khó",
-    "statement": "Nhập số lẻ N. In hình thoi rỗng; N là số hàng từ đỉnh đến hàng giữa, hai đường biên là dấu *. Yêu cầu trình bày: In đủ hình thoi rỗng theo N; giữ căn giữa, khoảng trắng đầu dòng và các ô trống trong lòng hình; giữa ô có một dấu cách, không có dòng trống cuối.",
-    "input": "Một số nguyên dương lẻ N là số hàng từ đỉnh đến giữa hình thoi, tính cả hàng giữa.",
-    "output": "In hình thoi rỗng cao 2 × N − 1 hàng. Chỉ hai cạnh in *, phần trong giữ trống. Căn giữa và giữ một dấu cách giữa hai ô. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N <= 15; N lẻ.",
-    "kind": "new_50",
+    "statement": "Cho số nguyên dương K. Tìm số nguyên không âm N nhỏ nhất sao cho N! chia hết cho K. Quy ước 0! = 1.",
+    "input": "Một số nguyên dương K.",
+    "output": "In giá trị N nhỏ nhất thỏa mãn.",
+    "constraints": "1 ≤ K ≤ 10000.",
+    "kind": "factorial_145",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
         "input": "1",
-        "output": "*"
+        "output": "0"
       },
       {
         "no": 2,
-        "input": "3",
-        "output": "    *\n  *   *\n*       *\n  *   *\n    *"
+        "input": "2",
+        "output": "2"
       },
       {
         "no": 3,
-        "input": "5",
-        "output": "        *\n      *   *\n    *       *\n  *           *\n*               *\n  *           *\n    *       *\n      *   *\n        *"
+        "input": "3",
+        "output": "3"
       },
       {
         "no": 4,
-        "input": "7",
-        "output": "            *\n          *   *\n        *       *\n      *           *\n    *               *\n  *                   *\n*                       *\n  *                   *\n    *               *\n      *           *\n        *       *\n          *   *\n            *"
+        "input": "4",
+        "output": "4"
       },
       {
         "no": 5,
-        "input": "9",
-        "output": "                *\n              *   *\n            *       *\n          *           *\n        *               *\n      *                   *\n    *                       *\n  *                           *\n*                               *\n  *                           *\n    *                       *\n      *                   *\n        *               *\n          *           *\n            *       *\n              *   *\n                *"
+        "input": "6",
+        "output": "3"
       },
       {
         "no": 6,
-        "input": "11",
-        "output": "                    *\n                  *   *\n                *       *\n              *           *\n            *               *\n          *                   *\n        *                       *\n      *                           *\n    *                               *\n  *                                   *\n*                                       *\n  *                                   *\n    *                               *\n      *                           *\n        *                       *\n          *                   *\n            *               *\n              *           *\n                *       *\n                  *   *\n                    *"
+        "input": "8",
+        "output": "4"
       },
       {
         "no": 7,
-        "input": "13",
-        "output": "                        *\n                      *   *\n                    *       *\n                  *           *\n                *               *\n              *                   *\n            *                       *\n          *                           *\n        *                               *\n      *                                   *\n    *                                       *\n  *                                           *\n*                                               *\n  *                                           *\n    *                                       *\n      *                                   *\n        *                               *\n          *                           *\n            *                       *\n              *                   *\n                *               *\n                  *           *\n                    *       *\n                      *   *\n                        *"
+        "input": "10",
+        "output": "5"
       },
       {
         "no": 8,
-        "input": "15",
-        "output": "                            *\n                          *   *\n                        *       *\n                      *           *\n                    *               *\n                  *                   *\n                *                       *\n              *                           *\n            *                               *\n          *                                   *\n        *                                       *\n      *                                           *\n    *                                               *\n  *                                                   *\n*                                                       *\n  *                                                   *\n    *                                               *\n      *                                           *\n        *                                       *\n          *                                   *\n            *                               *\n              *                           *\n                *                       *\n                  *                   *\n                    *               *\n                      *           *\n                        *       *\n                          *   *\n                            *"
+        "input": "12",
+        "output": "4"
+      },
+      {
+        "no": 9,
+        "input": "16",
+        "output": "6"
+      },
+      {
+        "no": 10,
+        "input": "25",
+        "output": "10"
+      },
+      {
+        "no": 11,
+        "input": "27",
+        "output": "9"
+      },
+      {
+        "no": 12,
+        "input": "97",
+        "output": "97"
+      },
+      {
+        "no": 13,
+        "input": "100",
+        "output": "10"
+      },
+      {
+        "no": 14,
+        "input": "10000",
+        "output": "20"
       }
     ],
-    "sample_input": "7",
-    "sample_output": "            *\n          *   *\n        *       *\n      *           *\n    *               *\n  *                   *\n*                       *\n  *                   *\n    *               *\n      *           *\n        *       *\n          *   *\n            *",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "10",
+    "sample_output": "5",
+    "difficulty_rank": 3,
+    "knowledge_note": "Kiến thức cần nhớ: Vì K! luôn chia hết cho K, đáp án không vượt K. Có thể phân tích K thành thừa số nguyên tố và đếm số mũ tương ứng trong N!.",
     "presentation_rules": ""
   },
   {
     "id": 146,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Tam giác vuông rỗng căn phải",
-    "level": "Khó",
-    "statement": "Nhập N. In tam giác vuông rỗng căn phải có N hàng; góc vuông ở dưới bên phải, hai cạnh bên là dấu * và hàng đáy được in kín. Yêu cầu trình bày: In đủ N hàng của tam giác rỗng căn phải; giữ khoảng trắng đầu dòng để căn phải và ô rỗng bên trong, cách ô một dấu cách; không có dấu cách thừa cuối dòng.",
-    "input": "Một số nguyên dương N là số hàng của tam giác vuông rỗng căn phải.",
-    "output": "In N hàng. Các hàng thẳng theo cạnh phải, chỉ in * trên hai cạnh bên và hàng đáy. Giữ khoảng trắng đầu hàng và ô trống trong hình. Hai ô liền nhau cách một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N <= 10.",
-    "kind": "new_51",
+    "title": "Phân tích N thành thừa số nguyên tố",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên N ≥ 2. Phân tích N thành các thừa số nguyên tố và in chúng theo thứ tự tăng dần, tính cả số lần lặp.",
+    "input": "Một số nguyên N.",
+    "output": "In các thừa số nguyên tố cách nhau đúng một dấu cách.",
+    "constraints": "2 ≤ N ≤ 10⁹.",
+    "kind": "number_theory_146",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "1",
-        "output": "*"
+        "input": "2",
+        "output": "2"
       },
       {
         "no": 2,
-        "input": "2",
-        "output": "  *\n* *"
+        "input": "3",
+        "output": "3"
       },
       {
         "no": 3,
-        "input": "3",
-        "output": "    *\n  * *\n* * *"
+        "input": "4",
+        "output": "2 2"
       },
       {
         "no": 4,
-        "input": "4",
-        "output": "      *\n    * *\n  *   *\n* * * *"
+        "input": "6",
+        "output": "2 3"
       },
       {
         "no": 5,
-        "input": "5",
-        "output": "        *\n      * *\n    *   *\n  *     *\n* * * * *"
+        "input": "12",
+        "output": "2 2 3"
       },
       {
         "no": 6,
-        "input": "6",
-        "output": "          *\n        * *\n      *   *\n    *     *\n  *       *\n* * * * * *"
+        "input": "36",
+        "output": "2 2 3 3"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "              *\n            * *\n          *   *\n        *     *\n      *       *\n    *         *\n  *           *\n* * * * * * * *"
+        "input": "49",
+        "output": "7 7"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "                  *\n                * *\n              *   *\n            *     *\n          *       *\n        *         *\n      *           *\n    *             *\n  *               *\n* * * * * * * * * *"
+        "input": "60",
+        "output": "2 2 3 5"
+      },
+      {
+        "no": 9,
+        "input": "97",
+        "output": "97"
+      },
+      {
+        "no": 10,
+        "input": "100",
+        "output": "2 2 5 5"
+      },
+      {
+        "no": 11,
+        "input": "99991",
+        "output": "99991"
+      },
+      {
+        "no": 12,
+        "input": "1000000000",
+        "output": "2 2 2 2 2 2 2 2 2 5 5 5 5 5 5 5 5 5"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "      *\n    * *\n  *   *\n* * * *",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "60",
+    "sample_output": "2 2 3 5",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Chia liên tiếp cho từng ước nguyên tố; mỗi lần chia được thì in ước đó. Phần còn lại lớn hơn 1 cũng là nguyên tố.",
     "presentation_rules": ""
   },
   {
     "id": 147,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "In tam giác vuông ngược rỗng",
-    "level": "Khó",
-    "statement": "Nhập N. In tam giác vuông rỗng ngược căn trái; hàng đầu được in kín, các hàng sau chỉ giữ hai cạnh bên. Yêu cầu trình bày: In đủ N hàng của tam giác rỗng ngược căn trái; giữ các ô trống bên trong và đúng cạnh của tam giác, cách ô một dấu cách; không có dấu cách thừa cuối dòng.",
-    "input": "Một số nguyên dương N là số hàng của tam giác vuông rỗng ngược.",
-    "output": "In N hàng căn trái. Hàng đầu có N dấu *, mỗi hàng sau giảm một ô và chỉ in * ở hai đầu. Giữa hai ô có một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N <= 10.",
-    "kind": "new_52",
+    "title": "Ước dương lớn nhất nhỏ hơn N",
+    "level": "Cơ bản",
+    "statement": "Cho số nguyên dương N. Tìm ước dương lớn nhất của N mà nhỏ hơn N. Với N = 1, in 0.",
+    "input": "Một số nguyên dương N.",
+    "output": "In ước dương lớn nhất nhỏ hơn N, hoặc 0 nếu N = 1.",
+    "constraints": "1 ≤ N ≤ 10⁹.",
+    "kind": "number_theory_147",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
         "input": "1",
-        "output": "*"
+        "output": "0"
       },
       {
         "no": 2,
         "input": "2",
-        "output": "* *\n*"
+        "output": "1"
       },
       {
         "no": 3,
         "input": "3",
-        "output": "* * *\n* *\n*"
+        "output": "1"
       },
       {
         "no": 4,
         "input": "4",
-        "output": "* * * *\n*   *\n* *\n*"
+        "output": "2"
       },
       {
         "no": 5,
-        "input": "5",
-        "output": "* * * * *\n*     *\n*   *\n* *\n*"
+        "input": "6",
+        "output": "3"
       },
       {
         "no": 6,
-        "input": "6",
-        "output": "* * * * * *\n*       *\n*     *\n*   *\n* *\n*"
+        "input": "9",
+        "output": "3"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "* * * * * * * *\n*           *\n*         *\n*       *\n*     *\n*   *\n* *\n*"
+        "input": "12",
+        "output": "6"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "* * * * * * * * * *\n*               *\n*             *\n*           *\n*         *\n*       *\n*     *\n*   *\n* *\n*"
+        "input": "25",
+        "output": "5"
+      },
+      {
+        "no": 9,
+        "input": "49",
+        "output": "7"
+      },
+      {
+        "no": 10,
+        "input": "97",
+        "output": "1"
+      },
+      {
+        "no": 11,
+        "input": "100",
+        "output": "50"
+      },
+      {
+        "no": 12,
+        "input": "99991",
+        "output": "1"
+      },
+      {
+        "no": 13,
+        "input": "1000000000",
+        "output": "500000000"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "* * * *\n*   *\n* *\n*",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "12",
+    "sample_output": "6",
+    "difficulty_rank": 1,
+    "knowledge_note": "Kiến thức cần nhớ: Ước thực sự lớn nhất của N bằng N chia cho ước nhỏ nhất lớn hơn 1 của N.",
     "presentation_rules": ""
   },
   {
     "id": 148,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "Bàn cờ X và chấm",
-    "level": "Khá",
-    "statement": "Nhập N và M. In bàn cờ N x M; X và . luân phiên theo cả hàng lẫn cột, mỗi hàng bắt đầu bằng ký tự đối diện hàng trước. Yêu cầu trình bày: In đúng N hàng và M cột của bàn cờ; X và . đổi nhau theo cả hàng lẫn cột, giữa hai ô có đúng một dấu cách; không có dòng trống cuối.",
-    "input": "Một dòng gồm hai số nguyên dương N và M là số hàng và số cột của bàn cờ.",
-    "output": "In N hàng, mỗi hàng M ký tự. Ô trên cùng bên trái là X. Hai ô liền nhau theo hàng hoặc cột dùng ký tự khác nhau giữa X và dấu chấm. Hai ô cách nhau một dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N, M <= 10.",
-    "kind": "new_53",
+    "title": "Tổng các ước dương chẵn của N",
+    "level": "Trung bình",
+    "statement": "Cho số nguyên dương N. Tính tổng tất cả ước dương chẵn của N. Nếu không có, in 0.",
+    "input": "Một số nguyên dương N.",
+    "output": "In tổng các ước dương chẵn của N.",
+    "constraints": "1 ≤ N ≤ 10⁹. Dùng long long cho kết quả.",
+    "kind": "calculation_148",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "1 1",
-        "output": "X"
+        "input": "1",
+        "output": "0"
       },
       {
         "no": 2,
-        "input": "1 3",
-        "output": "X . X"
+        "input": "2",
+        "output": "2"
       },
       {
         "no": 3,
-        "input": "3 1",
-        "output": "X\n.\nX"
+        "input": "3",
+        "output": "0"
       },
       {
         "no": 4,
-        "input": "2 4",
-        "output": "X . X .\n. X . X"
+        "input": "4",
+        "output": "6"
       },
       {
         "no": 5,
-        "input": "4 2",
-        "output": "X .\n. X\nX .\n. X"
+        "input": "6",
+        "output": "8"
       },
       {
         "no": 6,
-        "input": "3 5",
-        "output": "X . X . X\n. X . X .\nX . X . X"
+        "input": "12",
+        "output": "24"
       },
       {
         "no": 7,
-        "input": "6 4",
-        "output": "X . X .\n. X . X\nX . X .\n. X . X\nX . X .\n. X . X"
+        "input": "15",
+        "output": "0"
       },
       {
         "no": 8,
-        "input": "10 10",
-        "output": "X . X . X . X . X .\n. X . X . X . X . X\nX . X . X . X . X .\n. X . X . X . X . X\nX . X . X . X . X .\n. X . X . X . X . X\nX . X . X . X . X .\n. X . X . X . X . X\nX . X . X . X . X .\n. X . X . X . X . X"
+        "input": "36",
+        "output": "78"
+      },
+      {
+        "no": 9,
+        "input": "49",
+        "output": "0"
+      },
+      {
+        "no": 10,
+        "input": "64",
+        "output": "126"
+      },
+      {
+        "no": 11,
+        "input": "100",
+        "output": "186"
+      },
+      {
+        "no": 12,
+        "input": "1000000000",
+        "output": "2495116932"
       }
     ],
-    "sample_input": "2 4",
-    "sample_output": "X . X .\n. X . X",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "12",
+    "sample_output": "24",
+    "difficulty_rank": 2,
+    "knowledge_note": "Kiến thức cần nhớ: Liệt kê ước theo cặp d và N/d; chỉ cộng ước chia hết cho 2, tránh cộng trùng căn bậc hai.",
     "presentation_rules": ""
   },
   {
@@ -11178,60 +10847,75 @@
   {
     "id": 150,
     "section": "Phần 4 - Vòng lặp lồng nhau và bài toán tổng hợp",
-    "title": "In hình bình hành rỗng",
-    "level": "Khó",
-    "statement": "Nhập N. In hình bình hành rỗng gồm N hàng và N ô mỗi hàng; các hàng lệch dần, chỉ viền ngoài có dấu *. Yêu cầu trình bày: In đủ N hàng và N ô của hình bình hành rỗng; giữ khoảng trắng đầu dòng tạo độ lệch và ô trống bên trong, giữa ô có một dấu cách; không có dòng trống cuối.",
-    "input": "Một số nguyên dương N là số hàng và số ô trên mỗi hàng của hình bình hành rỗng.",
-    "output": "In N hàng, mỗi hàng N ô. Chỉ in * ở viền, phần trong giữ trống. Hai ô cách nhau một dấu cách. Hàng đầu có 2 × (N − 1) dấu cách đầu hàng, mỗi hàng sau bớt hai dấu cách. Không để dấu cách thừa cuối hàng.",
-    "constraints": "1 <= N <= 10.",
-    "kind": "new_55",
+    "title": "Số chữ số 0 tận cùng của tích giai thừa",
+    "level": "Khá",
+    "statement": "Cho số nguyên không âm N. Gọi P = 1! × 2! × ... × N!. Đếm số chữ số 0 tận cùng của P; tích rỗng khi N=0 bằng 1.",
+    "input": "Một số nguyên không âm N.",
+    "output": "In số chữ số 0 tận cùng của P.",
+    "constraints": "0 ≤ N ≤ 10000. Kết quả nằm trong phạm vi long long.",
+    "kind": "calculation_150",
     "gen": "custom",
     "tests": [
       {
         "no": 1,
-        "input": "1",
-        "output": "*"
+        "input": "0",
+        "output": "0"
       },
       {
         "no": 2,
-        "input": "2",
-        "output": "  * *\n* *"
+        "input": "1",
+        "output": "0"
       },
       {
         "no": 3,
-        "input": "3",
-        "output": "    * * *\n  *   *\n* * *"
+        "input": "2",
+        "output": "0"
       },
       {
         "no": 4,
         "input": "4",
-        "output": "      * * * *\n    *     *\n  *     *\n* * * *"
+        "output": "0"
       },
       {
         "no": 5,
         "input": "5",
-        "output": "        * * * * *\n      *       *\n    *       *\n  *       *\n* * * * *"
+        "output": "1"
       },
       {
         "no": 6,
         "input": "6",
-        "output": "          * * * * * *\n        *         *\n      *         *\n    *         *\n  *         *\n* * * * * *"
+        "output": "2"
       },
       {
         "no": 7,
-        "input": "8",
-        "output": "              * * * * * * * *\n            *             *\n          *             *\n        *             *\n      *             *\n    *             *\n  *             *\n* * * * * * * *"
+        "input": "10",
+        "output": "7"
       },
       {
         "no": 8,
-        "input": "10",
-        "output": "                  * * * * * * * * * *\n                *                 *\n              *                 *\n            *                 *\n          *                 *\n        *                 *\n      *                 *\n    *                 *\n  *                 *\n* * * * * * * * * *"
+        "input": "25",
+        "output": "56"
+      },
+      {
+        "no": 9,
+        "input": "100",
+        "output": "1124"
+      },
+      {
+        "no": 10,
+        "input": "1000",
+        "output": "123124"
+      },
+      {
+        "no": 11,
+        "input": "10000",
+        "output": "12473749"
       }
     ],
-    "sample_input": "4",
-    "sample_output": "      * * * *\n    *     *\n  *     *\n* * * *",
-    "difficulty_rank": 4,
-    "knowledge_note": "",
+    "sample_input": "10",
+    "sample_output": "7",
+    "difficulty_rank": 3,
+    "knowledge_note": "Kiến thức cần nhớ: Mỗi số 0 cuối cần một cặp 2 và 5. Trong tích giai thừa, số thừa số 5 ít hơn số thừa số 2; cộng số mũ của 5 trong từng i!.",
     "presentation_rules": ""
   }
 ]
