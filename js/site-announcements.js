@@ -11,7 +11,7 @@ function readSeen(key) {
   }
 }
 
-function noticeDialog(notice, onClose) {
+function noticeDialog(notice) {
   const overlay = document.createElement('div');
   overlay.className = 'site-announcement-overlay';
   overlay.setAttribute('role', 'dialog');
@@ -19,6 +19,9 @@ function noticeDialog(notice, onClose) {
   overlay.setAttribute('aria-labelledby', 'siteAnnouncementTitle');
   const card = document.createElement('div');
   card.className = 'site-announcement-card';
+  const accent = document.createElement('div');
+  accent.className = 'site-announcement-accent';
+  accent.setAttribute('aria-hidden', 'true');
   const close = document.createElement('button');
   close.type = 'button';
   close.className = 'site-announcement-close';
@@ -27,13 +30,23 @@ function noticeDialog(notice, onClose) {
   close.addEventListener('click', () => window.location.reload(), { once: true });
   const eyebrow = document.createElement('div');
   eyebrow.className = 'site-announcement-eyebrow';
-  eyebrow.textContent = 'Thông báo cập nhật';
+  const icon = document.createElement('span');
+  icon.className = 'site-announcement-icon';
+  icon.setAttribute('aria-hidden', 'true');
+  icon.textContent = '📣';
+  const label = document.createElement('span');
+  label.textContent = 'Thông báo cập nhật';
+  eyebrow.append(icon, label);
   const title = document.createElement('h2');
   title.id = 'siteAnnouncementTitle';
   title.textContent = notice.title;
   const body = document.createElement('p');
+  body.className = 'site-announcement-body';
   body.textContent = notice.body;
-  card.append(close, eyebrow, title, body);
+  const footer = document.createElement('div');
+  footer.className = 'site-announcement-footer';
+  footer.textContent = 'Đóng thông báo để tải lại trang và tiếp tục học.';
+  card.append(accent, close, eyebrow, title, body, footer);
   overlay.append(card);
   document.body.append(overlay);
   close.focus();
@@ -77,10 +90,7 @@ export function initSiteAnnouncements(getClient, getUser) {
       }
       sessionSeen.set(key, new Set(seen));
       active = true;
-      noticeDialog(notice, () => {
-        active = false;
-        void check();
-      });
+      noticeDialog(notice);
     } catch (error) {
       console.warn('Không hiển thị được thông báo cập nhật:', error);
     } finally {
