@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
-/* VI: Bộ chọn ba bảng màu sáng, đồng bộ trên cả trang luyện tập và khu vực quản trị.
-   EN: Three low-glare palettes shared by the practice and admin interfaces. */
+/* VI: Bộ chọn bốn bảng màu, đồng bộ trên cả trang luyện tập và khu vực quản trị.
+   EN: Four coordinated palettes shared by the practice and admin interfaces. */
 .header-actions {
   display: flex;
   align-items: center;
@@ -176,32 +176,32 @@
   background: var(--preview-accent2);
 }
 .theme-preview-a {
-  --preview-accent: #2f6963;
-  --preview-accent2: #3b6c80;
+  --preview-accent: #0e7775;
+  --preview-accent2: #286b95;
   --preview-card: #fffefa;
-  --preview-line: #ddd8ce;
-  background: #f4f1ea;
+  --preview-line: #d8d0bd;
+  background: #f5f2e9;
 }
 .theme-preview-b {
-  --preview-accent: #315f49;
-  --preview-accent2: #356f67;
-  --preview-card: #fbfcfa;
-  --preview-line: #d1ddd4;
-  background: #edf2ed;
+  --preview-accent: #0b7950;
+  --preview-accent2: #087f8d;
+  --preview-card: #fcfffc;
+  --preview-line: #c7d8cb;
+  background: #edf4ee;
 }
 .theme-preview-c {
-  --preview-accent: #3e618a;
-  --preview-accent2: #4b7098;
-  --preview-card: #f9fbfd;
-  --preview-line: #d6dee7;
-  background: #edf1f5;
+  --preview-accent: #285ec4;
+  --preview-accent2: #604bc1;
+  --preview-card: #fbfdff;
+  --preview-line: #cbd7e8;
+  background: #eff3fa;
 }
 .theme-preview-d {
-  --preview-accent: #84c6b2;
-  --preview-accent2: #8cb9dc;
-  --preview-card: #2d3942;
-  --preview-line: #43515a;
-  background: #171f26;
+  --preview-accent: #62e0b1;
+  --preview-accent2: #8ac5ff;
+  --preview-card: #2d3b47;
+  --preview-line: #536575;
+  background: #151d25;
 }
 .theme-choice-copy {
   display: grid;
@@ -502,7 +502,7 @@
 }
 .submission-badge.partial {
   background: var(--doing-bg);
-  color: var(--doing-text);
+  color: var(--doing-ink);
 }
 .submission-badge.wrong,
 .submission-badge.compile_error,

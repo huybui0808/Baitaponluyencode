@@ -100,12 +100,12 @@ a {
   font-weight: 700;
   letter-spacing: 0.3px;
   border: 1px solid var(--line);
-  color: var(--gold);
+  color: var(--notice-text);
   background: var(--notice-bg);
   white-space: nowrap;
 }
 .adm-role.super {
-  color: var(--gold);
+  color: var(--doing-ink);
   border-color: #8a6d2c;
   background: var(--doing-bg);
 }
@@ -372,7 +372,7 @@ a {
   background: var(--success-bg);
 }
 .adm-badge.warn {
-  color: var(--gold);
+  color: var(--notice-text);
   border-color: #7a6130;
   background: var(--notice-bg);
 }
@@ -382,7 +382,7 @@ a {
   background: var(--error-bg);
 }
 .adm-badge.sup {
-  color: var(--gold);
+  color: var(--doing-ink);
   border-color: #8a6d2c;
   background: var(--doing-bg);
 }

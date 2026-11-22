@@ -2,30 +2,30 @@
 
 /* VI: Màu giao diện dịu, giảm vùng sáng mạnh. EN: Muted interface colors reduce harsh bright areas. */
 :root {
-  --bg: #edf2ed;
-  --panel: #fbfcfa;
-  --panel2: #f4f7f4;
+  --bg: #edf4ee;
+  --panel: #fcfffc;
+  --panel2: #f1f7f2;
   --panel-raised: #ffffff;
-  --line: #d1ddd4;
-  --text: #202d25;
-  --muted: #435349;
-  --accent: #315f49;
-  --accent2: #356f67;
-  --good: #286f45;
-  --bad: #a63f4a;
-  --gold: #79580f;
-  --header-bg: rgb(251 252 250 / 96%);
-  --field-bg: #f6f8f6;
-  --control-bg: #e8efe9;
-  --hover-bg: #e1eae3;
-  --active-bg: #dce9df;
-  --active-text: #254b34;
+  --line: #c7d8cb;
+  --text: #18271d;
+  --muted: #354b3c;
+  --accent: #0b7950;
+  --accent2: #087f8d;
+  --good: #19733d;
+  --bad: #b4233c;
+  --gold: #9a5b00;
+  --header-bg: rgb(252 255 252 / 97%);
+  --field-bg: #f7faf7;
+  --control-bg: #e5f1e8;
+  --hover-bg: #dceddf;
+  --active-bg: #d2ead9;
+  --active-text: #155439;
   --on-accent: #ffffff;
-  --notice-bg: #f5f0e1;
-  --notice-text: #62501f;
-  --overlay-bg: rgb(30 40 34 / 54%);
-  --code-bg: #202a35;
-  --code-text: #e4ebf1;
+  --notice-bg: #fff0ad;
+  --notice-text: #583700;
+  --overlay-bg: rgb(24 37 25 / 60%);
+  --code-bg: #1c2630;
+  --code-text: #eef3f7;
   --syntax-bg: #151a21;
   --syntax-fg: #e4ebf1;
   --syntax-comment: #aab5c1;
@@ -37,97 +37,101 @@
   --syntax-preprocessor: #f07178;
   --syntax-operator: #89ddff;
   --syntax-caret: #f4f7fa;
-  --todo-bg: #e8edf1;
-  --todo-text: #3c4a57;
-  --doing-bg: #fff1ce;
-  --doing-text: #674a0e;
-  --done-bg: #deeee3;
-  --done-text: #285e3a;
-  --error-bg: #f7e5e7;
-  --error-text: #81323c;
-  --success-bg: #e0efe4;
-  --success-text: #285d39;
-  --info-bg: #e5edf6;
-  --info-text: #354f6c;
+  --todo-bg: #e8eef4;
+  --todo-text: #304255;
+  --doing-bg: #ffe9a0;
+  --doing-text: #533600;
+  --doing-ink: #533600;
+  --done-bg: #dff2e5;
+  --done-text: #155b33;
+  --error-bg: #fbe5e8;
+  --error-text: #8d1e32;
+  --success-bg: #dff2e5;
+  --success-text: #155b33;
+  --info-bg: #e1edff;
+  --info-text: #244c7f;
   --mono: "Cascadia Code", Consolas, "DejaVu Sans Mono", "Courier New", monospace;
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
 :root[data-theme="a"] {
-  --bg: #f4f1ea;
+  --bg: #f5f2e9;
   --panel: #fffefa;
-  --panel2: #f8f5ef;
+  --panel2: #f8f5eb;
   --panel-raised: #fffefa;
-  --line: #ddd8ce;
-  --text: #282f34;
-  --muted: #4f5351;
-  --accent: #2f6963;
-  --accent2: #3b6c80;
+  --line: #d8d0bd;
+  --text: #242c33;
+  --muted: #465158;
+  --accent: #0e7775;
+  --accent2: #286b95;
   --on-accent: #ffffff;
-  --header-bg: rgb(255 254 250 / 95%);
-  --field-bg: #f8f6f1;
-  --control-bg: #f1eee7;
-  --hover-bg: #ece8df;
-  --active-bg: #dcebe7;
-  --active-text: #24544e;
-  --notice-bg: #f8f0df;
+  --header-bg: rgb(255 254 250 / 97%);
+  --field-bg: #fbf9f3;
+  --control-bg: #f0ecdf;
+  --hover-bg: #e9e4d5;
+  --active-bg: #d8eeea;
+  --active-text: #145654;
+  --notice-bg: #fff0ad;
+  --notice-text: #583700;
 }
 :root[data-theme="c"] {
-  --bg: #edf1f5;
-  --panel: #f9fbfd;
-  --panel2: #f2f5f8;
-  --panel-raised: #f9fbfd;
-  --line: #d6dee7;
-  --text: #293647;
-  --muted: #46566a;
-  --accent: #3e618a;
-  --accent2: #4b7098;
+  --bg: #eff3fa;
+  --panel: #fbfdff;
+  --panel2: #f2f6fc;
+  --panel-raised: #ffffff;
+  --line: #cbd7e8;
+  --text: #202d40;
+  --muted: #3c4e65;
+  --accent: #285ec4;
+  --accent2: #604bc1;
   --on-accent: #ffffff;
-  --header-bg: rgb(249 251 253 / 95%);
-  --field-bg: #f3f6f9;
-  --control-bg: #eaf0f5;
-  --hover-bg: #e3ebf2;
-  --active-bg: #dce7f1;
-  --active-text: #2e4c6c;
-  --notice-bg: #f5f0e5;
+  --header-bg: rgb(251 253 255 / 97%);
+  --field-bg: #f7f9fd;
+  --control-bg: #e8effb;
+  --hover-bg: #dfe9fa;
+  --active-bg: #dce8ff;
+  --active-text: #204a99;
+  --notice-bg: #fff0ad;
+  --notice-text: #583700;
 }
 :root[data-theme="d"] {
   color-scheme: dark;
-  --bg: #171f26;
-  --panel: #222c34;
-  --panel2: #29343d;
-  --panel-raised: #2d3942;
-  --line: #43515a;
-  --text: #edf2f2;
-  --muted: #c2ccce;
-  --accent: #84c6b2;
-  --accent2: #8cb9dc;
-  --good: #8bd3ad;
-  --bad: #f0a2aa;
-  --gold: #e4c77c;
-  --header-bg: rgb(27 36 43 / 96%);
-  --field-bg: #1b252c;
-  --control-bg: #303c45;
-  --hover-bg: #37454e;
-  --active-bg: #29443b;
-  --active-text: #d3f0e3;
-  --on-accent: #1b2d2a;
-  --notice-bg: #403b2c;
-  --notice-text: #f0dda1;
-  --overlay-bg: rgb(5 9 12 / 76%);
-  --code-bg: #141c22;
-  --code-text: #e1e9ef;
-  --todo-bg: #303c45;
-  --todo-text: #d5dfe1;
-  --doing-bg: #49402d;
-  --doing-text: #f1d992;
-  --done-bg: #29443a;
-  --done-text: #b4e8ca;
-  --error-bg: #4a3035;
-  --error-text: #f2bec2;
-  --success-bg: #29443a;
-  --success-text: #b4e8ca;
-  --info-bg: #2b3e50;
-  --info-text: #c1ddf5;
+  --bg: #151d25;
+  --panel: #202b35;
+  --panel2: #283743;
+  --panel-raised: #2d3b47;
+  --line: #536575;
+  --text: #f3f7fb;
+  --muted: #d0dbe5;
+  --accent: #62e0b1;
+  --accent2: #8ac5ff;
+  --good: #75d99e;
+  --bad: #ff929f;
+  --gold: #ff9a5e;
+  --header-bg: rgb(25 35 44 / 97%);
+  --field-bg: #19242c;
+  --control-bg: #30404c;
+  --hover-bg: #394c59;
+  --active-bg: #234a3a;
+  --active-text: #c4ffe4;
+  --on-accent: #173b2e;
+  --notice-bg: #ffd3b7;
+  --notice-text: #47291f;
+  --overlay-bg: rgb(5 9 12 / 78%);
+  --code-bg: #111a22;
+  --code-text: #f0f4f8;
+  --todo-bg: #30404c;
+  --todo-text: #e0e8ef;
+  --doing-bg: #ffc49f;
+  --doing-text: #ffd0b5;
+  --doing-ink: #47261c;
+  --done-bg: #234a3a;
+  --done-text: #c4ffe4;
+  --error-bg: #512f39;
+  --error-text: #ffc2ca;
+  --success-bg: #234a3a;
+  --success-text: #c4ffe4;
+  --info-bg: #293e56;
+  --info-text: #c6e2ff;
 }
 a {
   text-decoration: none;
@@ -344,6 +348,7 @@ main {
 .concept-note {
   border-left: 4px solid var(--gold);
   background: var(--notice-bg);
+  color: var(--notice-text);
 }
 .format-guide {
   border-left: 4px solid var(--accent2);
@@ -355,6 +360,9 @@ main {
   margin-bottom: 4px;
   color: var(--gold);
   font-size: 16px;
+}
+.concept-note b {
+  color: var(--notice-text);
 }
 .concept-note p {
   margin: 0;
@@ -593,15 +601,15 @@ textarea#code {
 :root[data-theme="d"] {
   --syntax-bg: #1b2028;
   --syntax-fg: #abb2bf;
-  --syntax-comment: #9099a7;
-  --syntax-keyword: #c678dd;
-  --syntax-type: #e5c07b;
-  --syntax-string: #98c379;
-  --syntax-number: #d19a66;
-  --syntax-function: #61afef;
-  --syntax-preprocessor: #e06c75;
-  --syntax-operator: #56b6c2;
-  --syntax-caret: #61afef;
+  --syntax-comment: #a4adba;
+  --syntax-keyword: #d386ff;
+  --syntax-type: #ffd580;
+  --syntax-string: #a6e3a1;
+  --syntax-number: #ffab70;
+  --syntax-function: #7ab8ff;
+  --syntax-preprocessor: #ff8491;
+  --syntax-operator: #67dfff;
+  --syntax-caret: #8ac5ff;
 }
 .code-editor:focus-within {
   border-color: var(--syntax-function);
@@ -840,9 +848,9 @@ textarea#stdin {
   color: var(--todo-text);
 }
 .taskbtn.status-doing {
-  border-left-color: var(--doing-text);
+  border-left-color: var(--doing-ink);
   background: var(--doing-bg);
-  color: var(--doing-text);
+  color: var(--doing-ink);
 }
 .taskbtn.status-done {
   border-left-color: #36c27b;
@@ -853,7 +861,7 @@ textarea#stdin {
   color: var(--todo-text);
 }
 .taskbtn.status-doing b {
-  color: var(--doing-text);
+  color: var(--doing-ink);
 }
 .taskbtn.status-done b {
   color: var(--done-text);

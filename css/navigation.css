@@ -228,7 +228,7 @@ header .top {
   color: var(--muted);
 }
 .ud-role.adm {
-  color: var(--gold);
+  color: var(--doing-ink);
   border-color: var(--gold);
   background: var(--doing-bg);
 }
