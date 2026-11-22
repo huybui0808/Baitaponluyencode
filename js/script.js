@@ -1,7 +1,7 @@
 import { classifyTestResult } from './checker.js';
 import { CONCEPT_NOTES, OUTPUT_RULES, taskPresentation, taskSample } from './problem-presentation.js';
 import { initStreak, openStreak, recordCompletedBatch, setStreakSession, streakUserId } from './streak.js';
-import { shiftStudyDate, streakTier, summarizeStreak } from './streak-core.js';
+import { shiftStudyDate, streakFlameSvg, streakTier, summarizeStreak } from './streak-core.js';
 import { bundledPartUrls } from './task-parts.js';
 import { renderCppHighlight } from './code-highlight.js';
 import { buildTaskPdfHtml } from './task-pdf.js';
@@ -1041,7 +1041,7 @@ function memberStreakMarkup(result) {
     return `<span class="profile-streak-day${done ? " done" : ""}${day === today ? " today" : ""}" title="${escapeHTML(`${day}: ${done ? "Đã học" : "Chưa học"}`)}"><small>${weekdayNames[date.getUTCDay()]}</small><b>${Number(day.slice(8))}</b></span>`;
   }).join("");
   return `<section class="profile-streak profile-section" data-tier="${streakTier(summary.current)}" aria-label="Chuỗi ngày học">
-    <div class="profile-streak-main"><div class="profile-streak-flame" aria-hidden="true"><svg class="streak-flame" viewBox="0 0 28 32"><path class="streak-flame-outer" d="M14 1c2 5 8 8 8 14 0 2-1 4-2 5 4-2 5-5 5-8 3 5 4 8 4 11 0 8-6 13-15 13S0 31 0 23c0-7 4-12 9-17-1 5 0 8 2 10 3-4 3-9 3-15Z" transform="translate(1 -4) scale(.9)"/><path class="streak-flame-core" d="M14 15c0 5 6 7 6 12a6 6 0 0 1-12 0c0-4 3-7 6-12Z"/></svg></div><div><h3>Chuỗi ngày học</h3><p><strong>${summary.current}</strong> ngày liên tiếp <span>· Dài nhất ${summary.longest} ngày</span></p></div></div>
+    <div class="profile-streak-main"><div class="profile-streak-flame" aria-hidden="true">${streakFlameSvg(streakTier(summary.current), "profile-streak")}</div><div><h3>Chuỗi ngày học</h3><p><strong>${summary.current}</strong> ngày liên tiếp <span>· Dài nhất ${summary.longest} ngày</span></p></div></div>
     <div class="profile-streak-week" aria-label="Bảy ngày học gần nhất">${recent}</div>
     <p class="profile-streak-note">${summary.completedToday ? "Đã học trong ngày hôm nay." : summary.pendingToday ? "Đã học hôm qua; hôm nay vẫn có thể duy trì chuỗi." : "Chưa ghi nhận lượt học hôm nay."}</p>
   </section>`;

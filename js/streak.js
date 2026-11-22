@@ -1,6 +1,6 @@
 import {
   DEFAULT_STREAK_TIME_ZONE, STREAK_MILESTONES, calendarCells,
-  streakTier, studyDateAt, summarizeStreak,
+  streakFlameSvg, streakTier, studyDateAt, summarizeStreak,
 } from "./streak-core.js";
 import { pendingStreakDays } from "./streak-sync.js";
 
@@ -135,13 +135,17 @@ function paint() {
   const confirmedToday = state.days.some((entry) => entry.study_date === today);
   const pendingToday = state.pending.some((entry) => entry.studyDate === today);
   const count = state.userId ? summary.current : 0;
+  const tier = streakTier(count);
   const badge = byId("streakNav");
-  badge.dataset.tier = String(streakTier(count));
+  badge.dataset.tier = String(tier);
+  badge.querySelector(".streak-flame-frame").innerHTML = streakFlameSvg(tier, "navbar");
   badge.dataset.pending = state.pending.length ? "true" : "false";
   badge.title = state.pending.length ? "Chuỗi đã xác nhận; có lượt học đang chờ đồng bộ" : "Mở chuỗi ngày học";
   badge.setAttribute("aria-label", state.userId ? `Chuỗi ngày học: ${count} ngày${state.pending.length ? ", đang chờ đồng bộ" : ""}. Mở chi tiết` : "Đăng nhập để xem chuỗi ngày học");
   byId("streakNavCount").textContent = state.userId ? String(count) : "—";
-  byId("streakOverlay").querySelector(".streak-page").dataset.tier = String(streakTier(count));
+  const page = byId("streakOverlay").querySelector(".streak-page");
+  page.dataset.tier = String(tier);
+  page.querySelector(".streak-number .streak-flame").outerHTML = streakFlameSvg(tier, "streak-page");
   byId("streakCurrent").textContent = String(count);
   byId("streakLongest").textContent = `${state.userId ? summary.longest : 0} ngày`;
   byId("streakToday").textContent = !state.userId ? "Đăng nhập" : confirmedToday ? "Đã học" : pendingToday ? "Chờ đồng bộ" : "Chưa học";
@@ -170,9 +174,11 @@ function paint() {
 function showCelebration(days) {
   byId("streakCelebrationTitle").textContent = `Chúc mừng! Bạn đã giữ chuỗi ${days} ngày.`;
   const notice = byId("streakCelebration");
+  notice.dataset.milestone = String(days);
+  notice.querySelector("span").textContent = String.fromCodePoint(10024, 32, 128293, 32, 10024);
   notice.hidden = false;
   clearTimeout(celebrationTimer);
-  celebrationTimer = setTimeout(() => { notice.hidden = true; }, 2400);
+  celebrationTimer = setTimeout(() => { notice.hidden = true; }, 4200);
 }
 
 async function checkCelebration(day, userId) {
