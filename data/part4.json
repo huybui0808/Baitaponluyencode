@@ -4026,7 +4026,7 @@
     "statement": "Cho số nguyên không âm N. Đếm số chữ số chẵn trong biểu diễn thập phân của N.",
     "input": "Một số nguyên không âm N để đếm các chữ số chẵn.",
     "output": "In số chữ số chẵn xuất hiện trong N. Chữ số 0 là chữ số chẵn.",
-    "constraints": "0 <= N <= 10^18.",
+    "constraints": "0 <= N <= 10??.",
     "kind": "new_1",
     "gen": "custom",
     "tests": [
@@ -4195,7 +4195,7 @@
     "statement": "Cho số nguyên không âm N. Đếm số chữ số lẻ trong biểu diễn thập phân của N.",
     "input": "Một số nguyên không âm N để đếm các chữ số lẻ.",
     "output": "In số chữ số lẻ xuất hiện trong N.",
-    "constraints": "0 <= N <= 10^18.",
+    "constraints": "0 <= N <= 10??.",
     "kind": "new_2",
     "gen": "custom",
     "tests": [
@@ -4364,7 +4364,7 @@
     "statement": "Cho số nguyên không âm N. Tính tổng các chữ số chẵn xuất hiện trong N.",
     "input": "Một số nguyên không âm N có các chữ số chẵn cần cộng.",
     "output": "In tổng các chữ số chẵn của N, cộng cả những chữ số xuất hiện nhiều lần.",
-    "constraints": "0 <= N <= 10^18.",
+    "constraints": "0 <= N <= 10??.",
     "kind": "new_3",
     "gen": "custom",
     "tests": [
@@ -4533,7 +4533,7 @@
     "statement": "Cho số nguyên không âm N. Tính tổng các chữ số lẻ xuất hiện trong N.",
     "input": "Một số nguyên không âm N có các chữ số lẻ cần cộng.",
     "output": "In tổng các chữ số lẻ của N, hoặc 0 nếu không có chữ số lẻ.",
-    "constraints": "0 <= N <= 10^18.",
+    "constraints": "0 <= N <= 10??.",
     "kind": "new_4",
     "gen": "custom",
     "tests": [
@@ -6538,7 +6538,7 @@
     "statement": "Cho số nguyên dương N và đoạn [L, R]. Đếm các ước dương của N thuộc đoạn.",
     "input": "Một dòng gồm ba số nguyên dương N, L và R. N là số cần xét ước, L và R giới hạn đoạn chứa các ước muốn đếm.",
     "output": "In số lượng ước dương của N thuộc đoạn [L, R].",
-    "constraints": "1 <= N <= 10^6; 1 <= L <= R <= N.",
+    "constraints": "1 <= N <= 10?; 1 <= L <= R <= N.",
     "kind": "new_19",
     "gen": "custom",
     "tests": [
@@ -6876,7 +6876,7 @@
     "statement": "Cho số nguyên dương N. Đếm có bao nhiêu ước dương của N đồng thời là số chính phương.",
     "input": "Một số nguyên dương N cần đếm các ước chính phương.",
     "output": "In số lượng ước dương của N là số chính phương.",
-    "constraints": "1 <= N <= 10^6.",
+    "constraints": "1 <= N <= 10?.",
     "kind": "new_21",
     "gen": "custom",
     "tests": [
@@ -7721,7 +7721,7 @@
     "statement": "Cho đoạn [L, R] và số nguyên dương K. Tìm số chính phương thứ K trong đoạn khi sắp tăng dần; nếu có ít hơn K số, in -1.",
     "input": "Ba số nguyên L, R, K.",
     "output": "In số chính phương thứ K hoặc -1.",
-    "constraints": "0 ≤ L ≤ R ≤ 10⁹; 1 ≤ K ≤ 100000.",
+    "constraints": "0 ≤ L ≤ R ≤ 10⁹; 1 ≤ K ≤ 10?.",
     "kind": "calculation_121",
     "gen": "custom",
     "tests": [
@@ -8391,7 +8391,7 @@
     "statement": "Cho số nguyên không âm N. Tìm số đối xứng nhỏ nhất lớn hơn hoặc bằng N.",
     "input": "Một số nguyên không âm N là ngưỡng dưới để tìm số đối xứng.",
     "output": "In số đối xứng nhỏ nhất lớn hơn hoặc bằng N.",
-    "constraints": "0 <= N <= 10^6.",
+    "constraints": "0 <= N <= 10?.",
     "kind": "new_31",
     "gen": "custom",
     "tests": [
@@ -8560,7 +8560,7 @@
     "statement": "Cho số nguyên không âm N. Tìm số nguyên tố nhỏ nhất lớn hơn hoặc bằng N.",
     "input": "Một số nguyên không âm N là ngưỡng dưới để tìm số nguyên tố.",
     "output": "In số nguyên tố nhỏ nhất lớn hơn hoặc bằng N.",
-    "constraints": "0 <= N <= 10^6.",
+    "constraints": "0 <= N <= 10?.",
     "kind": "new_32",
     "gen": "custom",
     "tests": [

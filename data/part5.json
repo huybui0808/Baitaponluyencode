@@ -1219,7 +1219,7 @@
     "statement": "Dịch vòng dãy sang trái K vị trí. K có thể lớn hơn N; hãy rút gọn K theo N.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là K.",
     "output": "In một dòng kết quả, dùng nhãn `Day ket qua la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. 0 <= K <= 10^9.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. 0 <= K <= 10?.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n0",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap K = 0\nDay ket qua la: -5 0 5 -5 10 -5",
     "tests": [
@@ -1317,7 +1317,7 @@
     "statement": "Dịch vòng dãy sang phải K vị trí. K có thể lớn hơn N; hãy rút gọn K theo N.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là K.",
     "output": "In một dòng kết quả, dùng nhãn `Day ket qua la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. 0 <= K <= 10^9.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. 0 <= K <= 10?.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n0",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap K = 0\nDay ket qua la: -5 0 5 -5 10 -5",
     "tests": [
@@ -3390,7 +3390,7 @@
     "statement": "Cho số T. Xác định có hai vị trí khác nhau i < j sao cho a[i] + a[j] = T hay không. In YES hoặc NO.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `Co cap tong T hay khong:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10? <= T <= 10?. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nCo cap tong T hay khong: YES",
     "tests": [
@@ -3503,7 +3503,7 @@
     "statement": "Đếm số cặp chỉ số i < j có a[i] + a[j] = T. Hai phần tử cùng giá trị nhưng ở vị trí khác nhau vẫn tạo thành một cặp.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `So cap thoa man la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10? <= T <= 10?. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nSo cap thoa man la: 3",
     "tests": [
@@ -3621,7 +3621,7 @@
     "statement": "Tìm cặp (i,j) theo thứ tự từ điển nhỏ nhất, với i < j và a[i]+a[j]=T. In chỉ số từ 1; nếu không có, in -1 -1.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `Cap chi so la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9.",
+    "constraints": "1 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10? <= T <= 10?.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nCap chi so la: 1 2",
     "tests": [
@@ -3719,7 +3719,7 @@
     "statement": "Chọn hai vị trí khác nhau sao cho tổng hai phần tử gần T nhất. Nếu hòa, chọn tổng nhỏ hơn. In tổng được chọn.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `Tong cap gan T nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "2 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9.",
+    "constraints": "2 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10? <= T <= 10?.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nTong cap gan T nhat la: -5",
     "tests": [
@@ -3817,7 +3817,7 @@
     "statement": "Xác định có ba vị trí phân biệt i < j < k sao cho tổng bằng T hay không. In YES hoặc NO.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `Co bo ba co tong bang T hay khong:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "3 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9.",
+    "constraints": "3 <= N <= 2 × 10³; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10? <= T <= 10?.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nCo bo ba co tong bang T hay khong: YES",
     "tests": [
@@ -5445,7 +5445,7 @@
     "statement": "Mọi phần tử đều dương. Tìm độ dài nhỏ nhất của đoạn liên tiếp có tổng >= S; in 0 nếu không có đoạn phù hợp.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là S.",
     "output": "In một dòng kết quả, dùng nhãn `Do dai ngan nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên dương trong [1, 10⁶]. 1 <= S <= 10^12. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên dương trong [1, 10⁶]. 1 <= S <= 10??. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n6 1 6 6 11 6\n6",
     "sample_output": "Nhap N = 6\nNhap day so = 6 1 6 6 11 6\nNhap S = 6\nDo dai ngan nhat la: 1",
     "tests": [
@@ -5558,7 +5558,7 @@
     "statement": "Đếm số đoạn con liên tiếp không rỗng có tổng đúng bằng T. Dãy có thể chứa số âm và số 0.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `So doan con thoa man la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10? <= T <= 10?. Dùng long long cho giá trị trung gian/kết quả có thể lớn. Có test hiệu năng với N lớn; cần chọn thuật toán phù hợp để tránh quá thời gian.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nSo doan con thoa man la: 5",
     "tests": [
@@ -5676,7 +5676,7 @@
     "statement": "Tìm độ dài lớn nhất của đoạn con liên tiếp có tổng bằng T. In 0 nếu không tồn tại.",
     "input": "Dòng đầu là N; dòng tiếp theo gồm N số nguyên và sau đó là T.",
     "output": "In một dòng kết quả, dùng nhãn `Do dai lon nhat la:`. Thay phần giá trị bằng đáp án; nếu kết quả là dãy, các phần tử cách nhau đúng một dấu cách. Không thêm dấu cách cuối dòng, lời giải thích hoặc dòng trống.",
-    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10^9 <= T <= 10^9.",
+    "constraints": "1 <= N <= 2 × 10⁵; mỗi phần tử là số nguyên trong [-10⁶, 10⁶]. -10? <= T <= 10?.",
     "sample_input": "6\n-5 0 5 -5 10 -5\n-5",
     "sample_output": "Nhap N = 6\nNhap day so = -5 0 5 -5 10 -5\nNhap T = -5\nDo dai lon nhat la: 4",
     "tests": [
