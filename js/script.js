@@ -88,7 +88,7 @@ async function loadTasksFromSupabase() {
     const key = "sb_publishable_Fb40gK9h5FiDyJSI05nH0g_TmXM8W-m";
     const url =
       "https://dcdvtpmihijzbieblwfa.supabase.co/rest/v1/problems" +
-      "?select=*,test_cases(no,input,output)&is_published=eq.true&order=sort_order.asc,id.asc&limit=1000";
+      "?select=*,test_cases(no,input,output)&is_published=eq.true&order=id.asc&limit=1000";
     const res = await fetch(url, {
       headers: { apikey: key },
       cache: "no-cache",

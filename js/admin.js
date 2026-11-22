@@ -360,7 +360,6 @@ async function loadProblems() {
       .select(
         "id,title,section,level,sort_order,is_published,test_cases(count)",
       )
-      .order("sort_order")
       .order("id"),
   );
   return state.problems;
@@ -512,7 +511,6 @@ async function exportToJson() {
     sb.from("problems")
       .select("id,section,title,level,statement,input,output,constraints,knowledge_note,presentation_rules,sample_input,sample_output,test_cases(no,input,output)")
       .eq("is_published", true)
-      .order("sort_order")
       .order("id")
       .limit(1000),
   );
