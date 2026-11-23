@@ -207,7 +207,7 @@ const VIEWS = {
 async function viewAnnouncements(body) {
   const rows = await rpc("admin_list_site_announcements");
   body.innerHTML = `
-    <div class="adm-page-head"><div><h1>Thông báo thay đổi</h1><p>Viết một thông báo sau mỗi đợt sửa. Người học chỉ thấy mỗi thông báo một lần.</p></div></div>
+    <div class="adm-page-head"><div><h1>Thông báo thay đổi</h1><p>Người học chỉ thấy thông báo mới nhất trong 7 ngày gần đây, một lần cho mỗi tài khoản. Thông báo cũ tự hết hạn.</p></div></div>
     <div class="adm-card" style="max-width:760px">
       <label class="adm-field">Tiêu đề<input id="admAnnouncementTitle" maxlength="120" placeholder="Ví dụ: Đã cập nhật bài tập vòng lặp"></label>
       <label class="adm-field">Nội dung<textarea id="admAnnouncementBody" maxlength="2000" rows="5" placeholder="Nêu các thay đổi mà người học cần biết."></textarea></label>
