@@ -3,6 +3,7 @@
 // việc ẩn nút ở giao diện chỉ để tiện dùng, KHÔNG phải lớp bảo mật.
 // VI: Công cụ quản trị được bổ sung theo yêu cầu của chủ dự án; AI có hỗ trợ viết và chỉnh sửa mã. EN: Admin tools follow the project owner's requirements; AI assisted with writing and editing code.
 import { buildExportParts, buildJsonZip } from "./admin-export.js";
+import { findReplacedProblems } from "./admin-import.js";
 import { bundledPartUrls } from "./task-parts.js";
 import { CONCEPT_NOTES, parsePresentationRules, taskPresentation } from "./problem-presentation.js";
 import { renderCppHighlight } from "./code-highlight.js";
@@ -944,13 +945,14 @@ async function importFromJson(selectedFiles = null) {
     await loadProblems();
     const existingById = new Map(state.problems.map((problem) => [problem.id, problem]));
     const overlap = tasks.filter((task) => existingById.has(task.id)).length;
-    const replacedTasks = tasks.filter((task) =>
-      /^(?:number_theory|factorial|calculation)_/.test(String(task.kind || "")) &&
-      existingById.has(task.id) &&
-      existingById.get(task.id).title !== task.title);
+    const replacedTasks = findReplacedProblems(tasks, existingById);
     const label = selectedFiles?.length ? `${selectedFiles.length} file đã chọn` : "JSON trên web";
+    const resetIds = replacedTasks.map((task) => String(task.id).padStart(3, "0"));
+    const resetNote = resetIds.length
+      ? `Các ID sẽ xóa dữ liệu học viên: ${resetIds.join(", ")}.`
+      : "Không phát hiện bài đổi nội dung đề; điểm và lịch sử hiện có sẽ được giữ nguyên.";
     if (!(await confirmBox(
-      `Nhập ${tasks.length} bài từ ${label}? ${overlap} bài trùng ID sẽ bị ghi đè nội dung và test. ${replacedTasks.length} bài đã đổi thành đề khác sẽ được xóa điểm, lịch sử nộp và thống kê học viên của riêng các bài đó; các bài khác giữ nguyên.`,
+      `Nhập ${tasks.length} bài từ ${label}? ${overlap} bài trùng ID sẽ bị ghi đè nội dung và test. Nhận diện ${replacedTasks.length} bài đổi nội dung đề. ${resetNote} Điểm, lịch sử nộp và thống kê chỉ bị xóa cho các ID này.`,
       { okText: "Bắt đầu nhập" },
     ))) return;
 
