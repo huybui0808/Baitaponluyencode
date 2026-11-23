@@ -22,12 +22,26 @@ function noticeDialog(notice) {
   const accent = document.createElement('div');
   accent.className = 'site-announcement-accent';
   accent.setAttribute('aria-hidden', 'true');
+  card.tabIndex = -1;
   const close = document.createElement('button');
   close.type = 'button';
-  close.className = 'site-announcement-close';
-  close.textContent = '×';
-  close.setAttribute('aria-label', 'Đóng thông báo và tải lại trang');
-  close.addEventListener('click', () => window.location.reload(), { once: true });
+  close.className = 'site-announcement-dismiss';
+  close.disabled = true;
+  close.textContent = 'Đóng được sau 5 giây';
+  close.setAttribute('aria-label', 'Nút đóng thông báo đang chờ 5 giây');
+  const footer = document.createElement('div');
+  footer.className = 'site-announcement-footer';
+  const hint = document.createElement('p');
+  hint.textContent = 'Vui lòng đọc nội dung trước khi đóng thông báo.';
+  const timerText = document.createElement('span');
+  timerText.className = 'site-announcement-timer';
+  timerText.setAttribute('role', 'status');
+  timerText.textContent = 'Nút đóng sẽ mở sau 5 giây.';
+  close.addEventListener('click', () => {
+    if (close.disabled) return;
+    clearInterval(countdownTimer);
+    overlay.remove();
+  }, { once: true });
   const eyebrow = document.createElement('div');
   eyebrow.className = 'site-announcement-eyebrow';
   const icon = document.createElement('span');
@@ -43,13 +57,25 @@ function noticeDialog(notice) {
   const body = document.createElement('p');
   body.className = 'site-announcement-body';
   body.textContent = notice.body;
-  const footer = document.createElement('div');
-  footer.className = 'site-announcement-footer';
-  footer.textContent = 'Đóng thông báo để tải lại trang và tiếp tục học.';
-  card.append(accent, close, eyebrow, title, body, footer);
+  footer.append(hint, timerText, close);
+  card.append(accent, eyebrow, title, body, footer);
   overlay.append(card);
   document.body.append(overlay);
-  close.focus();
+  card.focus();
+  let secondsRemaining = 5;
+  const countdownTimer = setInterval(() => {
+    secondsRemaining -= 1;
+    if (secondsRemaining <= 0) {
+      clearInterval(countdownTimer);
+      close.disabled = false;
+      close.textContent = 'Đóng thông báo';
+      close.setAttribute('aria-label', 'Đóng thông báo');
+      timerText.textContent = 'Bạn có thể đóng thông báo.';
+      return;
+    }
+    close.textContent = `Đóng được sau ${secondsRemaining} giây`;
+    timerText.textContent = `Nút đóng sẽ mở sau ${secondsRemaining} giây.`;
+  }, 1000);
 }
 
 export function initSiteAnnouncements(getClient, getUser) {

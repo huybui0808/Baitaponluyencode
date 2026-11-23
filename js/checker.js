@@ -84,6 +84,36 @@ function layoutMatches(actual, expected, pattern, task) {
   return !removeHeadings([...got.slice(0, first), inlinePrefix].join("\n"), pattern, task).trim();
 }
 
+function labeledNumericLinesMatch(actual, expected, presentation, pattern, task) {
+  const labels = presentation.lineLabels;
+  const expectedLines = normalize(expected).split("\n");
+  if (!labels?.length || labels.length !== expectedLines.length ||
+      !expectedLines.every(line => line.trim() && line.trim().split(/\s+/).every(token => decimalToken.test(token)))) return false;
+
+  const numericLine = /^[ \t]*([+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:e[+-]?\d+)?(?:[ \t]+[+-]?(?:\d+(?:[.,]\d*)?|[.,]\d+)(?:e[+-]?\d+)?)*?)[ \t]*$/i;
+  const actualLines = normalize(actual).split("\n");
+  if (actualLines.length !== labels.length) return false;
+  const actualValues = [];
+  for (const label of labels) {
+    const words = foldLabel(label).match(/[\p{L}\p{N}]+/gu) || [];
+    if (!words.length) return false;
+    const body = words.map(word => word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("[\\s:=()!.,_-]*");
+    const labelPattern = new RegExp("(?<![\\p{L}\\p{N}_])" + body + "(?![\\p{L}\\p{N}_])[!)]*[ \\t]*(?::|=)?[ \\t]*(.*)$", "u");
+    const matches = actualLines.map(line => ({ line, match: labelPattern.exec(foldLabel(line)) })).filter(item => item.match);
+    if (matches.length !== 1) return false;
+    const { line, match } = matches[0];
+    if (removeHeadings(line.slice(0, match.index), pattern, task).trim()) return false;
+    const values = numericLine.exec(match[1]);
+    if (!values) return false;
+    actualValues.push(values[1].trim().split(/[ \t]+/));
+  }
+  return expectedLines.every((line, index) => {
+    const values = line.trim().split(/\s+/);
+    return values.length === actualValues[index].length &&
+      values.every((value, at) => decimalKey(value) === decimalKey(actualValues[index][at]));
+  });
+}
+
 function semanticMatch(actual, expected, task, presentation) {
   if (!actual.trim() || !expected.trim()) return false;
   const pattern = labelPattern(presentation);
@@ -91,6 +121,9 @@ function semanticMatch(actual, expected, task, presentation) {
       /in hàng đầu của ma trận/iu.test(String(task.output || "")) || /^[\s*#.]+$/.test(expected)) {
     return layoutMatches(actual, expected, pattern, task);
   }
+  // A result whose values are attached to the right labels remains correct
+  // when the labeled lines are printed in the wrong order; classify that as PE.
+  if (labeledNumericLinesMatch(actual, expected, presentation, pattern, task)) return true;
   // VI: Nhãn ở từng dòng output là phần trình bày; so giá trị sau nhãn theo đúng thứ tự.
   // EN: Compare values after each output label before judging presentation.
   const expectedTokens = removeHeadings(expected, pattern, task).trim().split(/\s+/);

@@ -1262,81 +1262,86 @@
   {
     "id": 29,
     "section": "Phần 2 - Câu lệnh rẽ nhánh",
-    "title": "Số nào xa 0 hơn?",
+    "title": "Tính giá trị hàm số theo từng miền",
     "level": "Trung bình",
-    "statement": "Nhập hai số nguyên a, b. So sánh khoảng cách từ mỗi số đến 0, tức là so sánh |a| và |b|.",
-    "input": "Một dòng gồm hai số nguyên a và b cần so khoảng cách đến 0.",
-    "output": "In A nếu trị tuyệt đối của a lớn hơn, B nếu trị tuyệt đối của b lớn hơn hoặc EQUAL nếu hai khoảng cách bằng nhau.",
-    "constraints": "-10⁹ <= a, b <= 10⁹.",
-    "kind": "farther_zero",
-    "gen": "pair_signed",
+    "statement": "Cho hàm số f(x) được xác định như sau: nếu x < 0 thì f(x) = x² + 2x + 1; nếu 0 ≤ x ≤ 5 thì f(x) = 2x + 1; nếu x > 5 thì f(x) = x² − 4x + 6. Tính f(x) theo miền chứa x.",
+    "input": "Một số nguyên x.",
+    "output": "In giá trị f(x) theo mẫu “Gia tri f(x) = Y”. Dùng số nguyên 64 bit nếu cần.",
+    "constraints": "−10⁹ ≤ x ≤ 10⁹. Kết quả có thể đạt khoảng 10¹⁸; dùng long long.",
+    "kind": "piecewise_integer_function",
+    "gen": "piecewise_integer_function",
     "tests": [
       {
         "no": 1,
-        "input": "0 0",
-        "output": "EQUAL"
+        "input": "-3",
+        "output": "4"
       },
       {
         "no": 2,
-        "input": "0 5",
-        "output": "B"
+        "input": "-25",
+        "output": "576"
       },
       {
         "no": 3,
-        "input": "-5 5",
-        "output": "EQUAL"
+        "input": "-10",
+        "output": "81"
       },
       {
         "no": 4,
-        "input": "3 -8",
-        "output": "B"
+        "input": "-2",
+        "output": "1"
       },
       {
         "no": 5,
-        "input": "-9 2",
-        "output": "A"
+        "input": "-1",
+        "output": "0"
       },
       {
         "no": 6,
-        "input": "10 -10",
-        "output": "EQUAL"
+        "input": "0",
+        "output": "1"
       },
       {
         "no": 7,
-        "input": "-12 -4",
-        "output": "A"
+        "input": "1",
+        "output": "3"
       },
       {
         "no": 8,
-        "input": "17 6",
-        "output": "A"
+        "input": "5",
+        "output": "11"
       },
       {
         "no": 9,
-        "input": "-25 24",
-        "output": "A"
+        "input": "6",
+        "output": "18"
       },
       {
         "no": 10,
-        "input": "99 -100",
-        "output": "B"
+        "input": "10",
+        "output": "66"
       },
       {
         "no": 11,
-        "input": "-120 30",
-        "output": "A"
+        "input": "100",
+        "output": "9606"
       },
       {
         "no": 12,
-        "input": "47 -48",
-        "output": "B"
+        "input": "1000000000",
+        "output": "999999996000000006"
+      },
+      {
+        "no": 13,
+        "input": "-1000000000",
+        "output": "999999998000000001"
       }
     ],
-    "sample_input": "-9 6",
-    "sample_output": "A",
+    "sample_input": "-3",
+    "sample_output": "Nhap x = -3\nGia tri f(x) = 4",
     "difficulty_rank": 2,
     "legacyId": 34,
-    "knowledge_note": "",
+    "knowledge_note": "Chọn đúng một công thức theo miền của x. Với miền x < 0, x² có thể đạt 10¹⁸ nên cần long long; kiểm tra cẩn thận các điểm biên x = 0 và x = 5.",
     "presentation_rules": ""
   },
   {
