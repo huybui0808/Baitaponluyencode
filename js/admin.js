@@ -376,7 +376,7 @@ async function loadProblems() {
     sb
       .from("problems")
       .select(
-        "id,title,section,level,sort_order,is_published,test_cases(count)",
+        "id,title,section,level,statement,input,output,sort_order,is_published,test_cases(count)",
       )
       .order("id"),
   );
