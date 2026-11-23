@@ -2,9 +2,11 @@
 // EN: The manifest lets new JSON parts load without changing application code.
 export async function bundledPartUrls(moduleUrl) {
   let numbers = [1, 2, 3, 4];
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 4500);
   try {
     const manifestUrl = new URL("../data/manifest.json", moduleUrl);
-    const response = await fetch(manifestUrl, { cache: "no-cache" });
+    const response = await fetch(manifestUrl, { cache: "no-cache", signal: controller.signal });
     if (response.ok) {
       const manifest = await response.json();
       const parts = manifest?.parts;
@@ -18,6 +20,8 @@ export async function bundledPartUrls(moduleUrl) {
   } catch (error) {
     if (error instanceof SyntaxError || error?.message?.includes("manifest.json không hợp lệ")) throw error;
     // Older deployments have four JSON files but no manifest.
+  } finally {
+    clearTimeout(timeout);
   }
   return numbers.map((number) => new URL(`../data/part${number}.json`, moduleUrl));
 }

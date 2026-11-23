@@ -1,6 +1,6 @@
 // VI: Cập nhật giao diện và tái sử dụng compiler đã cache, tránh tải lại khoảng 95 MB. EN: Refresh the app shell while reusing cached compiler assets to avoid another ~95 MB download.
 // Bump the patch for static UI/cache revisions; minor/major for app-level changes.
-const CACHE_NAME = "onluyencpp-offline-v2.1.17";
+const CACHE_NAME = "onluyencpp-offline-v2.1.18";
 const APP_FILES = [
   "./",
   "./index.html",
@@ -13,6 +13,7 @@ const APP_FILES = [
   "./css/member-profile.css",
   "./css/mobile.css",
   "./css/streak.css",
+  "./css/welcome.css",
   "./js/theme.js",
   "./js/script.js",
   "./js/code-highlight.js",
@@ -62,25 +63,14 @@ self.addEventListener("install", (event) => {
       const oldCache = previousCaches.length
         ? await caches.open(previousCaches[0])
         : await caches.open(CACHE_NAME);
-      const missingLargeAssets = [];
-      const manifestResponse = await fetch(new Request(new URL("./data/manifest.json", self.registration.scope), { cache: "reload" }));
-      if (!manifestResponse.ok) throw new Error("Không tải được danh sách các phần bài tập.");
-      const manifest = await manifestResponse.json();
-      const extraParts = (manifest.parts || [])
-        .filter((number) => Number.isInteger(number) && number > 4 && number <= 99)
-        .map((number) => `./data/part${number}.json`);
-
       for (const path of largeAssets) {
         const url = new URL(path, self.registration.scope).href;
         const saved = oldCache ? await oldCache.match(url) : null;
         if (saved) await cache.put(url, saved);
-        else missingLargeAssets.push(path);
       }
 
       await cache.addAll([
         ...shellAndData.map((path) => new Request(new URL(path, self.registration.scope), { cache: "reload" })),
-        ...extraParts.map((path) => new Request(new URL(path, self.registration.scope), { cache: "reload" })),
-        ...missingLargeAssets,
       ]);
       await self.skipWaiting();
     })(),

@@ -26,6 +26,7 @@ const MAX_TESTS = 30;
 const MIN_TESTS = 8;
 const MAX_VISIBLE_TESTS = 10;
 const LEGACY_TEST_COUNT = 20;
+let pendingBundledTaskParts = Promise.resolve([]);
 function hasValidTestCount(tests) {
   return Array.isArray(tests) && tests.length >= MIN_TESTS && tests.length <= MAX_TESTS;
 }
@@ -89,10 +90,14 @@ async function loadTasksFromSupabase() {
     const url =
       "https://dcdvtpmihijzbieblwfa.supabase.co/rest/v1/problems" +
       "?select=*,test_cases(no,input,output)&is_published=eq.true&order=id.asc&limit=1000";
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 8000);
     const res = await fetch(url, {
       headers: { apikey: key },
       cache: "no-cache",
+      signal: controller.signal,
     });
+    window.clearTimeout(timeout);
     if (!res.ok) {
       const details = await res.json().catch(() => ({}));
       console.warn("Không tải được danh sách bài từ Supabase:", res.status, details.message || "");
@@ -144,17 +149,32 @@ async function loadTaskData() {
   // EN: Keep the cached server snapshot authoritative over bundled fallback.
   if (cachedTasks) return cachedTasks;
   const dataFiles = await bundledPartUrls(import.meta.url);
-  const parts = await Promise.all(
-    dataFiles.map(async (url) => {
-      const response = await fetch(url, { cache: "no-cache" });
+  const coreFiles = dataFiles.filter((url) => Number(url.pathname.match(/part(\d+)\.json$/)?.[1]) <= 4);
+  const deferredFiles = dataFiles.filter((url) => !coreFiles.includes(url));
+  const readPart = async (url) => {
+      const controller = new AbortController();
+      const timeout = window.setTimeout(() => controller.abort(), 9000);
+      let response;
+      try { response = await fetch(url, { cache: "no-cache", signal: controller.signal }); }
+      finally { window.clearTimeout(timeout); }
       if (!response.ok)
         throw new Error(`Không tải được ${url.pathname} (HTTP ${response.status}).`);
       const rows = await response.json();
       if (!Array.isArray(rows))
         throw new Error(`${url.pathname} không chứa một danh sách bài tập hợp lệ.`);
       return rows;
-    }),
-  );
+  };
+  const coreResults = await Promise.allSettled((coreFiles.length ? coreFiles : dataFiles.slice(0, 1)).map(readPart));
+  const parts = coreResults.filter((result) => result.status === "fulfilled").map((result) => result.value);
+  if (!parts.length) throw coreResults.find((result) => result.status === "rejected")?.reason || new Error("Không tải được dữ liệu bài tập.");
+  if (parts.length !== (coreFiles.length || 1)) catalogSyncWarning = "Một số phần bài đang tải chậm; các phần còn lại vẫn dùng được.";
+  pendingBundledTaskParts = Promise.allSettled(deferredFiles.map(readPart))
+    .then((results) => results.filter((result) => result.status === "fulfilled").flatMap((result) => result.value))
+    .catch((error) => {
+      console.warn("Chưa tải được các phần bài tập bổ sung:", error);
+      catalogSyncWarning = "Một số phần bài tập đang tải chậm; hãy thử tải lại trang nếu chưa xuất hiện.";
+      return [];
+    });
 
   const tasks = parts.flat();
   const ids = new Set();
@@ -197,16 +217,12 @@ try {
   if (!TASKS.length) console.warn("Website chưa tải được bài tập nào.");
 } catch (error) {
   console.error("Không thể khởi tạo website TLU C++:", error);
-  document.body.innerHTML = `
-    <main style="max-width:760px;margin:48px auto;padding:24px;font-family:Arial,sans-serif;line-height:1.6">
-      <h1>Không tải được dữ liệu bài tập</h1>
-      <p>Hãy kiểm tra <b>data/manifest.json</b>, các file phần bài tập và kết nối máy chủ của website.</p>
-      <pre id="loadError" style="white-space:pre-wrap;color:#a33"></pre>
-    </main>`;
-  document.getElementById("loadError").textContent = error.message;
+  const list = document.getElementById("tasklist");
+  if (list) list.innerHTML = `<div class="task-load-error" role="alert"><strong>Chưa tải được danh sách bài.</strong><p>Kiểm tra mạng rồi thử lại. Điều hướng và tài khoản vẫn dùng được.</p><button type="button" id="retryTaskLoad">Thử tải lại</button><small>${String(error.message || "").replace(/[<>&"']/g, "")}</small></div>`;
+  document.getElementById("retryTaskLoad")?.addEventListener("click", () => location.reload());
   throw error;
 }
-const TOTAL_TEST_CASES = TASKS.reduce((sum, task) => sum + task.tests.length, 0);
+let TOTAL_TEST_CASES = TASKS.reduce((sum, task) => sum + task.tests.length, 0);
 function currentBestScore(taskId) {
   const task = TASKS.find((item) => Number(item.id) === Number(taskId));
   const score = bestScores?.[taskId];
@@ -2555,4 +2571,24 @@ window.addEventListener("beforeunload", (event) => {
 
 renderList();
 selectTask(TASKS[0].id); // Bài đầu tiên theo thứ tự hiển thị.
-void refreshPublishedTasksInBackground();
+void pendingBundledTaskParts.then((laterTasks) => {
+  if (!laterTasks.length) return;
+  const ids = new Set(TASKS.map((task) => task.id));
+  const additions = laterTasks.filter((task) => {
+    if (!Number.isInteger(task.id) || ids.has(task.id) || !hasValidTestCount(task.tests)) return false;
+    ids.add(task.id);
+    return true;
+  });
+  if (!additions.length) return;
+  TASKS = [...TASKS, ...additions].sort((a, b) => a.id - b.id);
+  visible = filter === "all" ? TASKS : TASKS.filter((task) => task.section === filter);
+  TOTAL_TEST_CASES = TASKS.reduce((sum, task) => sum + task.tests.length, 0);
+  document.getElementById("siteTaskSummary").textContent = `${TASKS.length} bài luyện tập C++ · Từ cơ bản đến nâng cao`;
+  renderList();
+  updateProgress();
+  if (catalogSyncWarning) {
+    const status = $("taskSyncStatus");
+    if (status) { status.textContent = catalogSyncWarning; status.hidden = false; }
+  }
+});
+window.setTimeout(() => { void refreshPublishedTasksInBackground(); }, 1800);
