@@ -1,4 +1,4 @@
-// VI: Lưu lựa chọn màu sắc riêng trên trình duyệt. EN: Store the user's theme choice locally.
+﻿// VI: Lưu lựa chọn màu sắc riêng trên trình duyệt. EN: Store the user's theme choice locally.
 (() => {
   const STORAGE_KEY = "onluyencpp_theme";
   const allowedThemes = new Set(["a", "b", "c", "d"]);
@@ -52,13 +52,21 @@
       const theme = button?.dataset.themeChoice;
       if (!allowedThemes.has(theme)) return;
       selectedTheme = theme;
-      document.documentElement.classList.remove("theme-wiping");
-      void document.documentElement.offsetWidth;
-      document.documentElement.classList.add("theme-wiping");
-      document.documentElement.dataset.theme = theme;
+      const bounds = button.getBoundingClientRect();
+      const root = document.documentElement;
+      root.style.setProperty("--theme-ripple-x", `${bounds.left + bounds.width / 2}px`);
+      root.style.setProperty("--theme-ripple-y", `${bounds.top + bounds.height / 2}px`);
+      const applyTheme = () => { root.dataset.theme = theme; syncButtons(); };
+      const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (document.startViewTransition && !reducedMotion) {
+        const cx = ((bounds.left + bounds.width / 2) / innerWidth) * 100;
+        const cy = ((bounds.top + bounds.height / 2) / innerHeight) * 100;
+        root.style.setProperty("--theme-ripple-x", `${cx}%`);
+        root.style.setProperty("--theme-ripple-y", `${cy}%`);
+        const transition = document.startViewTransition(applyTheme);
+        transition.finished.finally(() => root.style.removeProperty("--theme-ripple-x"));
+      } else applyTheme();
       try { localStorage.setItem(STORAGE_KEY, theme); } catch (_) {}
-      syncButtons();
-      window.setTimeout(() => document.documentElement.classList.remove("theme-wiping"), 700);
       if (options.contains(button)) { closePicker(); trigger.focus(); }
     });
 
@@ -76,3 +84,5 @@
     init();
   }
 })();
+
+

@@ -30,8 +30,15 @@
 @keyframes welcome-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
 @keyframes welcome-card-in { from { opacity:0; transform:translateY(10px) scale(.995); } to { opacity:1; transform:translateY(0) scale(1); } }
 @keyframes welcome-fade { to { opacity:0; visibility:hidden; } }
-html.theme-wiping::after { content:""; position:fixed; z-index:9999; inset:0; pointer-events:none; background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 86%,var(--accent2)) 0%,color-mix(in srgb,var(--accent2) 76%,var(--panel)) 55%,color-mix(in srgb,var(--accent) 88%,var(--accent2)) 100%); box-shadow:0 0 70px color-mix(in srgb,var(--accent) 45%,transparent); animation:theme-color-sweep .72s cubic-bezier(.65,0,.25,1) both; }
-@keyframes theme-color-sweep { 0% { transform:translateY(-102%); } 42% { transform:translateY(0); } 58% { transform:translateY(0); } 100% { transform:translateY(102%); } }
+::view-transition-group(root) { animation-duration:1.28s; }
+::view-transition-new(root) { z-index:2; animation:theme-water-reveal 1.28s cubic-bezier(.25,.65,.2,1) both; }
+::view-transition-old(root) { z-index:1; animation:none; }
+@keyframes theme-water-reveal {
+  0% { clip-path:circle(0 at var(--theme-ripple-x,50vw) var(--theme-ripple-y,50vh)); }
+  44% { clip-path:circle(64vmax at var(--theme-ripple-x,50vw) var(--theme-ripple-y,50vh)); }
+  66% { clip-path:circle(64vmax at var(--theme-ripple-x,50vw) var(--theme-ripple-y,50vh)); }
+  100% { clip-path:circle(150vmax at var(--theme-ripple-x,50vw) var(--theme-ripple-y,50vh)); }
+}
 @media(max-width:680px) { .welcome-screen{padding:16px}.welcome-top{margin-bottom:14px;flex-wrap:wrap;gap:8px}.welcome-brand{font-size:16px}.welcome-top-actions{gap:6px;margin-left:auto}.welcome-themes{gap:1px;padding:3px}.welcome-themes button{width:25px;height:27px}.welcome-version{display:none}.welcome-card{padding:28px 22px;border-radius:22px}.welcome-features{grid-template-columns:1fr;gap:8px;margin-bottom:24px}.welcome-features article{min-height:64px;padding:10px 12px}.welcome-actions{align-items:flex-start;flex-direction:column;gap:10px}.welcome-enter{width:100%;justify-content:center} }
-@media(prefers-reduced-motion:reduce) { html.theme-wiping::after { animation-duration:.01ms; } }
+@media(prefers-reduced-motion:reduce) { ::view-transition-group(root), ::view-transition-new(root) { animation-duration:.01ms!important; } }
 @media(prefers-reduced-motion:reduce) { .welcome-screen *, .welcome-screen *::before { animation-duration:.01ms!important; animation-iteration-count:1!important; scroll-behavior:auto!important; transition-duration:.01ms!important; } }
