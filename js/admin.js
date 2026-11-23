@@ -207,24 +207,26 @@ const VIEWS = {
 async function viewAnnouncements(body) {
   const rows = await rpc("admin_list_site_announcements");
   body.innerHTML = `
-    <div class="adm-page-head"><div><h1>Thông báo thay đổi</h1><p>Người học chỉ thấy thông báo mới nhất trong 7 ngày gần đây, một lần cho mỗi tài khoản. Thông báo cũ tự hết hạn.</p></div></div>
+    <div class="adm-page-head"><div><h1>Thông báo thay đổi</h1><p>Chọn thời hạn 3, 7, 15 hoặc 30 ngày. Học viên chỉ thấy thông báo mới nhất còn hạn; thông báo hết hạn sẽ tự xóa.</p></div></div>
     <div class="adm-card" style="max-width:760px">
       <label class="adm-field">Tiêu đề<input id="admAnnouncementTitle" maxlength="120" placeholder="Ví dụ: Đã cập nhật bài tập vòng lặp"></label>
       <label class="adm-field">Nội dung<textarea id="admAnnouncementBody" maxlength="2000" rows="5" placeholder="Nêu các thay đổi mà người học cần biết."></textarea></label>
+      <label class="adm-field">Tự xóa sau<select id="admAnnouncementExpiry"><option value="3">3 ngày</option><option value="7" selected>7 ngày</option><option value="15">15 ngày</option><option value="30">1 tháng (30 ngày)</option></select></label>
       <button class="adm-btn primary" id="admPublishAnnouncement" type="button">📣 Phát thông báo cho mọi người</button>
     </div>
     <div class="adm-card" style="max-width:760px;margin-top:18px"><h2>Thông báo đã phát</h2>
-      ${rows.length ? rows.map((row) => `<div style="border-top:1px solid var(--line);padding:14px 0"><b>${esc(row.title)}</b><small style="display:block;color:var(--muted)">${fmt(row.published_at)} · ${Number(row.read_count || 0)} tài khoản đã nhận</small><p style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(row.body)}</p></div>`).join("") : `<p class="mut">Chưa có thông báo nào.</p>`}
+      ${rows.length ? rows.map((row) => `<div style="border-top:1px solid var(--line);padding:14px 0"><div style="display:flex;justify-content:space-between;gap:12px;align-items:center"><b>${esc(row.title)}</b><button class="adm-btn" type="button" data-delete-announcement="${Number(row.id)}">Xóa</button></div><small style="display:block;color:var(--muted)">${fmt(row.published_at)} · hạn ${Number(row.retention_days)} ngày, đến ${fmt(row.expires_at)} · ${Number(row.read_count || 0)} tài khoản đã nhận</small><p style="white-space:pre-wrap;overflow-wrap:anywhere">${esc(row.body)}</p></div>`).join("") : `<p class="mut">Chưa có thông báo nào.</p>`}
     </div>`;
   $("#admPublishAnnouncement", body).onclick = async () => {
     const title = $("#admAnnouncementTitle", body).value.trim();
     const message = $("#admAnnouncementBody", body).value.trim();
+    const expiryDays = Number($("#admAnnouncementExpiry", body).value);
     if (!title || !message) return toast("Nhập tiêu đề và nội dung thông báo.", "err");
-    if (!(await confirmBox(`Phát thông báo “${title}” cho mọi người? Mỗi người sẽ thấy thông báo này một lần.`, { okText: "Phát thông báo" }))) return;
+    if (!(await confirmBox(`Phát thông báo “${title}” cho mọi người trong ${expiryDays} ngày? Mỗi người chỉ thấy thông báo mới nhất còn hạn một lần.`, { okText: "Phát thông báo" }))) return;
     const button = $("#admPublishAnnouncement", body);
     button.disabled = true;
     try {
-      await rpc("admin_publish_site_announcement", { p_title: title, p_body: message });
+      await rpc("admin_publish_site_announcement", { p_title: title, p_body: message, p_expiry_days: expiryDays });
       window.dispatchEvent(new Event("site-announcement-published"));
       toast("Đã phát thông báo.", "ok");
       await viewAnnouncements(body);
@@ -233,6 +235,21 @@ async function viewAnnouncements(body) {
       button.disabled = false;
     }
   };
+  body.querySelectorAll("[data-delete-announcement]").forEach((button) => {
+    button.onclick = async () => {
+      const id = Number(button.dataset.deleteAnnouncement);
+      if (!(await confirmBox("Xóa thông báo này ngay? Học viên chưa đọc cũng sẽ không còn nhìn thấy.", { okText: "Xóa thông báo" }))) return;
+      button.disabled = true;
+      try {
+        await rpc("admin_delete_site_announcement", { p_announcement_id: id });
+        toast("Đã xóa thông báo.", "ok");
+        await viewAnnouncements(body);
+      } catch (error) {
+        toast(error.message, "err");
+        button.disabled = false;
+      }
+    };
+  });
 }
 async function show(view) {
   if ((view === "admins" || view === "audit") && !isSuper) view = "dash";
