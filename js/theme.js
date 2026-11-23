@@ -1,4 +1,4 @@
-﻿// VI: Lưu lựa chọn màu sắc riêng trên trình duyệt. EN: Store the user's theme choice locally.
+// VI: Lưu lựa chọn màu sắc riêng trên trình duyệt. EN: Store the user's theme choice locally.
 (() => {
   const STORAGE_KEY = "onluyencpp_theme";
   const allowedThemes = new Set(["a", "b", "c", "d"]);
@@ -35,6 +35,17 @@
   };
 
   const init = () => {
+    const welcome = document.getElementById("welcomeScreen");
+    const welcomeEnter = document.getElementById("welcomeEnter");
+    welcomeEnter?.addEventListener("click", () => {
+      if (!welcome || welcome.hidden) return;
+      welcome.classList.add("is-leaving");
+      window.setTimeout(() => {
+        welcome.hidden = true;
+        welcome.classList.remove("is-leaving");
+      }, 240);
+    });
+
     const picker = document.getElementById("themePicker");
     const trigger = document.getElementById("themeTrigger");
     const options = document.getElementById("themeOptions");
@@ -84,5 +95,3 @@
     init();
   }
 })();
-
-

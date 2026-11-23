@@ -2556,9 +2556,3 @@ window.addEventListener("beforeunload", (event) => {
 renderList();
 selectTask(TASKS[0].id); // Bài đầu tiên theo thứ tự hiển thị.
 void refreshPublishedTasksInBackground();
-$("welcomeEnter")?.addEventListener("click", () => {
-  const screen = $("welcomeScreen");
-  if (!screen) return;
-  screen.classList.add("is-leaving");
-  setTimeout(() => { screen.hidden = true; screen.classList.remove("is-leaving"); }, 300);
-});
