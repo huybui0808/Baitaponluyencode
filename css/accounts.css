@@ -217,15 +217,22 @@ body.no-scroll {
   color: var(--muted);
   font-size: 12px;
   font-weight: 600;
-  text-align: left;
+  text-align: center;
+}
+.lb-table th:first-child,
+.lb-table .lb-rank {
+  min-width: 86px;
+  white-space: nowrap;
+  text-align: center;
 }
 .lb-table td {
   padding: 9px 10px;
   border-top: 1px solid var(--line);
   color: var(--text);
+  text-align: center;
 }
 .lb-table .lb-rank {
-  width: 52px;
+  width: 86px;
   font-weight: 700;
   color: var(--accent2);
 }
@@ -233,21 +240,43 @@ body.no-scroll {
   font-weight: 700;
   color: var(--gold);
 }
+.lb-table tr.rank-1 td { background: color-mix(in srgb, #f2bd36 20%, var(--panel)); }
+.lb-table tr.rank-2 td { background: color-mix(in srgb, #aab8c5 20%, var(--panel)); }
+.lb-table tr.rank-3 td { background: color-mix(in srgb, #d18461 20%, var(--panel)); }
+.lb-table tr.rank-1 .lb-rank::before,
+.lb-table tr.rank-2 .lb-rank::before,
+.lb-table tr.rank-3 .lb-rank::before {
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 18px;
+  line-height: 1;
+  vertical-align: -2px;
+}
+.lb-table tr.rank-1 .lb-rank::before { content: "🥇"; }
+.lb-table tr.rank-2 .lb-rank::before { content: "🥈"; }
+.lb-table tr.rank-3 .lb-rank::before { content: "🥉"; }
 .lb-table tr.rank-1 .lb-rank {
-  color: var(--gold);
+  color: #9a6700;
+  box-shadow: inset 4px 0 #e9b52f;
 }
 .lb-table tr.rank-2 .lb-rank {
-  color: var(--muted);
+  color: #596b7d;
+  box-shadow: inset 4px 0 #9aa9b7;
 }
 .lb-table tr.rank-3 .lb-rank {
-  color: var(--gold);
+  color: #9f5738;
+  box-shadow: inset 4px 0 #c97852;
 }
 .lb-table tr.me td {
   background: var(--active-bg);
 }
+:root[data-theme="d"] .lb-table tr.rank-1 .lb-rank { color: #ffd166; }
+:root[data-theme="d"] .lb-table tr.rank-2 .lb-rank { color: #d6e0e8; }
+:root[data-theme="d"] .lb-table tr.rank-3 .lb-rank { color: #f0a27e; }
 .lb-table small {
   color: var(--accent);
 }
+.lb-table .lb-profile-link { text-align: center; }
 .lb-empty {
   padding: 20px 10px;
   text-align: center;

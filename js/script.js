@@ -898,7 +898,7 @@ async function loadLeaderboard() {
   body.innerHTML = data
     .map(
       (r) =>
-        `<tr class="${rankRowClass(r)}"><td class="lb-rank">${Number(r.rank_no)}</td><td class="lb-name"><button class="lb-profile-link" type="button" data-profile="${escapeHTML(r.user_id)}">${escapeHTML(r.display_name || "(chưa đặt tên)")}</button>${r.is_me ? " <small>(bạn)</small>" : ""}</td><td class="lb-score">${Number(r.solved)}/${TASKS.length}</td><td>${Number(r.total_correct)}/${TOTAL_TEST_CASES}</td><td>${Number(r.total_points).toFixed(2)}/${TASKS.length * 10}</td></tr>`,
+        `<tr class="${rankRowClass(r)}"><td class="lb-rank">${Number(r.rank_no)}</td><td class="lb-name"><button class="lb-profile-link" type="button" data-profile="${escapeHTML(r.user_id)}">${escapeHTML(r.display_name || "(chưa đặt tên)")}</button>${r.is_me ? " <small>(bạn)</small>" : ""}</td><td class="lb-score">${Number(r.solved)}</td><td>${Number(r.total_correct)}</td><td>${Number(r.total_points).toFixed(2)}</td></tr>`,
     )
     .join("");
 }

@@ -1,5 +1,11 @@
 // VI: Phân biệt thay đề thật với các lần chỉ cập nhật test hoặc ràng buộc.
 // EN: Distinguish replaced exercises from test-case or constraint-only edits.
+export const MAX_AUTO_RESET_PROBLEMS = 50;
+
+export function exceedsAutoResetLimit(count) {
+  return !Number.isInteger(count) || count < 0 || count > MAX_AUTO_RESET_PROBLEMS;
+}
+
 function comparableText(value) {
   return String(value ?? "")
     .normalize("NFKD")

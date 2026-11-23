@@ -3,7 +3,7 @@
 // việc ẩn nút ở giao diện chỉ để tiện dùng, KHÔNG phải lớp bảo mật.
 // VI: Công cụ quản trị được bổ sung theo yêu cầu của chủ dự án; AI có hỗ trợ viết và chỉnh sửa mã. EN: Admin tools follow the project owner's requirements; AI assisted with writing and editing code.
 import { buildExportParts, buildJsonZip } from "./admin-export.js";
-import { findReplacedProblems } from "./admin-import.js";
+import { exceedsAutoResetLimit, findReplacedProblems, MAX_AUTO_RESET_PROBLEMS } from "./admin-import.js";
 import { bundledPartUrls } from "./task-parts.js";
 import { CONCEPT_NOTES, parsePresentationRules, taskPresentation } from "./problem-presentation.js";
 import { renderCppHighlight } from "./code-highlight.js";
@@ -946,6 +946,10 @@ async function importFromJson(selectedFiles = null) {
     const existingById = new Map(state.problems.map((problem) => [problem.id, problem]));
     const overlap = tasks.filter((task) => existingById.has(task.id)).length;
     const replacedTasks = findReplacedProblems(tasks, existingById);
+    if (exceedsAutoResetLimit(replacedTasks.length)) {
+      toast(`Đã dừng nhập an toàn: phát hiện ${replacedTasks.length} bài đổi đề, vượt giới hạn tự xóa ${MAX_AUTO_RESET_PROBLEMS} bài mỗi lần. Chưa có dữ liệu nào được ghi; hãy chia nhỏ đợt nhập và kiểm tra lại.`, "err");
+      return;
+    }
     const label = selectedFiles?.length ? `${selectedFiles.length} file đã chọn` : "JSON trên web";
     const resetIds = replacedTasks.map((task) => String(task.id).padStart(3, "0"));
     const resetNote = resetIds.length

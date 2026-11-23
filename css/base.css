@@ -664,6 +664,11 @@ textarea#stdin {
   font-size: 12px;
   color: var(--muted);
 }
+.status.completed-summary {
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 700;
+}
 .status.ok {
   color: var(--good);
 }
@@ -920,6 +925,10 @@ textarea#stdin {
 }
 #taskSyncStatus {
   color: var(--error-text);
+}
+#progressSyncStatus {
+  color: var(--error-text);
+  font-weight: 600;
 }
 
 /* Nút hủy phiên chấm và chỉ báo bài đang được chấm */

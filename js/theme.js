@@ -63,20 +63,24 @@
       const theme = button?.dataset.themeChoice;
       if (!allowedThemes.has(theme)) return;
       selectedTheme = theme;
-      const bounds = button.getBoundingClientRect();
       const root = document.documentElement;
-      root.style.setProperty("--theme-ripple-x", `${bounds.left + bounds.width / 2}px`);
-      root.style.setProperty("--theme-ripple-y", `${bounds.top + bounds.height / 2}px`);
+      const bounds = button.getBoundingClientRect();
+      root.style.setProperty("--theme-ripple-x", `${((bounds.left + bounds.width / 2) / innerWidth) * 100}%`);
+      root.style.setProperty("--theme-ripple-y", `${((bounds.top + bounds.height / 2) / innerHeight) * 100}%`);
       const applyTheme = () => { root.dataset.theme = theme; syncButtons(); };
       const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (document.startViewTransition && !reducedMotion) {
-        const cx = ((bounds.left + bounds.width / 2) / innerWidth) * 100;
-        const cy = ((bounds.top + bounds.height / 2) / innerHeight) * 100;
-        root.style.setProperty("--theme-ripple-x", `${cx}%`);
-        root.style.setProperty("--theme-ripple-y", `${cy}%`);
         const transition = document.startViewTransition(applyTheme);
-        transition.finished.finally(() => root.style.removeProperty("--theme-ripple-x"));
-      } else applyTheme();
+        const clearRipple = () => {
+          root.style.removeProperty("--theme-ripple-x");
+          root.style.removeProperty("--theme-ripple-y");
+        };
+        transition.finished.then(clearRipple, clearRipple);
+      } else {
+        applyTheme();
+        root.style.removeProperty("--theme-ripple-x");
+        root.style.removeProperty("--theme-ripple-y");
+      }
       try { localStorage.setItem(STORAGE_KEY, theme); } catch (_) {}
       if (options.contains(button)) { closePicker(); trigger.focus(); }
     });
