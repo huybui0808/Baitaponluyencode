@@ -47,21 +47,19 @@
       trigger.setAttribute("aria-expanded", String(open));
     });
 
-    options.addEventListener("click", (event) => {
+    document.addEventListener("click", (event) => {
       const button = event.target.closest("[data-theme-choice]");
       const theme = button?.dataset.themeChoice;
       if (!allowedThemes.has(theme)) return;
       selectedTheme = theme;
+      document.documentElement.classList.remove("theme-wiping");
+      void document.documentElement.offsetWidth;
+      document.documentElement.classList.add("theme-wiping");
       document.documentElement.dataset.theme = theme;
-      try {
-        localStorage.setItem(STORAGE_KEY, theme);
-      } catch (_) {
-        // VI: Lựa chọn vẫn áp dụng trong phiên hiện tại.
-        // EN: The selection still applies for this session.
-      }
+      try { localStorage.setItem(STORAGE_KEY, theme); } catch (_) {}
       syncButtons();
-      closePicker();
-      trigger.focus();
+      window.setTimeout(() => document.documentElement.classList.remove("theme-wiping"), 700);
+      if (options.contains(button)) { closePicker(); trigger.focus(); }
     });
 
     document.addEventListener("click", (event) => {

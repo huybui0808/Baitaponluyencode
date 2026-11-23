@@ -138,8 +138,6 @@ async function loadTasksFromSupabase() {
 }
 
 async function loadTaskData() {
-  const dbTasks = await loadTasksFromSupabase();
-  if (dbTasks) return dbTasks;
   const cachedTasks = await readCachedPublishedTasks();
   // VI: Bản đã đồng bộ là ảnh chụp của Supabase, gồm cả các bài đã xóa.
   // Không ghép thêm JSON đóng gói vì như vậy bài đã xóa sẽ xuất hiện lại offline.
@@ -170,6 +168,19 @@ async function loadTaskData() {
     ids.add(task.id);
   }
   return tasks.sort((a, b) => a.id - b.id);
+}
+
+async function refreshPublishedTasksInBackground() {
+  const tasks = await loadTasksFromSupabase();
+  if (!tasks?.length) return;
+  const selectedId = current?.id;
+  TASKS = tasks;
+  current = TASKS.find((task) => task.id === selectedId) || TASKS[0];
+  visible = TASKS;
+  document.getElementById("siteTaskSummary").textContent = `${TASKS.length} bài luyện tập C++ · Từ cơ bản đến nâng cao`;
+  renderList();
+  updateProgress();
+  selectTask(current.id);
 }
 
 let TASKS;
@@ -362,16 +373,15 @@ persistScores();
 const SUPABASE_URL = "https://dcdvtpmihijzbieblwfa.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Fb40gK9h5FiDyJSI05nH0g_TmXM8W-m";
 let supabase = null;
-try {
-  if (!navigator.onLine) throw new Error("Offline");
-  // Nạp động: nếu CDN lỗi thì website vẫn chạy bình thường (chỉ mất đăng nhập).
-  const { createClient } =
-    await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm");
-  supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-} catch (error) {
-  console.error("Không tải được Supabase SDK:", error);
-}
-void reconcileProblemLearningResets().then((changed) => {
+async function initializeSupabase() {
+  if (!navigator.onLine) { renderAuthBox(); return; }
+  try {
+    const sdk = await Promise.race([import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm"), new Promise((_, reject) => setTimeout(() => reject(new Error("Supabase SDK load timeout")), 3500))]);
+    supabase = sdk.createClient(SUPABASE_URL, SUPABASE_KEY);
+    supabase.auth.onAuthStateChange((_event, session) => setTimeout(() => handleSession(session), 0));
+    renderAuthBox();
+  } catch (error) { console.warn("Supabase SDK unavailable; local practice remains available.", error); renderAuthBox(); }
+}void reconcileProblemLearningResets().then((changed) => {
   if (changed && !currentUser) refreshScoreViews();
 });
 let profileName = "";
@@ -1550,12 +1560,7 @@ initStreak({
   onLogin: () => { setAuthMode("login"); openOverlay("authOverlay"); $("authEmail").focus(); },
 });
 renderAuthBox();
-if (supabase) {
-  // Không await Supabase trực tiếp trong callback (tránh treo SDK) nên dùng setTimeout.
-  supabase.auth.onAuthStateChange((_event, session) => {
-    setTimeout(() => handleSession(session), 0);
-  });
-}
+void initializeSupabase();
 
 const STATUS_LABELS = {
   todo: "Chưa làm",
@@ -2549,4 +2554,11 @@ window.addEventListener("beforeunload", (event) => {
 });
 
 renderList();
-selectTask(TASKS[0].id); // [ADMIN] bài đầu tiên theo thứ tự hiển thị (trước đây là bài số 1)
+selectTask(TASKS[0].id); // Bài đầu tiên theo thứ tự hiển thị.
+void refreshPublishedTasksInBackground();
+$("welcomeEnter")?.addEventListener("click", () => {
+  const screen = $("welcomeScreen");
+  if (!screen) return;
+  screen.classList.add("is-leaving");
+  setTimeout(() => { screen.hidden = true; screen.classList.remove("is-leaving"); }, 300);
+});
