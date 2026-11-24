@@ -273,6 +273,7 @@ let current = TASKS[0],
 const $ = (id) => document.getElementById(id);
 const SCORE_KEY = "tlu_cpp_best_scores_v1";
 const SCORE_META_KEY = "tlu_cpp_best_score_meta_v1";
+const GUEST_SCORE_OWNER_KEY = "tlu_cpp_guest_score_migration_owner_v1";
 const SCORE_HISTORY_KEY = "tlu_cpp_best_score_history_v1";
 const LEGACY_LATEST_SCORE_KEY = "tlu_cpp_latest_scores_v1";
 const PROBLEM_RESET_VERSION_KEY = "tlu_cpp_problem_reset_versions_v1";
@@ -389,14 +390,27 @@ persistScores();
 const SUPABASE_URL = "https://dcdvtpmihijzbieblwfa.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Fb40gK9h5FiDyJSI05nH0g_TmXM8W-m";
 let supabase = null;
+let supabaseInitPromise = null;
 async function initializeSupabase() {
-  if (!navigator.onLine) { renderAuthBox(); return; }
-  try {
-    const sdk = await Promise.race([import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm"), new Promise((_, reject) => setTimeout(() => reject(new Error("Supabase SDK load timeout")), 3500))]);
-    supabase = sdk.createClient(SUPABASE_URL, SUPABASE_KEY);
-    supabase.auth.onAuthStateChange((_event, session) => setTimeout(() => handleSession(session), 0));
-    renderAuthBox();
-  } catch (error) { console.warn("Supabase SDK unavailable; local practice remains available.", error); renderAuthBox(); }
+  if (!navigator.onLine) { renderAuthBox(); return null; }
+  if (supabase) return supabase;
+  if (supabaseInitPromise) return supabaseInitPromise;
+  supabaseInitPromise = (async () => {
+    try {
+      const sdk = await Promise.race([import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm"), new Promise((_, reject) => setTimeout(() => reject(new Error("Supabase SDK load timeout")), 3500))]);
+      if (supabase) return supabase;
+      supabase = sdk.createClient(SUPABASE_URL, SUPABASE_KEY);
+      supabase.auth.onAuthStateChange((_event, session) => setTimeout(() => handleSession(session), 0));
+      renderAuthBox();
+      return supabase;
+    } catch (error) {
+      console.warn("Supabase SDK unavailable; local practice remains available.", error);
+      renderAuthBox();
+      return null;
+    }
+  })();
+  try { return await supabaseInitPromise; }
+  finally { supabaseInitPromise = null; }
 }void reconcileProblemLearningResets().then((changed) => {
   if (changed && !currentUser) refreshScoreViews();
 });
@@ -425,6 +439,12 @@ function refreshScoreViews() {
   updateProgress();
   updateScore();
   renderList();
+}
+function setProgressSyncStatus(message = "") {
+  const status = $("progressSyncStatus");
+  if (!status) return;
+  status.textContent = message;
+  status.hidden = !message;
 }
 // VI: Thanh điều hướng gom chức năng vào một menu gọn. EN: Group navigation actions in one compact menu.
 function renderAuthBox() {
@@ -540,6 +560,17 @@ function maxScoreUnits(passed, total) {
 // máy chủ chỉ giữ điểm cao hơn nên không thể làm tụt điểm.
 async function syncGuestScoresUp() {
   if (accountSuspended) return;
+  const userId = currentUser?.id;
+  if (!userId) return;
+  let owner = "";
+  try { owner = localStorage.getItem(GUEST_SCORE_OWNER_KEY) || ""; } catch (_) {}
+  // VI: Không chuyển phần điểm khách đang chờ của tài khoản trước sang tài khoản khác.
+  // EN: Never migrate one account's failed guest-score transfer into another account.
+  if (owner && owner !== userId) return;
+  if (!owner) {
+    owner = userId;
+    try { localStorage.setItem(GUEST_SCORE_OWNER_KEY, owner); } catch (_) {}
+  }
   const scores = readStore(SCORE_KEY);
   const metadata = readStore(SCORE_META_KEY);
   const pendingScores = {};
@@ -597,8 +628,94 @@ async function syncGuestScoresUp() {
       localStorage.removeItem(SCORE_KEY);
       localStorage.removeItem(SCORE_META_KEY);
       localStorage.removeItem(LEGACY_LATEST_SCORE_KEY);
+      localStorage.removeItem(GUEST_SCORE_OWNER_KEY);
     }
   } catch (_) {}
+}
+
+// VI: Đẩy các điểm đã lưu riêng trong tài khoản nhưng chưa lên mạng.
+// EN: Upload this account's locally saved scores that have not reached Supabase.
+async function syncAccountScoresUp(userId = currentUser?.id) {
+  if (!userId || !supabase || !navigator.onLine || accountSuspended || currentUser?.id !== userId) return false;
+  await reconcileProblemLearningResets();
+  if (currentUser?.id !== userId) return false;
+  let legacySchema = false;
+  let { data: remoteRows, error } = await supabase
+    .from("user_progress")
+    .select("problem_id,best_score,best_points,best_tests_total,test_set_version");
+  if (error && /best_points|column/i.test(error.message || "")) {
+    legacySchema = true;
+    ({ data: remoteRows, error } = await supabase.from("user_progress").select("problem_id,best_score"));
+  }
+  if (error || currentUser?.id !== userId) {
+    if (error) console.warn("Không kiểm tra được điểm cần đồng bộ:", error.message);
+    return false;
+  }
+
+  const remote = new Map((remoteRows || []).map((row) => [String(row.problem_id), row]));
+  const scores = readStore(scoreStoreKey(SCORE_KEY, userId));
+  const metadata = readStore(scoreStoreKey(SCORE_META_KEY, userId));
+  let changed = false;
+  let complete = true;
+  for (const [id, rawScore] of Object.entries(scores)) {
+    if (currentUser?.id !== userId || !navigator.onLine) return false;
+    if (!/^\d{1,4}$/.test(id)) continue;
+    const task = TASKS.find((item) => String(item.id) === id);
+    if (!task) continue;
+    const meta = metadata[id] || {};
+    const version = testSetVersion(task);
+    const versionMismatch = task.test_set_version
+      ? meta.testSetVersion !== String(task.test_set_version) || Number(meta.testsTotal) !== task.tests.length
+      : meta.testSetVersion
+        ? meta.testSetVersion !== version || Number(meta.testsTotal) !== task.tests.length
+        : task.tests.length !== LEGACY_TEST_COUNT;
+    if (versionMismatch) {
+      complete = false;
+      continue;
+    }
+
+    const points = Number(meta.points ?? rawScore);
+    if (!Number.isFinite(points) || points <= 0 || points > 10) continue;
+    const row = remote.get(id);
+    const remoteTotal = Number(row?.best_tests_total || (legacySchema ? LEGACY_TEST_COUNT : task.tests.length));
+    const remotePoints = row
+      ? Number(row.best_points ?? ((Number(row.best_score) * 10) / remoteTotal))
+      : -1;
+    if (remotePoints >= points) continue;
+
+    const passed = Number.isInteger(meta.testsPassed)
+      ? meta.testsPassed
+      : Math.round((points * task.tests.length) / 10);
+    if (passed < 0 || passed > task.tests.length) continue;
+    let { data, error: saveError } = await supabase.rpc("submit_score_with_presentation", {
+      p_problem_id: Number(id),
+      p_tests_passed: passed,
+      p_tests_total: task.tests.length,
+      p_test_set_version: version,
+      p_points: Math.min(points, maxScoreUnits(passed, task.tests.length) / SCORE_PRECISION),
+    });
+    if (saveError?.code === "PGRST202" && task.tests.length === LEGACY_TEST_COUNT) {
+      ({ data, error: saveError } = await supabase.rpc("submit_score_with_presentation", {
+        p_problem_id: Number(id), p_tests_passed: passed, p_points: points,
+      }));
+    }
+    if (currentUser?.id !== userId) return false;
+    if (saveError) {
+      console.warn(`Chưa đồng bộ được điểm bài ${id}:`, saveError.message);
+      complete = false;
+      continue;
+    }
+    scores[id] = Math.max(Number(scores[id] || 0), Number(data) || 0);
+    metadata[id] = { ...meta, points: scores[id] };
+    changed = true;
+  }
+  if (changed && currentUser?.id === userId) {
+    try {
+      localStorage.setItem(scoreStoreKey(SCORE_KEY, userId), JSON.stringify(scores));
+      localStorage.setItem(scoreStoreKey(SCORE_META_KEY, userId), JSON.stringify(metadata));
+    } catch (_) {}
+  }
+  return complete;
 }
 
 async function loadCloudProgress() {
@@ -616,7 +733,12 @@ async function loadCloudProgress() {
       .select("problem_id,best_score"));
   }
   if (currentUser?.id !== userId) return;
-  if (error) console.warn("Không tải được điểm từ tài khoản:", error.message);
+  if (error) {
+    console.warn("Không tải được điểm từ tài khoản:", error.message);
+    setProgressSyncStatus("Chưa tải được tiến độ từ Supabase; đang giữ dữ liệu đã lưu trên thiết bị.");
+    return;
+  }
+  setProgressSyncStatus();
   const cloud = readStore(scoreStoreKey(SCORE_KEY, userId));
   const cloudMeta = readStore(scoreStoreKey(SCORE_META_KEY, userId));
   for (const row of data || []) {
@@ -660,6 +782,23 @@ async function loadCloudProgress() {
   bestScores = cloud;
   bestScoreMeta = cloudMeta;
   persistScores();
+}
+let progressRefreshInFlight = null;
+async function refreshAccountProgress() {
+  const userId = currentUser?.id;
+  if (!userId || !supabase || !navigator.onLine || accountSuspended) return;
+  if (progressRefreshInFlight) return progressRefreshInFlight;
+  progressRefreshInFlight = (async () => {
+    const syncComplete = await syncAccountScoresUp(userId);
+    if (currentUser?.id !== userId) return;
+    await loadCloudProgress();
+    if (currentUser?.id === userId) {
+      if (!syncComplete) setProgressSyncStatus("Một số điểm chưa đồng bộ được; sẽ tự thử lại khi có mạng hoặc mở lại trang.");
+      refreshScoreViews();
+    }
+  })();
+  try { await progressRefreshInFlight; }
+  finally { progressRefreshInFlight = null; }
 }
 async function loadProfileName() {
   let { data, error } = await supabase
@@ -729,9 +868,17 @@ async function refreshSuspensionStatus() {
 }
 $("dismissSuspensionNotice")?.addEventListener("click", () => { suspensionDismissed = true; renderSuspensionNotice(); });
 window.addEventListener("online", async () => {
+  await Promise.all([initializeSupabase(), refreshPublishedTasksInBackground()]);
   await refreshSuspensionStatus();
+  await refreshAccountProgress();
 });
-document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshSuspensionStatus(); });
+window.addEventListener("focus", () => { void refreshAccountProgress(); });
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) {
+    void refreshSuspensionStatus();
+    void refreshAccountProgress();
+  }
+});
 setInterval(async () => {
   if (document.hidden) return;
   await refreshSuspensionStatus();
@@ -773,7 +920,9 @@ async function handleSession(session) {
   loadedForUser = user.id;
   renderAuthBox();
   await syncGuestScoresUp();
+  const accountScoresSynced = await syncAccountScoresUp(user.id);
   await loadCloudProgress();
+  if (!accountScoresSynced && !accountSuspended) setProgressSyncStatus("Một số điểm chưa đồng bộ được; sẽ tự thử lại khi có mạng hoặc mở lại trang.");
   await loadProfileName();
   await loadMyRole();
   renderAuthBox();
@@ -2504,7 +2653,7 @@ $("runall").onclick = async () => {
     updateJobView(
       job,
       `Đã chấm xong bài ${job.taskId}: ${job.pass}/${job.total} test đúng · Điểm cao nhất ${best.toFixed(2)}/10.`,
-      scoreStatusClass(Math.round((best / 10) * job.total), job.total),
+      `${scoreStatusClass(Math.round((best / 10) * job.total), job.total)} completed-summary`,
       job.lines.join("\n") + summary + historyNote,
     );
     updateProgress();
