@@ -279,6 +279,7 @@ const LEGACY_LATEST_SCORE_KEY = "tlu_cpp_latest_scores_v1";
 const PROBLEM_RESET_VERSION_KEY = "tlu_cpp_problem_reset_versions_v1";
 const SCORE_PRECISION = 1_000_000;
 const TEST_TIME_LIMIT_MS = 1000;
+const COMPILER_TIMEOUT_MS = 90_000;
 const activeRuns = new Map(); // Một bài có tối đa một phiên chạy tại một thời điểm.
 const runViews = new Map(); // Kết quả/progress được giữ riêng theo ID bài khi chuyển bài.
 let nextRunId = 1;
@@ -852,9 +853,13 @@ function renderSuspensionNotice() {
 async function refreshSuspensionStatus() {
   if (!supabase || !currentUser || !navigator.onLine) return accountSuspended;
   try {
-    const { data: lockData, error: lockError } = await supabase.rpc("get_my_lock_status");
+    const [lockResult, userResult] = await Promise.all([
+      supabase.rpc("get_my_lock_status"),
+      supabase.auth.getUser(),
+    ]);
+    const { data: lockData, error: lockError } = lockResult;
     if (!lockError) accountSuspended = Boolean(lockData);
-    const { data, error } = await supabase.auth.getUser();
+    const { data, error } = userResult;
     if (error) {
       if (/user_banned|banned/i.test(`${error.code || ""} ${error.message || ""}`)) accountSuspended = true;
     } else {
@@ -2199,7 +2204,7 @@ $("clearcode").onclick = () => {
 function workerRequest(
   workerUrl,
   message,
-  { signal, timeoutMs, timeoutOnStartMessage = false } = {},
+  { signal, timeoutMs, timeoutOnStartMessage = false, onStarted } = {},
 ) {
   return new Promise((resolve, reject) => {
     if (signal?.aborted)
@@ -2234,6 +2239,7 @@ function workerRequest(
     worker.onmessage = (event) => {
       if (event.data?.type === "started" && timeoutMs) {
         startTimeout();
+        onStarted?.();
         return;
       }
       finish(resolve, event.data);
@@ -2245,15 +2251,25 @@ function workerRequest(
 }
 
 async function waitForOfflineCache(signal) {
+  const serviceWorker = navigator.serviceWorker;
   if (
-    !navigator.serviceWorker ||
+    !serviceWorker ||
     location.protocol === "file:" ||
-    navigator.serviceWorker.controller
+    serviceWorker.controller ||
+    navigator.onLine
   )
     return;
+
+  // If this device has no active worker yet, waiting for `ready` can only add
+  // the old fixed delay; it cannot make offline compiler assets available.
+  const registration = await serviceWorker.getRegistration().catch(() => null);
+  if (signal?.aborted)
+    throw new DOMException("Đã hủy phiên chấm.", "AbortError");
+  if (!registration?.active) return;
+
   await Promise.race([
-    navigator.serviceWorker.ready.catch(() => null),
-    wait(3000, signal).catch((error) => {
+    serviceWorker.ready.catch(() => null),
+    wait(1000, signal).catch((error) => {
       if (signal?.aborted) throw error;
     }),
   ]);
@@ -2261,14 +2277,25 @@ async function waitForOfflineCache(signal) {
     throw new DOMException("Đã hủy phiên chấm.", "AbortError");
 }
 
-async function compileCode(code, signal) {
+async function compileCode(code, signal, onStarted) {
   if (!code.trim()) throw new Error("Bạn chưa dán mã nguồn C++.");
   await waitForOfflineCache(signal);
   const result = await workerRequest(
     new URL("../workers/cpp-compiler-worker.js", import.meta.url),
     { type: "compile", source: code },
-    { signal },
+    {
+      signal,
+      timeoutMs: COMPILER_TIMEOUT_MS,
+      onStarted,
+    },
   );
+  if (result.timedOut) {
+    const error = new Error(
+      "Compiler C++20 không phản hồi trong 90 giây. Worker đã được dừng; lượt này không chấm điểm. Hãy thử lại khi tài nguyên đã tải xong hoặc kiểm tra kết nối.",
+    );
+    error.code = "COMPILER_TIMEOUT";
+    throw error;
+  }
   if (result.type === "compile-error") {
     const error = new Error(result.message || "Biên dịch thất bại.");
     error.code = "COMPILE_ERROR";
@@ -2427,8 +2454,8 @@ async function* runCompiledBatch(module, tests, signal) {
   }
 }
 
-async function compileRun(stdin, code, signal) {
-  const module = await compileCode(code, signal);
+async function compileRun(stdin, code, signal, onCompileStarted) {
+  const module = await compileCode(code, signal, onCompileStarted);
   return runCompiled(module, stdin, signal);
 }
 function normalize(s) {
@@ -2464,9 +2491,14 @@ $("runone").onclick = async () => {
       job,
       "Đang biên dịch C++20 trong trình duyệt...",
       "",
-      "Đang khởi tạo compiler C++20 cục bộ…",
+      "Đang kiểm tra cache offline và khởi tạo compiler C++20…",
     );
-    const result = await compileRun(stdin, job.code, job.controller.signal);
+    const result = await compileRun(
+      stdin,
+      job.code,
+      job.controller.signal,
+      () => updateJobView(job, "Đang khởi tạo Clang/LLD và biên dịch C++20…", "", job.output),
+    );
     if (job.controller.signal.aborted)
       throw new DOMException("Đã hủy phiên chấm.", "AbortError");
     const grade = target
@@ -2512,16 +2544,18 @@ $("runone").onclick = async () => {
   } catch (error) {
     const cancelled =
       error.name === "AbortError" || job.controller.signal.aborted;
-    await saveRunSubmission(
-      job,
-      null,
-      target?.no || null,
-      cancelled
-        ? "cancelled"
-        : error.code === "COMPILE_ERROR"
-          ? "compile_error"
-          : "runtime_error",
-    );
+    if (error.code !== "COMPILER_TIMEOUT") {
+      await saveRunSubmission(
+        job,
+        null,
+        target?.no || null,
+        cancelled
+          ? "cancelled"
+          : error.code === "COMPILE_ERROR"
+            ? "compile_error"
+            : "runtime_error",
+      );
+    }
     if (cancelled) {
       job.state = "cancelled";
       updateJobView(
@@ -2534,11 +2568,15 @@ $("runone").onclick = async () => {
       job.state = "error";
       updateJobView(
         job,
-        error.code === "COMPILE_ERROR"
+        error.code === "COMPILER_TIMEOUT"
+          ? "COMPILER KHÔNG PHẢN HỒI · Đã dừng phiên chấm."
+          : error.code === "COMPILE_ERROR"
           ? "BIÊN DỊCH THẤT BẠI."
           : "Không chạy được: " + error.message,
         "err",
-        (error.code === "COMPILE_ERROR" ? "Lỗi biên dịch:\n" : "Lỗi chạy cục bộ:\n") +
+        (error.code === "COMPILER_TIMEOUT"
+          ? "Compiler không hoàn tất trong 90 giây. Worker đã được dừng để tránh treo giao diện. Lượt này không lưu điểm hoặc lịch sử bài nộp.\n"
+          : error.code === "COMPILE_ERROR" ? "Lỗi biên dịch:\n" : "Lỗi chạy cục bộ:\n") +
           error.message +
           "\nKhông thay đổi điểm.",
       );
@@ -2558,14 +2596,19 @@ $("runall").onclick = async () => {
     setStatus(e.message, "err");
     return;
   }
+  const suspensionCheck = refreshSuspensionStatus();
   try {
     updateJobView(
       job,
       `Đang biên dịch C++20 cho bài ${job.taskId}...`,
       "",
-      "Đang khởi tạo compiler C++20 cục bộ…",
+      "Đang kiểm tra cache offline và khởi tạo compiler C++20…",
     );
-    const module = await compileCode(job.code, job.controller.signal);
+    const module = await compileCode(
+      job.code,
+      job.controller.signal,
+      () => updateJobView(job, "Đang khởi tạo Clang/LLD và biên dịch C++20…", "", job.output),
+    );
     for await (const { index: i, test, result } of runCompiledBatch(
       module,
       job.task.tests,
@@ -2574,12 +2617,6 @@ $("runall").onclick = async () => {
       if (job.controller.signal.aborted)
         throw new DOMException("Đã hủy phiên chấm.", "AbortError");
       job.currentTest = i + 1;
-      updateJobView(
-        job,
-        `Đang chấm bài ${job.taskId}: TEST ${i + 1}/${job.total} · Đúng ${job.pass} test. Chuyển sang bài khác không làm dừng phiên này.`,
-        "",
-        job.lines.join("\n"),
-      );
       const grade = classifyTestResult(result, job.task, test);
       if (grade.status === "PASS" || grade.status === "PRESENTATION") job.pass++;
       if (grade.status === "PRESENTATION") {
@@ -2596,7 +2633,7 @@ $("runall").onclick = async () => {
     }
     if (job.controller.signal.aborted)
       throw new DOMException("Đã hủy phiên chấm.", "AbortError");
-    await refreshSuspensionStatus();
+    await suspensionCheck;
     if (job.controller.signal.aborted)
       throw new DOMException("Đã hủy phiên chấm.", "AbortError");
     // VI: Chấm đủ test trước rồi mới trừ tổng lỗi trình bày; không hạ điểm cao nhất đã lưu.
@@ -2635,17 +2672,21 @@ $("runall").onclick = async () => {
     } catch (streakError) {
       console.warn("Không ghi được ngày học; lượt chấm vẫn hợp lệ:", streakError);
     }
-    const historyNote = await saveRunSubmission(
-      job,
-      job.pass,
-      null,
-      job.pass === job.total && job.formatErrors === 0
-        ? "accepted"
-        : job.pass === 0
-          ? "wrong"
-          : "partial",
-    );
-    const cloudNote = suspendedForRun ? "\nTài khoản đang bị đình chỉ: lượt chấm này không tính điểm." : await syncScoreAfterGrading(job.taskId, job.pass, score, job.testsTotal, testSetVersion(job.task));
+    const [historyNote, cloudNote] = await Promise.all([
+      saveRunSubmission(
+        job,
+        job.pass,
+        null,
+        job.pass === job.total && job.formatErrors === 0
+          ? "accepted"
+          : job.pass === 0
+            ? "wrong"
+            : "partial",
+      ),
+      suspendedForRun
+        ? Promise.resolve("\nTài khoản đang bị đình chỉ: lượt chấm này không tính điểm.")
+        : syncScoreAfterGrading(job.taskId, job.pass, score, job.testsTotal, testSetVersion(job.task)),
+    ]);
     const best = Number(currentBestScore(job.taskId) ?? (suspendedForRun ? 0 : score));
     const summary = suspendedForRun
       ? `\n\nHoàn tất: ${job.pass}/${job.total} test đúng thuật toán; ${job.formatErrors} test lỗi trình bày. Tài khoản đang bị đình chỉ nên lượt này không được tính điểm.\nĐiểm cao nhất đã lưu trước đó: ${best.toFixed(2)}/10.${cloudNote}`
@@ -2660,16 +2701,18 @@ $("runall").onclick = async () => {
     updateScore();
     renderList();
   } catch (error) {
-    await saveRunSubmission(
-      job,
-      job.pass,
-      null,
-      error.name === "AbortError" || job.controller.signal.aborted
-        ? "cancelled"
-        : error.code === "COMPILE_ERROR"
-          ? "compile_error"
-          : "runtime_error",
-    );
+    if (error.code !== "COMPILER_TIMEOUT") {
+      await saveRunSubmission(
+        job,
+        job.pass,
+        null,
+        error.name === "AbortError" || job.controller.signal.aborted
+          ? "cancelled"
+          : error.code === "COMPILE_ERROR"
+            ? "compile_error"
+            : "runtime_error",
+      );
+    }
     if (error.name === "AbortError" || job.controller.signal.aborted) {
       job.state = "cancelled";
       updateJobView(
@@ -2683,12 +2726,16 @@ $("runall").onclick = async () => {
       job.state = "error";
       updateJobView(
         job,
-        error.code === "COMPILE_ERROR"
+        error.code === "COMPILER_TIMEOUT"
+          ? "COMPILER KHÔNG PHẢN HỒI · Đã dừng phiên chấm."
+          : error.code === "COMPILE_ERROR"
           ? "BIÊN DỊCH THẤT BẠI · Chưa chạy test case nào."
           : `Lỗi chạy cục bộ tại TEST ${job.currentTest}/${job.total}.`,
         "err",
         job.lines.join("\n") +
-          `\n\n${error.code === "COMPILE_ERROR" ? "Lỗi biên dịch:\n" : "Lỗi chạy:\n"}${error.message}\nLượt chấm chưa hoàn tất nên không cập nhật điểm. Điểm cao nhất cũ vẫn được giữ.`,
+          (error.code === "COMPILER_TIMEOUT"
+            ? `\n\nCompiler không hoàn tất trong 90 giây. Worker đã được dừng để tránh treo giao diện. Lượt này không lưu điểm hoặc lịch sử bài nộp.\n${error.message}`
+            : `\n\n${error.code === "COMPILE_ERROR" ? "Lỗi biên dịch:\n" : "Lỗi chạy:\n"}${error.message}\nLượt chấm chưa hoàn tất nên không cập nhật điểm. Điểm cao nhất cũ vẫn được giữ.`),
       );
     }
   } finally {

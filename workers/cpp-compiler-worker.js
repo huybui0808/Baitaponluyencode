@@ -5,6 +5,9 @@ import { compile } from "../vendor/cpp-compiler/compiler/index.js";
 self.onmessage = async (event) => {
   if (event.data?.type !== "compile") return;
 
+  // Let the UI show that the compiler worker started before loading the WASM toolchain.
+  self.postMessage({ type: "started" });
+
   try {
     const result = await compile({
       source: event.data.source,
